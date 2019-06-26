@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const Questions = sequelize.define("Questions", {
-        question: {             
+    const Question = sequelize.define("Question", {
+        question: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -13,5 +13,15 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     });
-    return Questions;
+
+    Question.associate = (models) => {
+        Question.belongsTo(models.Survey, {
+            foreignKey: {
+                allowNull: false,
+                onDelete: 'cascade'
+            }
+        });
+    }
+
+    return Question;
 }
