@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         options: {
-            type: DataTypes.ARRAY,
+            type: DataTypes.ARRAY(DataTypes.STRING),
             allowNull: false
         },
         optionsInput: {
