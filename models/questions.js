@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         options: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
+            type: DataTypes.STRING,
             allowNull: false
         },
         optionsInput: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         }
     });
