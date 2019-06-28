@@ -1,24 +1,24 @@
 module.exports = (sequelize, DataTypes) => {
-    const Survey = sequelize.define("Survey", {
-        surveyName: {
+    const User = sequelize.define("User", {
+        name: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        getId: {
-            type: DataTypes.BOOL,
+        emailAddress: {
+            type: DataTypes.EMAIL,
             allowNull: false
         },
-        notes: {
+        phoneNumber: {
             type: DataTypes.TEXT,
             allowNull: true
         }
     });
 
-    Survey.associate = (models) => {
-        Survey.hasMany(models.Question, {
+    User.associate = (models) => {
+        User.hasMany(models.Survey, {
             onDelete: 'cascade'
         });
     };
 
-    return Survey;
+    return User;
 }

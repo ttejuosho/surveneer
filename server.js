@@ -29,7 +29,7 @@ require("./routes/api-routes.js")(app);
 
 
 app.use("/", routes);
-app.use("/update", routes);
+app.use("/newsurvey", routes);
 app.use("/create", routes);
 app.use("/delete", routes);
 app.use("/survenaire", routes);
