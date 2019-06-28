@@ -9,13 +9,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/index', (req,res) => {
-    db.Survey.findAll({})
-    .then( (dbSurvey) => {
-        var hbsObject = {
-            survey: dbSurvey
-        };
-        return res.render("index", hbsObject);
-    });
+    return res.render("index");
 });
 
 
