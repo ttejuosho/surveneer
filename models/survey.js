@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        notes: {
+        surveyNotes: {
             type: DataTypes.TEXT,
             allowNull: true
         }

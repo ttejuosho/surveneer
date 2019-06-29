@@ -1,83 +1,46 @@
-<div class="row">
+
     <div class="col-md-8">
     <div class="card">
         <div class="card-header">
         <h5 class="title">New Survey</h5>
         </div>
         <div class="card-body">
-        <form action="/survey/new" method="POST">
+        <form id="newSurveyForm" action="/survey/new" method="POST">
             <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                <label>Survey Name</label>
-                <input type="text" class="form-control" placeholder="Survey Name" value="">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Survey Name</label>
+                    <input id="surveyName" name="surveyName" type="text" class="form-control" placeholder="Survey Name">
+                    </div>
                 </div>
             </div>
-            </div>
             <div class="row">
-            <div class="col-md-12">
-                <div class="form-check">
-                    <label class="form-check-label">
-                    <input id="getId" class="form-check-input" type="checkbox" value="True">
-                    Get Responder Id
-                    <span class="form-check-sign">
-                        <span class="check"></span>
-                    </span>
-                    </label>
-                    <small class="form-text text-muted mb-3">If checked, responders will be asked for their names, email addresses & phone numbers.</small>
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="surveyNotes" name="surveyNotes" rows="4" cols="80" class="form-control" placeholder="Survey Notes"></textarea>
+                    </div>
                 </div>
             </div>
-            </div>
             <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                <label>Notes</label>
-                <textarea rows="4" cols="80" class="form-control" placeholder="Survey Notes" value="Mike"></textarea>
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input id="getId" name="getId" class="form-check-input" type="checkbox" value=True>
+                        Get Responder Id
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                        </label>
+                        <small class="form-text text-muted mb-3">If checked, responders will be asked for their names, email addresses & phone numbers.</small>
+                    </div>
                 </div>
             </div>
-            </div>
+                    <div class="card-footer">
+        <button type="submit" class="btn btn-fill btn-primary">Submit</button>
+        </div>
         </form>
         </div>
-        <div class="card-footer">
-        <button type="submit" class="btn btn-fill btn-primary">Save</button>
-        </div>
+
     </div>
-    </div>
-    <div class="col-md-4">
-    <div class="card card-user">
-        <div class="card-body">
-        <p class="card-text">
-            <div class="author">
-            <div class="block block-one"></div>
-            <div class="block block-two"></div>
-            <div class="block block-three"></div>
-            <div class="block block-four"></div>
-            <a href="javascript:void(0)">
-                <img class="avatar" src="../assets/img/emilyz.jpg" alt="...">
-                <h5 class="title">Taiwo Tejuosho</h5>
-            </a>
-            <p class="description">
-                Ceo/Co-Founder
-            </p>
-            </div>
-        </p>
-        <div class="card-description">
-            Do not be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-        </div>
-        </div>
-        <div class="card-footer">
-        <div class="button-container">
-            <button href="javascript:void(0)" class="btn btn-icon btn-round btn-facebook">
-            <i class="fab fa-facebook"></i>
-            </button>
-            <button href="javascript:void(0)" class="btn btn-icon btn-round btn-twitter">
-            <i class="fab fa-twitter"></i>
-            </button>
-            <button href="javascript:void(0)" class="btn btn-icon btn-round btn-google">
-            <i class="fab fa-google-plus"></i>
-            </button>
-        </div>
-        </div>
-    </div>
-    </div>
-</div>
+    </div>    

@@ -12,12 +12,25 @@ router.get('/index', (req, res) => {
     return res.render("index");
 });
 
-router.get('/newsurvey', (req, res) => {
-    return res.render("newsurvey");
+router.get('/survey/new', (req, res) => {
+    return res.render("survey/new");
+});
+
+router.get('/question/new', (req, res) => {
+    return res.render("question/new");
 });
 
 router.post('/survey/new', (req,res) => {
-    return res.render('newquestion');
-})
+    console.log(req.body, "From Controller");
+    db.Survey.create({
+        surveyName: req.body.surveyName,
+        surveyNotes: req.body.surveyNotes,
+        getId: req.body.getId
+    }).then((dbSurvey) => {
+        return res.render('question/new', dbSurvey);
+    }).catch((err) => {
+        res.render('error', err);
+    });  
+});
 
 module.exports = router;
