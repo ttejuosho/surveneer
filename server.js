@@ -29,8 +29,8 @@ require("./routes/api-routes.js")(app);
 
 
 app.use("/", routes);
-app.use("/newsurvey", routes);
-app.use("/create", routes);
+app.use("/edit", routes);
+app.use("/new", routes);
 app.use("/delete", routes);
 app.use("/survenaire", routes);
 // listen on port 3000

@@ -16,4 +16,8 @@ router.get('/newsurvey', (req, res) => {
     return res.render("newsurvey");
 });
 
+router.post('/survey/new', (req,res) => {
+    return res.render('newquestion');
+})
+
 module.exports = router;

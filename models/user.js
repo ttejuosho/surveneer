@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         emailAddress: {
-            type: DataTypes.EMAIL,
+            type: DataTypes.STRING,
             allowNull: false
         },
         phoneNumber: {

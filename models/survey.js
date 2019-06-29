@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         getId: {
-            type: DataTypes.BOOL,
+            type: DataTypes.BOOLEAN,
             allowNull: false
         },
         notes: {
