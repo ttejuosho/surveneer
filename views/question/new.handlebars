@@ -1,1 +1,88 @@
-<h3>ok</h3>
+    <div class="col-md-8">
+    <div class="card">
+        <div class="card-header">
+        <h5 class="title">Add Question</h5>
+        </div>
+        <div class="card-body">
+        <form id="newQuestionForm" action="/question/new" method="POST">
+        <div class="messages text-danger font-weight-bold">{{error}}</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Question</label>
+                    <textarea id="question" name="question" rows="2" cols="80" class="form-control" placeholder=""></textarea>
+                    <div class="messages text-danger font-weight-bold">{{questionError}}</div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Options</label>
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="YesNo" checked>
+                                Yes/No
+                                <span class="form-check-sign"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="TrueFalse" >
+                                True/False
+                                <span class="form-check-sign"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="MultipleChoice" >
+                                Multiple Choice
+                                <span class="form-check-sign"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="ShortAnswer" >
+                                Short Answer
+                                <span class="form-check-sign"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" >
+                                Long Answer
+                                <span class="form-check-sign"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" >
+                                Likert-type
+                                <span class="form-check-sign"></span>
+                                
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">( 1 to 5 scale, strongly agree to strongly disagree. )</small>
+                        </div>
+
+                        <div class="form-check form-check-radio disabled">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" >
+                                Custom Options
+                                <span class="form-check-sign"></span>
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">( currently not supported. )</small>
+                        </div>
+                </div>
+            </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-fill btn-primary">Submit</button>
+        </div>
+        </form>
+        </div>
+    </div>
+    </div>    

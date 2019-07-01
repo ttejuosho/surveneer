@@ -30,9 +30,8 @@ require("./routes/api-routes.js")(app);
 
 app.use("/", routes);
 app.use("/update", routes);
-app.use("/create", routes);
+app.use("/new", routes);
 app.use("/delete", routes);
-app.use("/survey/new", routes);
 app.use("/survey", routes);
 // listen on port 3000
 var port = process.env.PORT || 3000;

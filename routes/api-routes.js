@@ -5,8 +5,18 @@ var db = require("../models");
 // =============================================================
 module.exports = (app) => {
 
-   app.get("/api/survey", (req, res) => {
+   app.get("/api/surveys", (req, res) => {
         db.Survey.findAll({}).then(function(dbSurvey) {
+        res.json(dbSurvey);
+        });
+    }); 
+
+    app.get("/api/surveys/:id", (req, res) => {
+        db.Survey.findOne({
+            where: {
+                id: req.params.id
+            }
+        }).then(function(dbSurvey) {
         res.json(dbSurvey);
         });
     }); 
@@ -17,14 +27,13 @@ module.exports = (app) => {
         });
     }); 
 
-    app.post('/api/survey/new', (req,res) => {
-        console.log(req.body, "from API");
-                db.Survey.create({
-                    surveyName: req.body.surveyName,
-                    surveyNotes: req.body.surveyNotes,
-                    getId: req.body.getId
-                }).then( (dbSurvey) => {
-                    res.json(dbSurvey);
-                });
+    app.post('/api/surveys', (req,res) => {
+            db.Survey.create({
+                surveyName: req.body.surveyName,
+                surveyNotes: req.body.surveyNotes,
+                getId: req.body.getId
+            }).then( (dbSurvey) => {
+                res.json(dbSurvey);
+            });
         });
 }

@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         getId: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.STRING,
             allowNull: false
         },
         surveyNotes: {
-            type: DataTypes.TEXT,
+            type: DataTypes.STRING,
             allowNull: true
         }
     });

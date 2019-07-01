@@ -1,8 +1,7 @@
 var express = require("express");
-
 var router = express.Router();
-// grabbing our models
 var db = require("../models");
+
 
 router.get('/', (req, res) => {
     res.redirect('/index');
@@ -16,21 +15,43 @@ router.get('/survey/new', (req, res) => {
     return res.render("survey/new");
 });
 
-router.get('/question/new', (req, res) => {
-    return res.render("question/new");
+//New Survey POST Route
+router.post('/survey/new', (req,res) => {
+    //Validate Survey Name
+    if (req.body.surveyName == ""){
+        var err = {
+            surveyNameError: "Survey Name is required."
+        }
+        res.render("survey/new", err);
+    } else {
+        //Check for duplicate Survey Name
+        db.Survey.findOne({
+            where: {
+                surveyName: req.body.surveyName
+            }
+        }).then((dbSurvey) => {
+            if (dbSurvey == null){
+                db.Survey.create({
+                    surveyName: req.body.surveyName,
+                    getId: req.body.getId,
+                    surveyNotes: req.body.surveyNotes
+                }).then((dbSurvey) => {
+                    return res.render('question/new', dbSurvey);
+                }).catch((err) => {
+                    res.render('error', err);
+                });  
+            } else {
+                var err = {
+                    error: dbSurvey.surveyName.toLowerCase() + " already exists, please choose another name for your survey."
+                }
+                res.render("survey/new", err);
+            }
+        });
+    }
 });
 
-router.post('/survey/new', (req,res) => {
-    console.log(req.body, "From Controller");
-    db.Survey.create({
-        surveyName: req.body.surveyName,
-        surveyNotes: req.body.surveyNotes,
-        getId: req.body.getId
-    }).then((dbSurvey) => {
-        return res.render('question/new', dbSurvey);
-    }).catch((err) => {
-        res.render('error', err);
-    });  
+router.get('/question/new', (req, res) => {
+    return res.render("question/new");
 });
 
 module.exports = router;
