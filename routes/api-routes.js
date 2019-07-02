@@ -21,19 +21,41 @@ module.exports = (app) => {
         });
     }); 
 
-    app.get("/api/question", (req, res) => {
+    app.post('/api/surveys', (req,res) => {
+        db.Survey.create({
+            surveyName: req.body.surveyName,
+            surveyNotes: req.body.surveyNotes,
+            getId: req.body.getId
+        }).then( (dbSurvey) => {
+            res.json(dbSurvey);
+        });
+    });
+
+// QUESTIONS API Routes
+
+    app.get("/api/questions", (req, res) => {
         db.Question.findAll({}).then(function(dbQuestion) {
         res.json(dbQuestion);
         });
     }); 
 
-    app.post('/api/surveys', (req,res) => {
-            db.Survey.create({
-                surveyName: req.body.surveyName,
-                surveyNotes: req.body.surveyNotes,
-                getId: req.body.getId
-            }).then( (dbSurvey) => {
-                res.json(dbSurvey);
-            });
+    app.get("/api/questions/:id", (req, res) => {
+        db.Question.findOne({
+            where: {
+                id: req.params.id
+            }
+        }).then(function(Question) {
+        res.json(Question);
         });
+    }); 
+
+    app.get("/api/questions/:surveyId", (req, res) => {
+        db.Question.findAll({
+            where: {
+                surveyId: req.params.surveyId
+            }
+        }).then(function(dbQuestion) {
+        res.json(dbQuestion);
+        });
+    }); 
 }

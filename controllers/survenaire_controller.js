@@ -54,4 +54,15 @@ router.get('/question/new', (req, res) => {
     return res.render("question/new");
 });
 
+router.post('/question/new', (req,res) => {
+    db.Question.create({
+        question: req.body.question,
+        options: req.body.options
+    }).then((dbQuestion) => {
+        return res.render('question/new', dbQuestion);
+    }).catch((err) => {
+        res.render('error', err);
+    }); 
+});
+
 module.exports = router;

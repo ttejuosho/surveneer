@@ -7,10 +7,6 @@ module.exports = (sequelize, DataTypes) => {
         options: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        optionsInput: {
-            type: DataTypes.TEXT,
-            allowNull: false
         }
     });
 
