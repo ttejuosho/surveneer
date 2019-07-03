@@ -76,19 +76,20 @@
                             </label>
                             <small class="form-text text-muted ml-3" style="display: unset;">( currently not supported. )</small>
                         </div>
+                        <div class="messages text-danger font-weight-bold">{{optionError}}</div>
                 </div>
             </div>
             <div class="row d-none">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <input class="form-check-input" type="text" name="surveyId" id="surveyId" value={{surveyId}} >
+                    <input class="form-check-input" type="text" name="SurveyId" id="SurveyId" value={{id}} >
                     </div>
                 </div>
             </div>
         <div class="card-footer">
-            <button type="submit" class="btn btn-fill btn-sm btn-primary">Back</button>
+            {{!-- <button type="submit" class="btn btn-fill btn-sm btn-primary">Back</button> --}}
             <button type="submit" class="btn btn-fill btn-sm btn-success float-right">Submit</button>
-            <button type="submit" class="btn btn-fill btn-sm btn-primary float-right">Save & Add New</button>           
+            {{!-- <button type="submit" class="btn btn-fill btn-sm btn-primary float-right">Save & Add New</button>            --}}
         </div>
         </form>
         </div>

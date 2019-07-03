@@ -16,9 +16,9 @@ router.get('/survey/new', (req, res) => {
 });
 
 //New Survey POST Route
-router.post('/survey/new', (req,res) => {
+router.post('/survey/new', (req, res) => {
     //Validate Survey Name
-    if (req.body.surveyName == ""){
+    if (req.body.surveyName == "") {
         var err = {
             surveyNameError: "Survey Name is required."
         }
@@ -30,16 +30,17 @@ router.post('/survey/new', (req,res) => {
                 surveyName: req.body.surveyName
             }
         }).then((dbSurvey) => {
-            if (dbSurvey == null){
+            if (dbSurvey == null) {
                 db.Survey.create({
                     surveyName: req.body.surveyName,
                     getId: req.body.getId,
                     surveyNotes: req.body.surveyNotes
                 }).then((dbSurvey) => {
-                    return res.render('question/new', dbSurvey);
+                    console.log(dbSurvey.dataValues);
+                    return res.render('question/new', dbSurvey.dataValues);
                 }).catch((err) => {
                     res.render('error', err);
-                });  
+                });
             } else {
                 var err = {
                     error: dbSurvey.surveyName.toLowerCase() + " already exists, please choose another name for your survey."
@@ -54,15 +55,18 @@ router.get('/question/new', (req, res) => {
     return res.render("question/new");
 });
 
-router.post('/question/new', (req,res) => {
+router.post('/question/new', (req, res) => {
+    console.log(req.body);
     db.Question.create({
         question: req.body.question,
-        options: req.body.options
+        options: req.body.options,
+        SurveyId: req.body.SurveyId
     }).then((dbQuestion) => {
-        return res.render('question/new', dbQuestion);
+        return res.render('question/new', dbQuestion.dataValues);
     }).catch((err) => {
+        console.log(err);
         res.render('error', err);
-    }); 
+    });
 });
 
 module.exports = router;
