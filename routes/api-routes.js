@@ -68,3 +68,10 @@ module.exports = (app) => {
         });
     });
 }
+
+// create database survenaire;
+// ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'
+// begin;
+// alter table questions drop column createdAt;
+// alter table questions drop column updatedAt;
+// commit;
