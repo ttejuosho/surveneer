@@ -57,16 +57,35 @@ router.get('/question/new', (req, res) => {
 
 router.post('/question/new', (req, res) => {
     console.log(req.body);
-    db.Question.create({
-        question: req.body.question,
-        options: req.body.options,
-        SurveyId: req.body.SurveyId
-    }).then((dbQuestion) => {
-        return res.render('question/new', dbQuestion.dataValues);
-    }).catch((err) => {
-        console.log(err);
-        res.render('error', err);
-    });
+        //Validate Survey Name
+        if (req.body.question == "") {
+            var err = {
+                questionError: "Please enter a question."
+            }
+            res.render("question/new", err);
+        }
+        else if (req.body.options == ""){
+            var err = {
+                optionsError: "Please choose an option."
+            }
+            res.render("question/new", err);
+        } else if (req.body.SurveyId == ""){
+            var err = {
+                error: "Survey Id is missing, Please create a new survey to add questions"
+            }
+            res.render("question/new", err);
+        } else {
+            db.Question.create({
+                question: req.body.question,
+                options: req.body.options,
+                SurveyId: req.body.SurveyId
+            }).then((dbQuestion) => {
+                return res.render('question/new', dbQuestion.dataValues);
+            }).catch((err) => {
+                console.log(err);
+                res.render('error', err);
+            });
+        }
 });
 
 module.exports = router;

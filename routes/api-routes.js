@@ -5,12 +5,14 @@ var db = require("../models");
 // =============================================================
 module.exports = (app) => {
 
+//Get all Surveys
     app.get("/api/surveys", (req, res) => {
         db.Survey.findAll({}).then(function(dbSurvey) {
             res.json(dbSurvey);
         });
     });
 
+//Get a Survey by Id
     app.get("/api/surveys/:id", (req, res) => {
         db.Survey.findOne({
             where: {
@@ -21,6 +23,7 @@ module.exports = (app) => {
         });
     });
 
+//Create a Survey
     app.post('/api/surveys', (req, res) => {
         db.Survey.create({
             surveyName: req.body.surveyName,
@@ -33,12 +36,14 @@ module.exports = (app) => {
 
     // QUESTIONS API Routes
 
+//Get all Questions
     app.get("/api/questions", (req, res) => {
         db.Question.findAll({}).then(function(dbQuestion) {
             res.json(dbQuestion);
         });
     });
 
+//Get a question by Id
     app.get("/api/questions/:id", (req, res) => {
         db.Question.findOne({
             where: {
@@ -49,7 +54,8 @@ module.exports = (app) => {
         });
     });
 
-    app.get("/api/survey/questions/:surveyId", (req, res) => {
+//Get all questions for a survey
+    app.get("/api/survey/questions/:SurveyId", (req, res) => {
         db.Question.findAll({
             where: {
                 SurveyId: req.params.SurveyId
@@ -59,6 +65,7 @@ module.exports = (app) => {
         });
     });
 
+//Create a new question
     app.post('/api/questions', (req, res) => {
         db.Question.create({
             question: req.body.question,
