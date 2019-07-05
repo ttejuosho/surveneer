@@ -1,0 +1,60 @@
+
+
+<div class="col-md-8">
+<h2><p>Survey ID: {{id}}</p></h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Survey Name</label>
+        <input id="surveyName" name="surveyName" type="text" class="form-control form-control-sm" value="{{surveyName}}" readonly>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Get Id</label>
+        <input id="getId" name="getId" type="text" class="form-control form-control-sm" value="{{getId}}" readonly>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Survey Notes</label>
+        <input id="surveyNotes" name="surveyNotes" type="text" class="form-control form-control-sm" value="{{surveyNotes}}" readonly>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Created At</label>
+        <input id="createdAt" name="createdAt" type="text" class="form-control form-control-sm" value="{{createdAt}}" readonly>
+        </div>
+    </div>
+</div>
+<h2><p>Questions</p></h2>
+{{#each Questions}}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+            <label>Question</label>
+            <input id="question" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+            <label>Options</label>
+            <input id="options" name="options" type="text" class="form-control form-control-sm" value="{{options}}" readonly>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+</div>

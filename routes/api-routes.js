@@ -13,7 +13,7 @@ module.exports = (app) => {
     });
 
 //Get a Survey by Id
-    app.get("/api/surveys/:id", (req, res) => {
+    app.get("/api/survey/:id", (req, res) => {
         db.Survey.findOne({
             where: {
                 id: req.params.id
@@ -33,6 +33,36 @@ module.exports = (app) => {
             res.json(dbSurvey);
         });
     });
+
+//Get All User Surveys With Questions
+app.get('/api/mysurveys', function(req, res) {
+    where = ( req.query.where && JSON.parse(req.query.where) || null );
+    console.log( where , "My Survey");
+    db.Survey.findAll({
+        where: where,
+        order: req.query.order || [],
+        include: [ { model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+    }).then(function(surveys){
+        res.json(surveys);
+    }).catch( function(err){
+        res.json('error', err);
+    });
+  });
+
+  //Get 1 User Survey With Questions
+  app.get('/api/mysurveys/:id', function(req, res) {
+    db.Survey.findOne({
+        where: {
+            id: req.params.id
+        },
+        include: [ { model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+    }).then(function(survey){
+        //console.log(survey);
+        res.json(survey);
+    }).catch( function(err){
+        res.json('error', err);
+    });
+  });
 
 //======================= QUESTIONS API Routes ================================
 
@@ -74,6 +104,7 @@ module.exports = (app) => {
             res.json(dbQuestion);
         });
     });
+
 }
 
 // create database survenaire;

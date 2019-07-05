@@ -11,6 +11,28 @@ router.get('/index', (req, res) => {
     return res.render("index");
 });
 
+router.get('/surveys', (req,res) => {
+    db.Survey.findAll({})
+    .then( (dbSurvey) => {
+        var surveys = {
+            survey: dbSurvey
+        };
+        return res.render("surveys", surveys);
+    });
+});
+
+// router.get('/survey/:id', (req, res) => {
+//     db.Survey.findOne({
+//         where: {
+//             id: req.params.id
+//         }
+//         }).then((dbSurvey) => {
+//         res.render('survey/survey', dbSurvey.dataValues);
+//     }).catch((err) => {
+//         res.render('error', err);
+//     });
+// });
+
 router.get('/survey/new', (req, res) => {
     return res.render("survey/new");
 });
@@ -87,5 +109,34 @@ router.post('/question/new', (req, res) => {
             });
         }
 });
+
+//======Get All User Surveys With Questions==================
+  router.get('/mysurveys', function(req, res) {
+    where = ( req.query.where && JSON.parse(req.query.where) || null );
+    db.Survey.findAll({
+        where: where,
+        order: req.query.order || [],
+        include: [ { model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+    }).then(function(surveys){
+        res.json(surveys);
+    }).catch( function(err){
+        res.render('error', err);
+    });
+  });
+
+//=================Get One User Survey With Questions==========
+  router.get('/mysurveys/:id', function(req, res) {
+    db.Survey.findOne({
+        where: {
+            id: req.params.id
+        },
+        include: [ { model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+    }).then(function(survey){
+        //console.log(survey.dataValues);
+        res.render('survey/survey', survey.dataValues);
+    }).catch( function(err){
+        res.render('error', err);
+    });
+  });
 
 module.exports = router;
