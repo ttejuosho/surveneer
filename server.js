@@ -27,13 +27,14 @@ var routes = require("./controllers/survenaire_controller");
 
 require("./routes/api-routes.js")(app);
 
-
 app.use("/", routes);
 app.use("/update", routes);
 app.use("/new", routes);
 app.use("/delete", routes);
 app.use("/survey", routes);
 app.use("/question", routes);
+
+
 // listen on port 3000
 var port = process.env.PORT || 3000;
 db.sequelize.sync().then(function() {
