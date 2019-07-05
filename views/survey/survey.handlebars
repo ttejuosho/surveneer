@@ -2,6 +2,13 @@
 
 <div class="col-md-8">
 <h2><p>Survey ID: {{id}}</p></h2>
+<div class="row d-none">
+    <div class="col-md-12">
+        <div class="form-group">
+        <input class="form-check-input" type="text" name="SurveyId" id="SurveyId" value={{id}} >
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
@@ -37,6 +44,7 @@
         </div>
     </div>
 </div>
+
 <h2><p>Questions</p></h2>
 {{#each Questions}}
     <div class="row">
@@ -47,11 +55,19 @@
             </div>
         </div>
     </div>
-        <div class="row">
+    <div class="row">
         <div class="col-md-12">
             <div class="form-group">
             <label>Options</label>
             <input id="options" name="options" type="text" class="form-control form-control-sm" value="{{options}}" readonly>
+            </div>
+        </div>
+    </div>
+{{else}}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+            <label>No Questions have been added to this survey. Click <a href="/question/new">here</a> to add questions</label>
             </div>
         </div>
     </div>

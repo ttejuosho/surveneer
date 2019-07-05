@@ -5,14 +5,14 @@ var db = require("../models");
 // =============================================================
 module.exports = (app) => {
 
-//Get all Surveys
+    //Get all Surveys
     app.get("/api/surveys", (req, res) => {
         db.Survey.findAll({}).then(function(dbSurvey) {
             res.json(dbSurvey);
         });
     });
 
-//Get a Survey by Id
+    //Get a Survey by Id
     app.get("/api/survey/:id", (req, res) => {
         db.Survey.findOne({
             where: {
@@ -23,7 +23,7 @@ module.exports = (app) => {
         });
     });
 
-//Create a Survey
+    //Create a Survey
     app.post('/api/surveys', (req, res) => {
         db.Survey.create({
             surveyName: req.body.surveyName,
@@ -34,46 +34,46 @@ module.exports = (app) => {
         });
     });
 
-//Get All User Surveys With Questions
-app.get('/api/mysurveys', function(req, res) {
-    where = ( req.query.where && JSON.parse(req.query.where) || null );
-    console.log( where , "My Survey");
-    db.Survey.findAll({
-        where: where,
-        order: req.query.order || [],
-        include: [ { model: db.Question, as: "Questions", attributes: ["question", "options"] }]
-    }).then(function(surveys){
-        res.json(surveys);
-    }).catch( function(err){
-        res.json('error', err);
+    //Get All User Surveys With Questions
+    app.get('/api/mysurveys', function(req, res) {
+        where = (req.query.where && JSON.parse(req.query.where) || null);
+        console.log(where, "My Survey");
+        db.Survey.findAll({
+            where: where,
+            order: req.query.order || [],
+            include: [{ model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+        }).then(function(surveys) {
+            res.json(surveys);
+        }).catch(function(err) {
+            res.json('error', err);
+        });
     });
-  });
 
-  //Get 1 User Survey With Questions
-  app.get('/api/mysurveys/:id', function(req, res) {
-    db.Survey.findOne({
-        where: {
-            id: req.params.id
-        },
-        include: [ { model: db.Question, as: "Questions", attributes: ["question", "options"] }]
-    }).then(function(survey){
-        //console.log(survey);
-        res.json(survey);
-    }).catch( function(err){
-        res.json('error', err);
+    //Get 1 User Survey With Questions
+    app.get('/api/mysurveys/:id', function(req, res) {
+        db.Survey.findOne({
+            where: {
+                id: req.params.id
+            },
+            include: [{ model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+        }).then(function(survey) {
+            //console.log(survey);
+            res.json(survey);
+        }).catch(function(err) {
+            res.json('error', err);
+        });
     });
-  });
 
-//======================= QUESTIONS API Routes ================================
+    //======================= QUESTIONS API Routes ================================
 
-//Get all Questions
+    //Get all Questions
     app.get("/api/questions", (req, res) => {
         db.Question.findAll({}).then(function(dbQuestion) {
             res.json(dbQuestion);
         });
     });
 
-//Get a question by Id
+    //Get a question by Id
     app.get("/api/questions/:id", (req, res) => {
         db.Question.findOne({
             where: {
@@ -84,7 +84,7 @@ app.get('/api/mysurveys', function(req, res) {
         });
     });
 
-//Get all questions for a survey
+    //Get all questions for a survey
     app.get("/api/survey/questions/:SurveyId", (req, res) => {
         db.Question.findAll({
             where: {
@@ -95,11 +95,12 @@ app.get('/api/mysurveys', function(req, res) {
         });
     });
 
-//Create a new question
-    app.post('/api/questions', (req, res) => {
+    //Create a new question
+    app.post('/api/question/:SurveyId', (req, res) => {
         db.Question.create({
             question: req.body.question,
-            options: req.body.options
+            options: req.body.options,
+            SurveyId: req.params.SurveyId
         }).then((dbQuestion) => {
             res.json(dbQuestion);
         });
