@@ -41,7 +41,7 @@ module.exports = (app) => {
         db.Survey.findAll({
             where: where,
             order: req.query.order || [],
-            include: [{ model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+            include: [{ model: db.Question, as: "Questions", attributes: ["id","question", "options"] }]
         }).then(function(surveys) {
             res.json(surveys);
         }).catch(function(err) {
