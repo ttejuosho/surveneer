@@ -1,6 +1,7 @@
-
-
 <div class="col-md-8">
+{{#if success}}
+    <div class="alert alert-primary" role="alert">{{success}}</div>
+{{/if}}
 <h2><p>Survey ID: {{id}}</p></h2>
 <div class="row d-none">
     <div class="col-md-12">
@@ -50,7 +51,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-            <label>Question</label>
+            <label>Question</label><a href="/questions/{{id}}/update"><i class="ml-2 tim-icons icon-pencil"></i></a><a href="/questions/{{id}}/delete"><i class="ml-2 tim-icons icon-trash-simple text-danger"></i></a>
             <input id="question" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
             </div>
         </div>
@@ -67,7 +68,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-            <label>No Questions have been added to this survey. Click <a href="/question/new">here</a> to add questions</label>
+            <label>No Questions added. Click <a href="/question/new/{{id}}">here</a> to add questions to this survey.</label>
             </div>
         </div>
     </div>

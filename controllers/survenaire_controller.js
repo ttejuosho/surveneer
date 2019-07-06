@@ -17,8 +17,8 @@ router.get('/surveys', (req, res) => {
             var surveys = {
                 survey: dbSurvey
             };
-            return res.render("surveys", surveys);
-        });
+        return res.render("surveys", surveys);
+    });
 });
 
 // router.get('/survey/:id', (req, res) => {
@@ -58,6 +58,7 @@ router.post('/survey/new', (req, res) => {
                     getId: req.body.getId,
                     surveyNotes: req.body.surveyNotes
                 }).then((dbSurvey) => {
+        //set the Id in the returned object as SurveyId (Object Destructuring)
                     const {
                         id,
                         ...hbsObject
@@ -78,9 +79,51 @@ router.post('/survey/new', (req, res) => {
     }
 });
 
-router.get('/question/new', (req, res) => {
-    return res.render("question/new");
+router.get('/question/new/:SurveyId', (req, res) => {
+    var hbsObject = { SurveyId: req.params.SurveyId }
+    return res.render("question/new", hbsObject );
 });
+
+router.get('/questions/:id/update', (req,res)=>{
+      db.Question
+        .findByPk(req.params.id)
+        .then( (dbQuestion) => {
+            //console.log(dbQuestion.dataValues);
+     res.render('question/update', dbQuestion.dataValues);
+    });
+});
+
+//Edit Route for Questions
+router.put('/questions/:id/update', (req, res) => {
+    const dbQuestion = {
+        question: req.body.question,
+        options: req.body.options
+    };
+    db.Question.update( dbQuestion, {
+        where: {
+            id: req.params.id
+        }
+    }).then( (dbQuestion) => {
+        res.redirect('/mysurveys/' + req.body.SurveyId);
+    }).catch((err) => {
+		res.render('error', err);
+	});
+});
+
+//Delete Route for Questions
+router.get('/questions/:id/delete', (req, res) => {
+    db.Question.findByPk(req.params.id)
+               .then( (dbQuestion) => {
+                   var SurveyId = dbQuestion.SurveyId;
+                   console.log(SurveyId);
+                   db.Question.destroy({
+                       where: {
+                           id: dbQuestion.dataValues.id
+                       }
+             }).then( () => { res.redirect('/mysurveys/' + SurveyId) })
+             }).catch((err) => { res.render('error', err)
+             });
+    });
 
 router.post('/question/new/:SurveyId', (req, res) => {
     //TODO:    Validate Received SurveyId HERE
@@ -135,7 +178,7 @@ router.get('/mysurveys/:id', function(req, res) {
         where: {
             id: req.params.id
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["id", "question", "options"] }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
         res.render('survey/survey', survey.dataValues);

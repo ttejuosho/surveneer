@@ -55,7 +55,7 @@ module.exports = (app) => {
             where: {
                 id: req.params.id
             },
-            include: [{ model: db.Question, as: "Questions", attributes: ["question", "options"] }]
+            include: [{ model: db.Question, as: "Questions", attributes: ["id","question", "options"] }]
         }).then(function(survey) {
             //console.log(survey);
             res.json(survey);
@@ -102,6 +102,20 @@ module.exports = (app) => {
             options: req.body.options,
             SurveyId: req.params.SurveyId
         }).then((dbQuestion) => {
+            res.json(dbQuestion);
+        });
+    });
+
+//Update a Question
+    app.put('/api/questions/', (req, res) => {
+        db.Question.update({
+            question: req.body.question,
+            options: req.body.options 
+        }, {
+            where: {
+                id: req.body.id
+            }
+        }).then( (dbQuestion) => {
             res.json(dbQuestion);
         });
     });
