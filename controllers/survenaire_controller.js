@@ -125,6 +125,20 @@ router.get('/questions/:id/delete', (req, res) => {
              });
     });
 
+// //Delete Route for Survey
+router.get('/surveys/:id/delete', (req, res) => {
+    db.Survey.findByPk(req.params.id)
+             .then( (dbSurvey) => {
+                 db.Survey.destroy({
+                     where: {
+                         id: dbSurvey.dataValues.id
+                     }
+           }).then( () => { res.redirect('/surveys') })
+           }).catch((err) => { res.render('error', err)
+           });
+    });
+
+
 router.post('/question/new/:SurveyId', (req, res) => {
     //TODO:    Validate Received SurveyId HERE
 

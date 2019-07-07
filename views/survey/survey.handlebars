@@ -1,7 +1,16 @@
 <div class="col-md-8">
-{{#if success}}
-    <div class="alert alert-primary" role="alert">{{success}}</div>
-{{/if}}
+    <div class="modal fade" id="confirmDeleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteQuestionModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header"><h4 class="text-primary"><i class="mr-2 tim-icons icon-alert-circle-exc"></i>Confirm Delete</h4></div>
+            <div class="modal-body pt-0 pr-0"><p>Delete ?? Okay...I hope you know what you're doing.</p></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <a href="/questions/{{id}}/delete"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
+            </div>
+          </div>
+        </div>
+    </div>
 <h2><p>Survey ID: {{id}}</p></h2>
 <div class="row d-none">
     <div class="col-md-12">
@@ -51,7 +60,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-            <label>Question</label><a href="/questions/{{id}}/update"><i class="ml-2 tim-icons icon-pencil"></i></a><a href="/questions/{{id}}/delete"><i class="ml-2 tim-icons icon-trash-simple text-danger"></i></a>
+            <label>Question</label><a href="/questions/{{id}}/update"><i class="ml-2 tim-icons icon-pencil"></i></a><i data-toggle="modal" data-target="#confirmDeleteQuestionModal" class="ml-2 tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
             <input id="question" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
             </div>
         </div>

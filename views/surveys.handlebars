@@ -1,11 +1,24 @@
 <div class="col-md-8">
+    <div class="modal fade" id="confirmDeleteSurveyModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteSurveyModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header"><h4 class="text-primary"><i class="mr-2 tim-icons icon-alert-circle-exc"></i>Confirm Delete</h4></div>
+            <div class="modal-body pt-0 pr-0"><p>Delete ?? Okay...I hope you know what you're doing.</p></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <a href="/surveys/{{id}}/delete"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
+            </div>
+          </div>
+        </div>
+    </div>
     <div class="row">
         {{#each survey}}
             <div class="col-lg-4">
                 <div class="card card-chart">
-                    <div class="card-header">
-                        <h5 class="card-category">{{id}} Respondents</h5>
+                    <div class="card-header"> 
+                        <i data-toggle="modal" data-target="#confirmDeleteSurveyModal" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
                         <h3 class="card-title"><i class="tim-icons icon-bullet-list-67 text-primary"></i><a href="/mysurveys/{{id}}">{{surveyName}}</a></h3>
+                        <h5 class="card-category">{{id}} Respondents</h5>
                     </div>
                     <div class="card-body">
                         <a href="/mysurveys/{{id}}">
