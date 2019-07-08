@@ -11,7 +11,11 @@
           </div>
         </div>
     </div>
-<h2><p>Survey ID: {{id}}</p></h2>
+
+    <div class="row justify-content-between ml-0 mr-0"> <h2 class="mb-0">Survey ID: {{id}}</h2> <span><a href="/surveys/{{id}}/view">View Survey</a></span></div>
+<div class="card">
+<div class="card-body">
+
 <div class="row d-none">
     <div class="col-md-12">
         <div class="form-group">
@@ -19,6 +23,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
@@ -54,22 +59,31 @@
         </div>
     </div>
 </div>
+</div>
+</div>
 
-<h2><p>Questions</p></h2>
+<h2 class="mb-0">Questions</h2>
 {{#each Questions}}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-            <label>Question</label><a href="/questions/{{id}}/update"><i class="ml-2 tim-icons icon-pencil"></i></a><i data-toggle="modal" data-target="#confirmDeleteQuestionModal" class="ml-2 tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
-            <input id="question" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
-            </div>
+    <div class="card">
+        <div class="card-header pt-1">
+            <span class="float-right"><a href="/questions/{{id}}/update"><i class="ml-3 tim-icons icon-pencil"></i></a><i data-toggle="modal" data-target="#confirmDeleteQuestionModal" class="ml-2 tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i></span>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-            <label>Options</label>
-            <input id="options" name="options" type="text" class="form-control form-control-sm" value="{{options}}" readonly>
+        <div class="card-body pt-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Question</label>
+                    <input id="question" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Options</label>
+                    <input id="options" name="options" type="text" class="form-control form-control-sm" value="{{options}}" readonly>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
