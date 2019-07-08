@@ -125,7 +125,8 @@ router.get('/questions/:id/delete', (req, res) => {
              });
     });
 
-// //Delete Route for Survey
+//Improvise Adapt & Overcome
+//Delete Route for Survey
 router.get('/surveys/:id/delete', (req, res) => {
     db.Survey.findByPk(req.params.id)
              .then( (dbSurvey) => {
@@ -137,7 +138,6 @@ router.get('/surveys/:id/delete', (req, res) => {
            }).catch((err) => { res.render('error', err)
            });
     });
-
 
 router.post('/question/new/:SurveyId', (req, res) => {
     //TODO:    Validate Received SurveyId HERE
@@ -196,6 +196,21 @@ router.get('/mysurveys/:id', function(req, res) {
     }).then(function(survey) {
         //console.log(survey.dataValues);
         res.render('survey/survey', survey.dataValues);
+    }).catch(function(err) {
+        res.render('error', err);
+    });
+});
+
+//View Route For a Survey
+router.get('/surveys/:id/view', (req, res) => {
+    db.Survey.findOne({
+        where: {
+            id: req.params.id
+        },
+        include: [{ model: db.Question, as: "Questions", attributes: ["id", "question", "options"] }]
+    }).then(function(survey) {
+        //console.log(survey.dataValues);
+        res.render('survey/view', survey.dataValues);
     }).catch(function(err) {
         res.render('error', err);
     });
