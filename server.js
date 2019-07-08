@@ -1,7 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
-
 // bring in the models
 var db = require("./models");
 
@@ -18,9 +17,20 @@ app.use(bodyParser.urlencoded({
 app.use(methodOverride("_method"));
 var exphbs = require("express-handlebars");
 
-app.engine("handlebars", exphbs({
+var hbs = exphbs.create({
+    helpers: {
+        ifEquals: function(arg1, arg2, options) {
+                return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+            }
+    },
     defaultLayout: "main"
-}));
+});
+
+// app.engine("handlebars", exphbs({
+//     defaultLayout: "main"
+// }));
+
+app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 
 var routes = require("./controllers/survenaire_controller");
