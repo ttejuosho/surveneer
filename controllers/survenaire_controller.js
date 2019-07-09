@@ -115,7 +115,7 @@ router.get('/questions/:id/delete', (req, res) => {
     db.Question.findByPk(req.params.id)
                .then( (dbQuestion) => {
                    var SurveyId = dbQuestion.SurveyId;
-                   console.log(SurveyId);
+                   //console.log(SurveyId);
                    db.Question.destroy({
                        where: {
                            id: dbQuestion.dataValues.id
@@ -145,17 +145,20 @@ router.post('/question/new/:SurveyId', (req, res) => {
     //Validate Survey Name
     if (req.body.question == "") {
         var err = {
-            questionError: "Please enter a question."
+            questionError: "Please enter a question.",
+            SurveyId: req.params.SurveyId
         }
         res.render("question/new", err);
     } else if (req.body.options == "") {
         var err = {
-            optionsError: "Please choose an option."
+            optionsError: "Please choose an option.",
+            SurveyId: req.params.SurveyId
         }
         res.render("question/new", err);
     } else if (req.body.SurveyId == "") {
         var err = {
-            error: "Survey Id is missing, Please create a new survey to add questions"
+            error: "Survey Id is missing, Please create a new survey to add questions",
+            SurveyId: req.params.SurveyId
         }
         res.render("question/new", err);
     } else {
@@ -166,7 +169,7 @@ router.post('/question/new/:SurveyId', (req, res) => {
         }).then((dbQuestion) => {
             return res.render('question/new', dbQuestion.dataValues);
         }).catch((err) => {
-            console.log(err);
+            //console.log(err);
             res.render('error', err);
         });
     }
@@ -212,6 +215,18 @@ router.get('/surveys/:id/view', (req, res) => {
         //console.log(survey.dataValues);
         res.render('survey/view', survey.dataValues);
     }).catch(function(err) {
+        res.render('error', err);
+    });
+});
+
+router.post('/responses', (req, res) => {
+    db.Response.create({
+        question: req.body.question,
+        options: req.body.options,
+        SurveyId: req.params.SurveyId
+    }).then((dbResponse) => {
+        return res.render('question/new', dbResponse.dataValues);
+    }).catch((err) => {
         res.render('error', err);
     });
 });
