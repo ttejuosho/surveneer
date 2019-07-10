@@ -1,5 +1,10 @@
-module.exports = (sequelize, DataTypes) => { 
+module.exports = (sequelize, DataTypes) => {
     const Respondent = sequelize.define("Respondent", {
+        respondentId: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
         respondentName: {
             type: DataTypes.STRING,
             allowNull: true

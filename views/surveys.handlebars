@@ -6,7 +6,7 @@
             <div class="modal-body pt-0 pr-0"><p><span class="text-danger font-weight-bold">Delete</span> ?? Okay...I hope you know what you're doing.</p></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
-                <a href="/surveys/{{id}}/delete"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
+                <a href="/surveys/{{surveyId}}/delete"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
             </div>
           </div>
         </div>
@@ -17,11 +17,11 @@
                 <div class="card card-chart">
                     <div class="card-header"> 
                         <i data-toggle="modal" data-target="#confirmDeleteSurveyModal" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
-                        <h3 class="card-title"><i class="tim-icons icon-bullet-list-67 text-primary"></i><a href="/mysurveys/{{id}}">{{surveyName}}</a></h3>
-                        <h5 class="card-category">{{id}} Respondents</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-bullet-list-67 text-primary"></i><a href="/mysurveys/{{surveyId}}">{{surveyName}}</a></h3>
+                        <h5 class="card-category">{{surveyId}} Respondents</h5>
                     </div>
                     <div class="card-body">
-                        <a href="/mysurveys/{{id}}">
+                        <a href="/mysurveys/{{surveyId}}">
                             <div class="chart-area">
                             <canvas id="chartLinePurple"></canvas>
                             </div>

@@ -41,7 +41,7 @@ module.exports = (app) => {
         db.Survey.findAll({
             where: where,
             order: req.query.order || [],
-            include: [{ model: db.Question, as: "Questions", attributes: ["id","question", "options"] }]
+            include: [{ model: db.Question, as: "Questions", attributes: ["id", "question", "options"] }]
         }).then(function(surveys) {
             res.json(surveys);
         }).catch(function(err) {
@@ -50,12 +50,12 @@ module.exports = (app) => {
     });
 
     //Get 1 User Survey With Questions
-    app.get('/api/mysurveys/:id', function(req, res) {
+    app.get('/api/mysurveys/:surveyId', function(req, res) {
         db.Survey.findOne({
             where: {
-                id: req.params.id
+                surveyId: req.params.surveyId
             },
-            include: [{ model: db.Question, as: "Questions", attributes: ["id","question", "options"] }]
+            include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
         }).then(function(survey) {
             //console.log(survey);
             res.json(survey);
@@ -106,16 +106,16 @@ module.exports = (app) => {
         });
     });
 
-//Update a Question
+    //Update a Question
     app.put('/api/questions/', (req, res) => {
         db.Question.update({
             question: req.body.question,
-            options: req.body.options 
+            options: req.body.options
         }, {
             where: {
                 id: req.body.id
             }
-        }).then( (dbQuestion) => {
+        }).then((dbQuestion) => {
             res.json(dbQuestion);
         });
     });

@@ -4,7 +4,7 @@
         <h5 class="title">Add Question</h5>
         </div>
         <div class="card-body">
-        <form id="newQuestionForm" action="/question/new/{{SurveyId}}" method="POST">
+        <form id="newQuestionForm" action="/question/new/{{SurveySurveyId}}" method="POST">
         <div class="messages text-danger font-weight-bold">{{error}}</div>
             <div class="row">
                 <div class="col-md-12">
@@ -87,7 +87,7 @@
                 </div>
             </div> --}}
         <div class="card-footer">
-            <a href="/mysurveys/{{SurveyId}}"><button type="button" class="btn btn-fill btn-sm btn-primary">Go to survey</button></a>
+            <a href="/mysurveys/{{SurveySurveyId}}"><button type="button" class="btn btn-fill btn-sm btn-primary">Go to survey</button></a>
             <button type="submit" class="btn btn-fill btn-sm btn-success float-right">Submit</button>
             {{!-- <button type="submit" class="btn btn-fill btn-sm btn-primary float-right">Save & Add New</button>            --}}
         </div>
