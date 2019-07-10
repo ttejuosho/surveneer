@@ -10,19 +10,19 @@
         <div class="col-md-4 pr-md-1">
             <div class="form-group">
             <label>Name</label>
-            <input type="text" class="form-control" name="respondentName" id="respondentName" placeholder="Name" value="">
+            <input type="text" class="form-control" name="respondentName" id="respondentName" placeholder="Name">
             </div>
         </div>
         <div class="col-md-4 px-md-1">
             <div class="form-group">
             <label>Email Address</label>
-            <input type="email" class="form-control" name="respondentEmail" id="respondentEmail" placeholder="Email" value="">
+            <input type="email" class="form-control" name="respondentEmail" id="respondentEmail" placeholder="Email">
             </div>
         </div>
         <div class="col-md-4 pl-md-1">
             <div class="form-group">
             <label>Phone Number</label>
-            <input type="number" class="form-control" name="respondentPhone" id="respondentPhone" placeholder="Phone Number" value="">
+            <input type="number" class="form-control" name="respondentPhone" id="respondentPhone" placeholder="Phone Number">
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>{{question}}</label>
+                    <input type="text" name="question" id="question" value={{question}} />
                 </div>
 
             {{#ifEquals options "YesNo"}}
@@ -52,13 +52,13 @@
             {{#ifEquals options "TrueFalse"}}
                 <div class="form-check form-check-radio form-check-inline">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="TrueFalse{{@index}}" id="True" value="True"> True
+                        <input class="form-check-input" type="radio" name="answer" id="True" value="True"> True
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio form-check-inline">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="TrueFalse{{@index}}" id="False" value="False"> False
+                        <input class="form-check-input" type="radio" name="answer" id="False" value="False"> False
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
@@ -98,7 +98,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="4" cols="80" class="form-control" name="ShortAnswer{{@index}}" placeholder="Enter Response Here" value=""></textarea>
+                        <textarea rows="4" cols="80" class="form-control" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
                       </div>
                     </div>
                   </div>
@@ -108,7 +108,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="8" cols="80" class="form-control" name="ShortAnswer{{@index}}" placeholder="Enter Response Here" value=""></textarea>
+                        <textarea rows="8" cols="80" class="form-control" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
                       </div>
                     </div>
                   </div>

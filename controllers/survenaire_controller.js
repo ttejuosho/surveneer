@@ -42,6 +42,9 @@ router.get('/survey/new', (req, res) => {
 
 //New Survey POST Route
 router.post('/survey/new', (req, res) => {
+    if (!req.body.getId){
+        req.body.getId = false;
+    }
     //Validate Survey Name
     if (req.body.surveyName == "") {
         var err = {
@@ -56,6 +59,7 @@ router.post('/survey/new', (req, res) => {
             }
         }).then((dbSurvey) => {
             if (dbSurvey == null) {
+                console.log(req.body);
                 db.Survey.create({
                     surveyName: req.body.surveyName,
                     getId: req.body.getId,
@@ -117,11 +121,18 @@ router.put('/questions/:id/update', (req, res) => {
 router.get('/questions/:id/delete', (req, res) => {
     db.Question.findByPk(req.params.id)
         .then((dbQuestion) => {
+            console.log(dbQuestion);
+            if (dbQuestion == null){
+                var err = {
+                    error: "Question doesnt exist in db"
+                }
+                
+            }
             var SurveyId = dbQuestion.SurveyId;
-            //console.log(SurveyId);
+            
             db.Question.destroy({
                 where: {
-                    id: dbQuestion.dataValues.id
+                    id: dbQuestion.id
                 }
             }).then(() => { res.redirect('/mysurveys/' + SurveyId) })
         }).catch((err) => {
@@ -225,12 +236,25 @@ router.get('/surveys/:id/view', (req, res) => {
 });
 
 router.post('/responses', (req, res) => {
-    db.Response.create({
+    var respondent = {
+        respondentName: req.body.respondentName,
+        respondentEmail: req.body.respondentEmail,
+        respondentPhone: req.body.respondentPhone
+    }
+    console.log("Respondents", req.body);
+    if (respondent.respondentName != undefined){
+    db.Respondent.create(respondent);
+}
+     var response = {
         question: req.body.question,
         options: req.body.options,
         SurveyId: req.params.SurveyId
-    }).then((dbResponse) => {
-        return res.render('question/new', dbResponse.dataValues);
+     }
+     //console.log("Response", response);
+    //return res.render('question/new', dbRespondent.dataValues);
+    db.Response.create(response).then((dbResponse) => {
+        console.log(dbResponse.dataValues);
+        return res.render('/surveys');
     }).catch((err) => {
         res.render('error', err);
     });

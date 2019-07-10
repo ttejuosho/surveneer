@@ -1,8 +1,6 @@
-$(document).ready(function() {
+$(function() {
     console.log("App Loaded");
-
     type = ['primary', 'info', 'success', 'warning', 'danger'];
-
     survenaire = {
         showNotification: function(from, align) {
             color = Math.floor((Math.random() * 4) + 1);
@@ -20,7 +18,10 @@ $(document).ready(function() {
                 }
             });
         }
-
     };
+
+   $("input[name='getId']").on('change', function(){
+    $(this).val(this.checked ? true : false);
+  });
 
 });
