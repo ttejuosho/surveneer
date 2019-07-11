@@ -4,7 +4,7 @@
         <h5 class="title">Update Question</h5>
         </div>
         <div class="card-body">
-        <form id="newQuestionForm" action="/questions/{{id}}/update?_method=PUT" method="POST">
+        <form id="newQuestionForm" action="/questions/{{questionId}}/update?_method=PUT" method="POST">
         <div class="messages text-danger font-weight-bold">{{error}}</div>
             <div class="row">
                 <div class="col-md-12">
@@ -82,12 +82,12 @@
             <div class="row d-none">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <input class="form-check-input" type="text" name="SurveyId" id="SurveyId" value={{SurveyId}} >
+                    <input class="form-check-input" type="text" name="SurveyId" id="SurveyId" value={{SurveySurveyId}} >
                     </div>
                 </div>
             </div>
         <div class="card-footer">
-            <a href="/mysurveys/{{SurveyId}}"><button type="button" class="btn btn-fill btn-sm btn-primary">Back</button></a>
+            <a href="/mysurveys/{{SurveySurveyId}}"><button type="button" class="btn btn-fill btn-sm btn-primary">Back</button></a>
             <button type="submit" class="btn btn-fill btn-sm btn-success float-right">Update</button>
         </div>
         </form>

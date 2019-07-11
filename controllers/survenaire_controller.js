@@ -72,7 +72,7 @@ router.post('/survey/new', (req, res) => {
                     } = dbSurvey.dataValues;
 
                     hbsObject.SurveySurveyId = dbSurvey.dataValues.surveyId;
-                    console.log(hbsObject);
+                    //console.log(hbsObject);
                     return res.render('question/new', hbsObject);
                 }).catch((err) => {
                     res.render('error', err);
@@ -88,7 +88,7 @@ router.post('/survey/new', (req, res) => {
 });
 
 router.get('/question/new/:surveyId', (req, res) => {
-    var hbsObject = { SurveyId: req.params.surveyId }
+    var hbsObject = { surveyId: req.params.surveyId }
     return res.render("question/new", hbsObject);
 });
 
@@ -112,7 +112,8 @@ router.put('/questions/:questionId/update', (req, res) => {
             questionId: req.params.questionId
         }
     }).then((dbQuestion) => {
-        res.redirect('/mysurveys/' + req.body.SurveyId);
+        console.log(dbQuestion, "LINE 115 =============================");
+        res.redirect('/mysurveys/' + dbQuestion);
     }).catch((err) => {
         res.render('error', err);
     });
@@ -156,34 +157,29 @@ router.get('/surveys/:id/delete', (req, res) => {
         });
 });
 
-router.post('/question/new/:SurveySurveyId', (req, res) => {
+router.post('/question/new/:surveyId', (req, res) => {
     //TODO:    Validate Received SurveyId HERE
 
     //Validate Survey Name
     if (req.body.question == "") {
         var err = {
             questionError: "Please enter a question.",
-            SurveySurveyId: req.params.SurveySurveyId
+            surveyId: req.params.surveyId
         }
         res.render("question/new", err);
     } else if (req.body.options == "") {
         var err = {
             optionsError: "Please choose an option.",
-            SurveySurveyId: req.params.SurveySurveyId
-        }
-        res.render("question/new", err);
-    } else if (req.body.SurveyId == "") {
-        var err = {
-            error: "Survey Id is missing, Please create a new survey to add questions",
-            SurveySurveyId: req.params.SurveySurveyId
+            surveyId: req.params.surveyId
         }
         res.render("question/new", err);
     } else {
         db.Question.create({
             question: req.body.question,
             options: req.body.options,
-            SurveySurveyId: req.params.SurveySurveyId
+            SurveySurveyId: req.params.surveyId
         }).then((dbQuestion) => {
+            //console.log(dbQuestion, "LINE 181");
             return res.render('question/new', dbQuestion.dataValues);
         }).catch((err) => {
             //console.log(err);
