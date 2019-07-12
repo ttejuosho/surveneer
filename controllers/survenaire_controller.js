@@ -114,7 +114,7 @@ router.put('/questions/:questionId/update', (req, res) => {
             questionId: req.params.questionId
         }
     }).then((dbQuestion) => {
-        console.log(dbQuestion, "LINE 115 =============================");
+        //console.log(dbQuestion, "LINE 115 =============================");
         res.redirect('/mysurveys/' + dbQuestion);
     }).catch((err) => {
         res.render('error', err);
@@ -232,23 +232,14 @@ router.get('/surveys/:surveyId/view', (req, res) => {
     });
 });
 
-router.post('/responses', (req, res) => {
-    var respondent = {
-        respondentName: req.body.respondentName,
-        respondentEmail: req.body.respondentEmail,
-        respondentPhone: req.body.respondentPhone
-    }
-    console.log("Respondents", respondent);
+router.post('/api/responses', (req, res) => {
+
+    console.log("Respondents", req);
     // if (respondent.respondentName != undefined) {
     //     db.Respondent.create(respondent);
     // }
-    var response = {
-            question: req.body.question,
-            options: req.body.options,
-            SurveyId: req.params.SurveyId
-        }
-    console.log("Response", response);
-        //return res.render('question/new', dbRespondent.dataValues);
+
+    //return res.render('question/new', dbRespondent.dataValues);
     // db.Response.create(response).then((dbResponse) => {
     //     console.log(dbResponse.dataValues);
     //     return res.render('/surveys');

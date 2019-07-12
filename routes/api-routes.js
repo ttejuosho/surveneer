@@ -120,11 +120,28 @@ module.exports = (app) => {
         });
     });
 
+    app.post('/api/responses', (req, res) => {
+        console.log(req.body);
+        // for (var i = 0; i < req.body.length; i++){
+        //     db.Response.create(req.body[i]);
+        // }
+
+    });
 }
 
-// create database survenaire;
-// ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'
 // begin;
 // alter table questions drop column createdAt;
 // alter table questions drop column updatedAt;
 // commit;
+
+// drop database survenaire;
+// create database survenaire;
+// ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+
+// USE survenaire;
+// INSERT INTO questions (question, options)
+// VALUES ('Are you here?', 'YesNo');
+
+// USE Survenaire;
+// UPDATE surveys SET surveyName = 'The Challenge', getId = 'False'
+// Where id = 1;

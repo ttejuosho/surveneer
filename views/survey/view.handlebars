@@ -4,7 +4,7 @@
     <div class="card-header"><h2><p>Thank you for taking the {{surveyName}} survey.</p></h2></div>
     
     <div class="card-body">
-    <form id="surveyForm" action="/responses" method="POST">
+    <form id="surveyForm" action="/api/responses" method="POST">
     {{#ifEquals getId "True"}}
     <div class="row">
         <div class="col-md-4 pr-md-1">
@@ -39,13 +39,13 @@
             {{#ifEquals options "YesNo"}}
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="YesNo{{@index}}" id="Yes" value="Yes"> Yes
+                        <input class="form-check-input answer" type="radio" name="YesNo{{@index}}" id="{{question}}" value="Yes"> Yes
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="YesNo{{@index}}" id="No" value="No"> No
+                        <input class="form-check-input answer" type="radio" name="YesNo{{@index}}" id="{{question}}" value="No"> No
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
@@ -53,13 +53,13 @@
             {{#ifEquals options "TrueFalse"}}
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="answer" id="True" value="True"> True
+                        <input class="form-check-input answer" type="radio" name="answer" id="{{question}}" value="True"> True
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="answer" id="False" value="False"> False
+                        <input class="form-check-input answer" type="radio" name="answer" id="{{question}}" value="False"> False
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
@@ -67,28 +67,28 @@
             {{#ifEquals options "MultipleChoice"}}
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionA" >
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionA" >
                         Option A
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionB" checked>
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionB" checked>
                         Option B
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionC" >
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionC" >
                         Option C
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionD">
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionD">
                         Option D
                         <span class="form-check-sign"></span>
                     </label>
@@ -99,7 +99,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="4" cols="80" class="form-control answer" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
+                        <textarea rows="4" cols="80" class="form-control answer" id="{{question}}" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
                       </div>
                     </div>
                   </div>
@@ -109,7 +109,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="8" cols="80" class="form-control answer" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
+                        <textarea rows="8" cols="80" class="form-control answer" id="{{question}}" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
                       </div>
                     </div>
                   </div>
@@ -128,7 +128,7 @@
 
     <div class="card-footer mt-3">
         <a href="/mysurveys/{{surveyId}}"><button type="button" class="btn btn-fill btn-primary">Back</button></a>
-        <button type="submit" class="btn btn-fill btn-primary float-right">Submit</button>
+        <button type="button" onclick="onSubmit()" class="btn btn-fill btn-primary float-right">Submit</button>
     </div>
     </form>
     </div>
@@ -136,8 +136,28 @@
 </div>
 
 <script>
-//$('.question').each(function(i){ arr[i] = { question: this.innerText } });
-//$('.answer').each(function(i){ if (this.checked) { arr[i].answer = $(this).val() } }});
-//$('.answer').each(function(i){ if (this.checked) { if ( arr[i] !== undefined ) { arr[i].answer = $(this).val() }}});
-//for (var i = 0; i < arr.length; i++) { if (arr[i] == undefined) { arr.splice(i, 1) } } 
+   
+var onSubmit = () => {
+    var obj = {};
+    obj['qanda'] = [];
+       $('.answer').each(function(i){ 
+       if (this.checked) { 
+            obj.qanda.push({ question: this.id, answer: this.value });
+        }
+    });
+    console.log(obj.qanda); //Log Form Values
+    $('#surveyForm')[0].reset(); //Reset Survey Form
+
+        //POST FETCH
+    fetch('/api/responses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: obj
+    }).then(
+        data => console.log(data)
+    ).catch(error => console.error(error));
+
+
+}
+
 </script>
