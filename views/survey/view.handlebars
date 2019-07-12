@@ -30,35 +30,36 @@
 
     {{#each Questions}}
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <input type="text" name="question" id="question" value={{question}} />
+            <div class="col-md-12 mb-3 qanda">
+                <div class="form-group mb-1">
+                    <h4>Question {{counter @index}}</h4>
+                    <p class="question" id="{{questionId}}">{{question}}</p>
                 </div>
 
             {{#ifEquals options "YesNo"}}
-                <div class="form-check form-check-radio form-check-inline">
+                <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="YesNo{{@index}}" id="Yes" value="Yes"> Yes
+                        <input class="form-check-input answer" type="radio" name="YesNo{{@index}}" id="Yes" value="Yes"> Yes
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
-                <div class="form-check form-check-radio form-check-inline">
+                <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="YesNo{{@index}}" id="No" value="No"> No
+                        <input class="form-check-input answer" type="radio" name="YesNo{{@index}}" id="No" value="No"> No
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
             {{/ifEquals}}
             {{#ifEquals options "TrueFalse"}}
-                <div class="form-check form-check-radio form-check-inline">
+                <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="answer" id="True" value="True"> True
+                        <input class="form-check-input answer" type="radio" name="answer" id="True" value="True"> True
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
-                <div class="form-check form-check-radio form-check-inline">
+                <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="answer" id="False" value="False"> False
+                        <input class="form-check-input answer" type="radio" name="answer" id="False" value="False"> False
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
@@ -66,28 +67,28 @@
             {{#ifEquals options "MultipleChoice"}}
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="MultipleChoice{{@index}}" value="optionA" >
+                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionA" >
                         Option A
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="MultipleChoice{{@index}}" value="optionB" checked>
+                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionB" checked>
                         Option B
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="MultipleChoice{{@index}}" value="optionC" >
+                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionC" >
                         Option C
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="MultipleChoice{{@index}}" value="optionD">
+                        <input class="form-check-input answer" type="radio" name="MultipleChoice{{@index}}" value="optionD">
                         Option D
                         <span class="form-check-sign"></span>
                     </label>
@@ -98,7 +99,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="4" cols="80" class="form-control" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
+                        <textarea rows="4" cols="80" class="form-control answer" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
                       </div>
                     </div>
                   </div>
@@ -108,7 +109,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="8" cols="80" class="form-control" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
+                        <textarea rows="8" cols="80" class="form-control answer" name="ShortAnswer{{@index}}" placeholder="Enter Response Here"></textarea>
                       </div>
                     </div>
                   </div>
@@ -125,10 +126,18 @@
         </div>
     {{/each}}
 
-    <div class="card-footer">
+    <div class="card-footer mt-3">
+        <a href="/mysurveys/{{surveyId}}"><button type="button" class="btn btn-fill btn-primary">Back</button></a>
         <button type="submit" class="btn btn-fill btn-primary float-right">Submit</button>
     </div>
     </form>
     </div>
     </div>
 </div>
+
+<script>
+//$('.question').each(function(i){ arr[i] = { question: this.innerText } });
+//$('.answer').each(function(i){ if (this.checked) { arr[i].answer = $(this).val() } }});
+//$('.answer').each(function(i){ if (this.checked) { if ( arr[i] !== undefined ) { arr[i].answer = $(this).val() }}});
+//for (var i = 0; i < arr.length; i++) { if (arr[i] == undefined) { arr.splice(i, 1) } } 
+</script>

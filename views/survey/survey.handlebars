@@ -1,16 +1,16 @@
 <div class="col-md-8">
-    {{!-- <div class="modal fade" id="confirmDeleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteQuestionModal" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteQuestionModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header"><h4 class="text-primary"><i class="mr-2 tim-icons icon-alert-circle-exc"></i>Confirm Delete</h4></div>
             <div class="modal-body pt-0 pr-0"><p><span class="text-danger font-weight-bold">Delete</span> ?? Okay...I hope you know what you're doing.</p></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
-                <a href="/questions/{{questionId}}/delete"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
+                <a id="modalDeleteBtn"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
             </div>
           </div>
         </div>
-    </div> --}}
+    </div>
 
     <div class="row justify-content-between ml-0 mr-0"> 
         <h2 class="mb-0">Survey ID: {{surveyId}}</h2> 
@@ -69,14 +69,14 @@
 {{#each Questions}}
     <div class="card">
         <div class="card-header pt-1">
-            <span class="float-right"><a href="/questions/{{questionId}}/update"><i class="ml-3 tim-icons icon-pencil"></i></a><i data-toggle="modal" data-target="#confirmDeleteQuestionModal" class="ml-2 tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i></span>
+            <span class="float-right"><a href="/questions/{{questionId}}/update"><i class="ml-3 tim-icons icon-pencil"></i></a><i onclick="openModal({{questionId}})" class="ml-2 tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i></span>
         </div>
         <div class="card-body pt-0">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                     <label>Question</label>
-                    <input id="question" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
+                    <input id="question{{questionId}}" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                     <label>Options</label>
-                    <input id="options" name="options" type="text" class="form-control form-control-sm" value="{{options}}" readonly>
+                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{options}}" readonly>
                     </div>
                 </div>
             </div>
@@ -101,3 +101,13 @@
 {{/each}}
 
 </div>
+
+<script>
+    var openModal  = (questionId) => {
+         $('#confirmDeleteQuestionModal').modal({
+             backdrop: false
+         });
+    $('#confirmDeleteQuestionModal').modal('show');
+    $('#modalDeleteBtn').attr('href', '/questions/' + questionId + '/delete')
+  }
+</script>

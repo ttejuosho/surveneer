@@ -87,11 +87,13 @@ router.post('/survey/new', (req, res) => {
     }
 });
 
+//Add Question to Survey Get Route
 router.get('/question/new/:surveyId', (req, res) => {
-    var hbsObject = { surveyId: req.params.surveyId }
+    var hbsObject = { surveyId: req.params.surveyId, SurveySurveyId: req.params.surveyId }
     return res.render("question/new", hbsObject);
 });
 
+//Get Route to Update Question
 router.get('/questions/:questionId/update', (req, res) => {
     db.Question
         .findByPk(req.params.questionId)
@@ -123,15 +125,13 @@ router.put('/questions/:questionId/update', (req, res) => {
 router.get('/questions/:questionId/delete', (req, res) => {
     db.Question.findByPk(req.params.questionId)
         .then((dbQuestion) => {
-            console.log(dbQuestion);
+            //console.log(dbQuestion);
             if (dbQuestion == null) {
                 var err = {
                     error: "Question doesnt exist in db"
                 }
-
             }
             var SurveyId = dbQuestion.SurveySurveyId;
-
             db.Question.destroy({
                 where: {
                     questionId: dbQuestion.questionId
@@ -218,7 +218,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
 });
 
 //View Route For a Survey
-router.get('/surveys/:id/view', (req, res) => {
+router.get('/surveys/:surveyId/view', (req, res) => {
     db.Survey.findOne({
         where: {
             surveyId: req.params.surveyId
@@ -238,23 +238,23 @@ router.post('/responses', (req, res) => {
         respondentEmail: req.body.respondentEmail,
         respondentPhone: req.body.respondentPhone
     }
-    console.log("Respondents", req.body);
-    if (respondent.respondentName != undefined) {
-        db.Respondent.create(respondent);
-    }
+    console.log("Respondents", respondent);
+    // if (respondent.respondentName != undefined) {
+    //     db.Respondent.create(respondent);
+    // }
     var response = {
             question: req.body.question,
             options: req.body.options,
             SurveyId: req.params.SurveyId
         }
-        //console.log("Response", response);
+    console.log("Response", response);
         //return res.render('question/new', dbRespondent.dataValues);
-    db.Response.create(response).then((dbResponse) => {
-        console.log(dbResponse.dataValues);
-        return res.render('/surveys');
-    }).catch((err) => {
-        res.render('error', err);
-    });
+    // db.Response.create(response).then((dbResponse) => {
+    //     console.log(dbResponse.dataValues);
+    //     return res.render('/surveys');
+    // }).catch((err) => {
+    //     res.render('error', err);
+    // });
 });
 
 module.exports = router;
