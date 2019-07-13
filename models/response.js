@@ -5,10 +5,6 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        question: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         answer: {
             type: DataTypes.STRING,
             allowNull: false

@@ -120,12 +120,25 @@ module.exports = (app) => {
         });
     });
 
-    app.post('/api/responses', (req, res) => {
-        console.log(req.body);
-        // for (var i = 0; i < req.body.length; i++){
-        //     db.Response.create(req.body[i]);
-        // }
+    //Get Responses by Survey ID
+    app.get('/api/responses/:surveyId', (req, res) => {
+        db.Response.count({
+            where: {
+                SurveySurveyId: req.params.surveyId,
+                answer: 'No'
+            }
+        }).then(function(dbResponse) {
+            res.json(dbResponse);
+        });
 
+        // db.Response.count({
+        //     distinct: 'No',
+        //     where: {
+        //         SurveySurveyId: req.params.surveyId
+        //     }
+        // }).then((count)=>{
+        //     res.json(count);
+        // });
     });
 }
 

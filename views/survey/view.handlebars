@@ -40,8 +40,8 @@
             <div class="col-md-12 mb-3 qanda">
                 <div class="form-group mb-1">
                     <h4>Question {{counter @index}}</h4>
-                    <input type="text" name="question{{@index}}" class="question d-none" value="{{question}}" />
-                    <p class="question" id="{{questionId}}">{{question}}</p>
+                    <input type="text" name="questionId{{@index}}" id="questionId" class="questionId d-none" value="{{questionId}}" />
+                    <p class="question">{{question}}</p>
                 </div>
 
             {{#ifEquals options "YesNo"}}

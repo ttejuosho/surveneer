@@ -8,10 +8,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/index', (req, res) => {
-    // var msg = {
-    //     success: "Good Job Notification"
-    // }
     return res.render("index");
+});
+
+router.get('/analytics', (req, res) => {
+    return res.render("survey/analytics");
 });
 
 router.get('/surveys', (req, res) => {
@@ -23,18 +24,6 @@ router.get('/surveys', (req, res) => {
             return res.render("surveys", surveys);
         });
 });
-
-// router.get('/survey/:id', (req, res) => {
-//     db.Survey.findOne({
-//         where: {
-//             id: req.params.id
-//         }
-//         }).then((dbSurvey) => {
-//         res.render('survey/survey', dbSurvey.dataValues);
-//     }).catch((err) => {
-//         res.render('error', err);
-//     });
-// });
 
 router.get('/survey/new', (req, res) => {
     return res.render("survey/new");
@@ -232,18 +221,18 @@ router.get('/surveys/:surveyId/view', (req, res) => {
     });
 });
 
+//Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-var respondent = {
-    respondentName: req.body.respondentName,
-    respondentEmail: req.body.respondentEmail,
-    respondentPhone: req.body.respondentPhone
-}
-console.log(respondent);
+// var respondent = {
+//     respondentName: req.body.respondentName,
+//     respondentEmail: req.body.respondentEmail,
+//     respondentPhone: req.body.respondentPhone
+// }
 
 var qandaArray = [];
 for (var i = 0; i < req.body.questionLength; i++){
     var qanda = {
-        question: req.body["question" + i],
+        QuestionQuestionId: req.body["questionId" + i],
         answer: req.body["answer" + i],
         SurveySurveyId: req.body.surveyId
     }
@@ -255,14 +244,28 @@ for (var i = 0; i < qandaArray.length; i++){
     db.Response.create(qandaArray[i])
 }
 
-    db.Respondent.create({
-        respondentName: req.body.respondentName,
-        respondentEmail: req.body.respondentEmail,
-        respondentPhone: req.body.respondentPhone
-    }).then((dbRespondent) => {
-        console.log(dbRespondent.dataValues);
-        return res.redirect('/mysurveys/' + req.body.surveyId);
-    }).catch((err) => {
+return res.redirect('/mysurveys/' + req.body.surveyId);
+    // db.Respondent.create({
+    //     respondentName: req.body.respondentName,
+    //     respondentEmail: req.body.respondentEmail,
+    //     respondentPhone: req.body.respondentPhone
+    // }).then((dbRespondent) => {
+    //     console.log(dbRespondent.dataValues);
+    //     return res.redirect('/mysurveys/' + req.body.surveyId);
+    // }).catch((err) => {
+    //     res.render('error', err);
+    // });
+});
+
+router.get('/reponses/:SurveySurveyId/view', (req, res)=>{
+    db.Response.findOne({
+        where: {
+            SurveySurveyId: req.params.SurveySurveyId
+        }
+    }).then(function(responses) {
+        console.log(responses);
+        res.render('response/view', responses.dataValues);
+    }).catch(function(err) {
         res.render('error', err);
     });
 });
