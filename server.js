@@ -24,6 +24,9 @@ var hbs = exphbs.create({
             },
         counter: function(value, options){
             return parseInt(value) + 1;
+        },
+        getLength: function(obj){
+            return obj.length
         }
     },
     defaultLayout: "main"

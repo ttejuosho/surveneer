@@ -232,20 +232,39 @@ router.get('/surveys/:surveyId/view', (req, res) => {
     });
 });
 
-router.post('/api/responses', (req, res) => {
+router.post('/responses', (req, res) => {
+var respondent = {
+    respondentName: req.body.respondentName,
+    respondentEmail: req.body.respondentEmail,
+    respondentPhone: req.body.respondentPhone
+}
+console.log(respondent);
 
-    console.log("Respondents", req);
-    // if (respondent.respondentName != undefined) {
-    //     db.Respondent.create(respondent);
-    // }
+var qandaArray = [];
+for (var i = 0; i < req.body.questionLength; i++){
+    var qanda = {
+        question: req.body["question" + i],
+        answer: req.body["answer" + i],
+        SurveySurveyId: req.body.surveyId
+    }
+    qandaArray.push(qanda);
+}
 
-    //return res.render('question/new', dbRespondent.dataValues);
-    // db.Response.create(response).then((dbResponse) => {
-    //     console.log(dbResponse.dataValues);
-    //     return res.render('/surveys');
-    // }).catch((err) => {
-    //     res.render('error', err);
-    // });
+console.log(qandaArray);
+for (var i = 0; i < qandaArray.length; i++){
+    db.Response.create(qandaArray[i])
+}
+
+    db.Respondent.create({
+        respondentName: req.body.respondentName,
+        respondentEmail: req.body.respondentEmail,
+        respondentPhone: req.body.respondentPhone
+    }).then((dbRespondent) => {
+        console.log(dbRespondent.dataValues);
+        return res.redirect('/mysurveys/' + req.body.surveyId);
+    }).catch((err) => {
+        res.render('error', err);
+    });
 });
 
 module.exports = router;
