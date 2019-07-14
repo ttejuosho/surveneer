@@ -105,6 +105,18 @@ module.exports = (app) => {
             res.json(dbQuestion);
         });
     });
+    
+//Create a new respondent
+    app.post('/api/respondent/:SurveyId', (req, res) => {
+        db.Respondent.create({
+            respondentName: req.body.respondentName,
+            respondentEmail: req.body.respondentEmail,
+            respondentPhone: req.body.respondentPhone,
+            SurveySurveyId: req.params.SurveyId
+        }).then((dbRespondent) => {
+            res.json(dbRespondent);
+        });
+    })
 
     //Update a Question
     app.put('/api/questions/', (req, res) => {

@@ -103,7 +103,7 @@ router.put('/questions/:questionId/update', (req, res) => {
             questionId: req.params.questionId
         }
     }).then((dbQuestion) => {
-        //console.log(dbQuestion, "LINE 115 =============================");
+        //dbQuestion is returned which is ID of updated survey  
         res.redirect('/mysurveys/' + dbQuestion);
     }).catch((err) => {
         res.render('error', err);
@@ -206,7 +206,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
     });
 });
 
-//View Route For a Survey
+//View Route For a Survey (Internal)
 router.get('/surveys/:surveyId/view', (req, res) => {
     db.Survey.findOne({
         where: {
@@ -221,13 +221,24 @@ router.get('/surveys/:surveyId/view', (req, res) => {
     });
 });
 
+//View Route For a Survey (Public) Without Layout
+router.get('/surveys/:surveyId/view2', (req, res) => {
+    db.Survey.findOne({
+        where: {
+            surveyId: req.params.surveyId
+        },
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
+    }).then(function(survey) {
+        //console.log(survey.dataValues);
+        survey.dataValues['layout'] = false;
+        res.render('survey/view2', survey.dataValues);
+    }).catch(function(err) {
+        res.render('error', err);
+    });
+});
+
 //Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-// var respondent = {
-//     respondentName: req.body.respondentName,
-//     respondentEmail: req.body.respondentEmail,
-//     respondentPhone: req.body.respondentPhone
-// }
 
 var qandaArray = [];
 for (var i = 0; i < req.body.questionLength; i++){
@@ -239,22 +250,22 @@ for (var i = 0; i < req.body.questionLength; i++){
     qandaArray.push(qanda);
 }
 
-console.log(qandaArray);
 for (var i = 0; i < qandaArray.length; i++){
     db.Response.create(qandaArray[i])
 }
 
-return res.redirect('/mysurveys/' + req.body.surveyId);
-    // db.Respondent.create({
-    //     respondentName: req.body.respondentName,
-    //     respondentEmail: req.body.respondentEmail,
-    //     respondentPhone: req.body.respondentPhone
-    // }).then((dbRespondent) => {
-    //     console.log(dbRespondent.dataValues);
-    //     return res.redirect('/mysurveys/' + req.body.surveyId);
-    // }).catch((err) => {
-    //     res.render('error', err);
-    // });
+    db.Respondent.create({
+        respondentName: req.body.respondentName,
+        respondentEmail: req.body.respondentEmail,
+        respondentPhone: req.body.respondentPhone,
+        SurveySurveyId: req.body.surveyId
+    }).then((dbRespondent) => {
+        //console.log(dbRespondent.dataValues);
+        return res.redirect('/mysurveys/' + req.body.surveyId);
+    }).catch((err) => {
+        res.render('error', err);
+    });
+
 });
 
 router.get('/reponses/:SurveySurveyId/view', (req, res)=>{

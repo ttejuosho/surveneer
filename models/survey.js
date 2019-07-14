@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
         Survey.hasMany(models.Response, {
             onDelete: 'cascade'
         });
+        Survey.hasMany(models.Respondent, {
+            onDelete: 'cascade'
+        });
     };
 
     return Survey;
