@@ -102,6 +102,186 @@
                     </label>
                 </div>
             {{/ifEquals}}
+            {{#ifEquals options "LikertAgreement"}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertAgreement{{@index}}" id="{{question}}"  value="StronglyDisagree"> Strongly Disagree
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertAgreement{{@index}}" id="{{question}}"  value="Disagree"> Disagree
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertAgreement{{@index}}" id="{{question}}"  value="Undecided"> Undecided
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertAgreement{{@index}}" id="{{question}}"  value="Agree"> Agree
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertAgreement{{@index}}" id="{{question}}"  value="StronglyAgree"> Strongly Agree
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                    </div>
+                </div>
+            {{/ifEquals}}
+            {{#ifEquals options "LikertQuality"}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertQuality{{@index}}" id="{{question}}"  value="VeryGood"> Very Good
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertQuality{{@index}}" id="{{question}}"  value="Good"> Good
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertQuality{{@index}}" id="{{question}}"  value="Acceptable"> Acceptable
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertQuality{{@index}}" id="{{question}}"  value="Poor"> Poor
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertQuality{{@index}}" id="{{question}}"  value="VeryPoor"> Very Poor
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                    </div>
+                </div>
+            {{/ifEquals}}
+            {{#ifEquals options "LikertValue"}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertValue{{@index}}" id="{{question}}"  value="High"> High
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertValue{{@index}}" id="{{question}}"  value="Moderate"> Moderate
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertValue{{@index}}" id="{{question}}"  value="Low"> Low
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertValue{{@index}}" id="{{question}}"  value="None"> None
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                    </div>
+                </div>
+            {{/ifEquals}}
+            {{#ifEquals options "LikertFrequency"}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertFrequency{{@index}}" id="{{question}}"  value="StronglyDisagree"> Very Frequently
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertFrequency{{@index}}" id="{{question}}"  value="Frequently"> Frequently
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertFrequency{{@index}}" id="{{question}}"  value="Occasionally"> Occasionally
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertFrequency{{@index}}" id="{{question}}"  value="Rarely"> Rarely
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertFrequency{{@index}}" id="{{question}}"  value="VeryRarely"> Very Rarely
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertFrequency{{@index}}" id="{{question}}"  value="Never"> Never
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                    </div>
+                </div>
+            {{/ifEquals}}
+            {{#ifEquals options "LikertImportance"}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertImportance{{@index}}" id="{{question}}"  value="VeryImportant"> Very Important
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertImportance{{@index}}" id="{{question}}"  value="Important"> Important
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertImportance{{@index}}" id="{{question}}"  value="ModeratelyImportant"> Moderately Important
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertImportance{{@index}}" id="{{question}}"  value="SlightlyImportant"> Slightly Important
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="LikertImportance{{@index}}" id="{{question}}"  value="NotImportant"> Not Important
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                    </div>
+                </div>
+            {{/ifEquals}}
             {{#ifEquals options "ShortAnswer"}}
                   <div class="row">
                     <div class="col-md-12">
@@ -135,7 +315,7 @@
     {{/each}}
 
     <div class="card-footer mt-3">
-        <a href="/mysurveys/{{surveyId}}"><button type="button" class="btn btn-sm btn-fill btn-primary">Back</button></a>
+        <a href="/mysurveys/{{surveyId}}"><button type="button" class="btn btn-sm btn-fill btn-primary">Go to Survey</button></a>
         <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Submit</button>
     </div>
     </form>

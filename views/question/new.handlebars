@@ -1,7 +1,7 @@
     <div class="col-md-8">
     <div class="card">
         <div class="card-header">
-        <h5 class="title">Add Question</h5>
+        <h5 class="title">Add an item to your survey</h5>
         </div>
         <div class="card-body">
         <form id="newQuestionForm" action="/question/new/{{SurveySurveyId}}" method="POST">
@@ -36,14 +36,6 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="MultipleChoice" >
-                                Multiple Choice
-                                <span class="form-check-sign"></span>
-                            </label>
-                        </div>
-
-                        <div class="form-check form-check-radio">
-                            <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="options" id="options" value="ShortAnswer" >
                                 Short Answer
                                 <span class="form-check-sign"></span>
@@ -58,23 +50,74 @@
                             </label>
                         </div>
                         
-                        <div class="form-check form-check-radio">
+                        <div id="LikertOptionDiv" class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" >
+                                <input class="form-check-input" type="radio" name="options" id="LikertOption" value="Likert">
                                 Likert-type
                                 <span class="form-check-sign"></span>
-                                
                             </label>
-                            <small class="form-text text-muted ml-3" style="display: unset;">( 1 to 5 scale, strongly agree to strongly disagree. )</small>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(Scales)</small>
+                        </div>
+
+<div id="LikertMoreOptions" class="d-none">
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input LikertAgreement" type="radio" name="options" id="options" value="LikertAgreement">
+                                Likert - Agreement
+                                <span class="form-check-sign"></span>
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Strongly Agree to Strongly Disagree)</small>
+                        </div>
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="LikertQuality">
+                                Likert - Quality
+                                <span class="form-check-sign"></span>
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Very Good to Very Poor)</small>
+                        </div>
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="LikertValue">
+                                Likert - Value
+                                <span class="form-check-sign"></span>
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(Scale: High to None.)</small>
+                        </div>
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="LikertFrequency">
+                                Likert - Frequency
+                                <span class="form-check-sign"></span>
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Very Frequently to Never)</small>
+                        </div>
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="LikertImportance">
+                                Likert - Important
+                                <span class="form-check-sign"></span>
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Very Important to Not Important)</small>
+                        </div>
+</div>
+
+                        <div class="form-check form-check-radio disabled">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="options" id="options" value="MultipleChoice" disabled>
+                                Multiple Choice
+                                <span class="form-check-sign"></span>
+                            </label>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(currently not supported)</small>
                         </div>
 
                         <div class="form-check form-check-radio disabled">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" disabled>
+                                <input class="form-check-input" type="radio" name="options" id="options" value="CustomOption" disabled>
                                 Custom Options
                                 <span class="form-check-sign"></span>
                             </label>
-                            <small class="form-text text-muted ml-3" style="display: unset;">( currently not supported. )</small>
+                            <small class="form-text text-muted ml-3" style="display: unset;">(currently not supported)</small>
                         </div>
                         <div class="messages text-danger font-weight-bold">{{optionsError}}</div>
                 </div>

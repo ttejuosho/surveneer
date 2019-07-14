@@ -24,6 +24,20 @@ $(function() {
     $(this).val(this.checked ? true : false);
   });
 
+$('#LikertOption').on('click', ()=> {
+    $('input.LikertAgreement').prop("checked", true);
+    $('#LikertMoreOptions').toggleClass('d-none');
+    $('#LikertOptionDiv').toggleClass('d-none');
+});
 
+$("input[name='options']").on('change', function(){
+    if (!$('#LikertMoreOptions').hasClass('d-none')){
+        if (!$(this).val().includes('Likert')){
+            $('#LikertMoreOptions').toggleClass('d-none');
+            $('#LikertOptionDiv').toggleClass('d-none');
+            $('input.LikertAgreement').prop("checked", false);
+        }
+    }
+  });
 
 });
