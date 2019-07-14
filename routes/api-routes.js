@@ -55,7 +55,8 @@ module.exports = (app) => {
             where: {
                 surveyId: req.params.surveyId
             },
-            include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
+            include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] },
+                      { model: db.Response, as: "Responses", attributes: ["QuestionQuestionId", "answer"] }]
         }).then(function(survey) {
             //console.log(survey);
             res.json(survey);
@@ -64,6 +65,20 @@ module.exports = (app) => {
         });
     });
 
+        //Get Responses by Survey ID
+        app.get('/api/questions/:questionId', (req, res) => {
+            db.Question.findOne({
+                where: {
+                    questionId: req.params.questionId
+                },
+                include: [
+                            { model: db.Survey, as: "Survey", attributes: ["surveyName"] },
+                            { model: db.Response, as: "Responses", attributes: ["answer"] }
+                          ]
+            }).then(function(dbQuestion) {
+                res.json(dbQuestion);
+            });
+        });
     //======================= QUESTIONS API Routes ================================
 
     //Get all Questions
@@ -116,7 +131,7 @@ module.exports = (app) => {
         }).then((dbRespondent) => {
             res.json(dbRespondent);
         });
-    })
+    });
 
     //Update a Question
     app.put('/api/questions/', (req, res) => {

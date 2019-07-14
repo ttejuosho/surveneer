@@ -250,21 +250,22 @@ for (var i = 0; i < req.body.questionLength; i++){
     qandaArray.push(qanda);
 }
 
+console.log(qandaArray);
 for (var i = 0; i < qandaArray.length; i++){
     db.Response.create(qandaArray[i])
 }
 
-    db.Respondent.create({
-        respondentName: req.body.respondentName,
-        respondentEmail: req.body.respondentEmail,
-        respondentPhone: req.body.respondentPhone,
-        SurveySurveyId: req.body.surveyId
-    }).then((dbRespondent) => {
-        //console.log(dbRespondent.dataValues);
-        return res.redirect('/mysurveys/' + req.body.surveyId);
-    }).catch((err) => {
-        res.render('error', err);
-    });
+db.Respondent.create({
+    respondentName: req.body.respondentName,
+    respondentEmail: req.body.respondentEmail,
+    respondentPhone: req.body.respondentPhone,
+    SurveySurveyId: req.body.surveyId
+}).then((dbRespondent) => {
+    //console.log(dbRespondent.dataValues);
+    return res.redirect('/mysurveys/' + req.body.surveyId);
+}).catch((err) => {
+    res.render('error', err);
+});
 
 });
 
