@@ -268,7 +268,7 @@ for (var i = 0; i < qandaArray.length; i++){
 
 });
 
-router.get('/reponses/:SurveySurveyId/view', (req, res)=>{
+router.get('/responses/:SurveySurveyId/view', (req, res)=>{
     db.Response.findOne({
         where: {
             SurveySurveyId: req.params.SurveySurveyId
