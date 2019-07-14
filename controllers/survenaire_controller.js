@@ -275,7 +275,7 @@ router.get('/responses/:SurveySurveyId/view', (req, res)=>{
             SurveySurveyId: req.params.SurveySurveyId
         }
     }).then(function(responses) {
-        console.log(responses);
+        //console.log(responses);
         res.render('response/view', responses.dataValues);
     }).catch(function(err) {
         res.render('error', err);

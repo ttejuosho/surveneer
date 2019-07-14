@@ -55,8 +55,10 @@ module.exports = (app) => {
             where: {
                 surveyId: req.params.surveyId
             },
-            include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] },
-                      { model: db.Response, as: "Responses", attributes: ["QuestionQuestionId", "answer"] }]
+            include: [
+                        { model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] },
+                        { model: db.Response, as: "Responses", attributes: ["QuestionQuestionId", "answer"] }
+                     ]
         }).then(function(survey) {
             //console.log(survey);
             res.json(survey);
