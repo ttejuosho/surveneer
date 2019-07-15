@@ -153,13 +153,13 @@ router.post('/question/new/:surveyId', (req, res) => {
     if (req.body.question == "") {
         var err = {
             questionError: "Please enter a question.",
-            surveyId: req.params.surveyId
+            SurveySurveyId: req.params.surveyId
         }
         res.render("question/new", err);
     } else if (req.body.options == "") {
         var err = {
             optionsError: "Please choose an option.",
-            surveyId: req.params.surveyId
+            SurveySurveyId: req.params.surveyId
         }
         res.render("question/new", err);
     } else {
