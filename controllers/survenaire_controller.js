@@ -239,7 +239,13 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 
 //Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-
+// console.log(req.body);
+// for (var i in req.body){ 
+//     if (req.body[i].length < 1) { 
+//     var err = { error: "Please enter a response for all items" }
+//     res.render('error', err);
+//     }
+// }
 var qandaArray = [];
 for (var i = 0; i < req.body.questionLength; i++){
     var qanda = {
@@ -250,7 +256,7 @@ for (var i = 0; i < req.body.questionLength; i++){
     qandaArray.push(qanda);
 }
 
-console.log(qandaArray);
+//console.log(qandaArray);
 for (var i = 0; i < qandaArray.length; i++){
     db.Response.create(qandaArray[i])
 }
