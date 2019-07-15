@@ -41,7 +41,7 @@ module.exports = (app) => {
         db.Survey.findAll({
             where: where,
             order: req.query.order || [],
-            include: [{ model: db.Question, as: "Questions", attributes: ["id", "question", "options"] }]
+            include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
         }).then(function(surveys) {
             res.json(surveys);
         }).catch(function(err) {
@@ -49,7 +49,7 @@ module.exports = (app) => {
         });
     });
 
-    //Get 1 User Survey With Questions
+    //Get 1 User Survey With Questions & Responses
     app.get('/api/mysurveys/:surveyId', function(req, res) {
         db.Survey.findOne({
             where: {
