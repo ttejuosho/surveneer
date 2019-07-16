@@ -219,7 +219,7 @@ router.get('/surveys/:surveyId/view', (req, res) => {
         where: {
             surveyId: req.params.surveyId
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "option1", "option2", "option3", "option4"] }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
         res.render('survey/view', survey.dataValues);
@@ -234,7 +234,7 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
         where: {
             surveyId: req.params.surveyId
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "option1", "option2", "option3", "option4"]  }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
         survey.dataValues['layout'] = false;

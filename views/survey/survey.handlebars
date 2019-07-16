@@ -95,7 +95,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <label>Options</label>
+                    <label>Option</label>
                     <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <label>Options</label>
+                    <label>Other Option </label>
                     <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <label>Options</label>
+                    <label>Other Option</label>
                     <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
                     </div>
                 </div>
@@ -124,8 +124,18 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <label>Options</label>
+                    <label>Other Option</label>
                     <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+            {{#if questionInstruction}}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Instruction</label>
+                    <input id="{{questionInstruction}}" name="options" type="text" class="form-control form-control-sm" value="{{questionInstruction}}" readonly>
                     </div>
                 </div>
             </div>

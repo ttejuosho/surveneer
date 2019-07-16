@@ -69,7 +69,7 @@
                     <p class="question">{{question}}</p>
                 </div>
 
-            {{#ifEquals options "YesNo"}}
+            {{#ifEquals option1 "YesNo"}}
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
                         <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="Yes"> Yes
@@ -83,7 +83,7 @@
                     </label>
                 </div>
             {{/ifEquals}}
-            {{#ifEquals options "TrueFalse"}}
+            {{#ifEquals option1 "TrueFalse"}}
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
                         <input class="form-check-input answer" type="radio" name="answer" id="{{question}}" value="True"> True
@@ -97,37 +97,37 @@
                     </label>
                 </div>
             {{/ifEquals}}
-            {{#ifEquals options "MultipleChoice"}}
+            {{#if option2}}
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionA" >
-                        Option A
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option1}}" >
+                        {{option1}}
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionB" checked>
-                        Option B
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option2}}" >
+                        {{option2}}
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionC" >
-                        Option C
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option3}}">
+                        {{option3}}
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="MultipleChoice{{@index}}" value="optionD">
-                        Option D
+                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option4}}" >
+                        {{option4}}
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
-            {{/ifEquals}}
-            {{#ifEquals options "LikertAgreement"}}
+            {{/if}}
+            {{#ifEquals option1 "LikertAgreement"}}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
@@ -163,7 +163,7 @@
                     </div>
                 </div>
             {{/ifEquals}}
-            {{#ifEquals options "LikertQuality"}}
+            {{#ifEquals option1 "LikertQuality"}}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
@@ -199,7 +199,7 @@
                     </div>
                 </div>
             {{/ifEquals}}
-            {{#ifEquals options "LikertValue"}}
+            {{#ifEquals option1 "LikertValue"}}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
@@ -229,7 +229,7 @@
                     </div>
                 </div>
             {{/ifEquals}}
-            {{#ifEquals options "LikertFrequency"}}
+            {{#ifEquals option1 "LikertFrequency"}}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
@@ -271,7 +271,7 @@
                     </div>
                 </div>
             {{/ifEquals}}
-            {{#ifEquals options "LikertImportance"}}
+            {{#ifEquals option1 "LikertImportance"}}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
@@ -307,7 +307,7 @@
                     </div>
                 </div>
             {{/ifEquals}}
-            {{#ifEquals options "ShortAnswer"}}
+            {{#ifEquals option1 "ShortAnswer"}}
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
@@ -317,7 +317,7 @@
                     </div>
                   </div>
             {{/ifEquals}}
-            {{#ifEquals options "LongAnswer"}}
+            {{#ifEquals option1 "LongAnswer"}}
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
