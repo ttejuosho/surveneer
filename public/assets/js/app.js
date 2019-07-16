@@ -24,22 +24,49 @@ $(function() {
     $(this).val(this.checked ? true : false);
   });
 
-$('#LikertOption').on('click', ()=> {
-    $('input.LikertAgreement').prop("checked", true);
-    $('#LikertMoreOptions').toggleClass('d-none');
-    $('#LikertOptionDiv').toggleClass('d-none');
-});
-
-$("input[name='options']").on('change', function(){
-    if (!$('#LikertMoreOptions').hasClass('d-none')){
-        if (!$(this).val().includes('Likert')){
-            $('#LikertMoreOptions').toggleClass('d-none');
-            $('#LikertOptionDiv').toggleClass('d-none');
-            $('input.LikertAgreement').prop("checked", false);
-        }
-    }
+  $("input[name='getInstructions']").on('change', function(){
+    $('#surveyInstructionsInput').toggleClass('d-none');
   });
 
+  $("input[name='option1']").on('change', function(){
+    $('.MultipleChoiceInput').val('');
+    if ($(this).val() === 'Likert'){
+        $(this).prop("checked", true);
+        $('#LikertOptionDiv').addClass('d-none');
+        $('#LikertMoreOptions').removeClass('d-none');
+        $('#MultipleChoiceMoreOptions').addClass('d-none');
+        $('#MultipleChoiceDiv').removeClass('d-none');
+        $('#MultipleChoiceOption').removeAttr('name');
+        $('.MultipleChoiceOption1').removeAttr('name');
+        $('input.LikertAgreement').prop("checked", true);
+        $('.MultipleChoiceOption').prop("checked", false);
+    } else if ($(this).val() === 'MultipleChoice'){
+        $('input.LikertAgreement').prop("checked", false);
+        $(this).prop("checked", true);
+        $('#LikertOptionDiv').removeClass('d-none');
+        $('#LikertMoreOptions').addClass('d-none');
+        $('#MultipleChoiceMoreOptions').removeClass('d-none');
+        //$('#MultipleChoiceDiv').addClass('d-none');
+        $('.MultipleChoiceOption1').attr('name','option1');
+        $('#MultipleChoiceOption').removeAttr('name');
+        
+    } else if (!$(this).val().includes('Likert')){
+        $(this).prop("checked", true);
+        $('.MultipleChoiceOption').prop("checked", false);
+        $('#LikertOptionDiv').removeClass('d-none');
+        $('#LikertMoreOptions').addClass('d-none');
+        $('#MultipleChoiceDiv').removeClass('d-none');
+        $('#MultipleChoiceMoreOptions').addClass('d-none');
+        $('.MultipleChoiceOption1').removeAttr('name');
+        $('#MultipleChoiceOption').removeAttr('name');
+    }
+   });
+
+   $('#newQuestionForm').on('submit', ()=>{
+    if($('input[id=MultipleChoiceOption]:checked').length < 1 ){
+        $('#MultipleChoiceMoreOptions').remove();
+    }
+   });
     // Javascript method's body can be found in assets/js/demos.js
     demo.initDashboardPageCharts();
 });

@@ -96,10 +96,40 @@
                 <div class="col-md-12">
                     <div class="form-group">
                     <label>Options</label>
-                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{options}}" readonly>
+                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
                     </div>
                 </div>
             </div>
+            {{#if option2}}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Options</label>
+                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+            {{#if option3}}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Options</label>
+                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+            {{#if option4}}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Options</label>
+                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
         </div>
     </div>
 {{else}}
