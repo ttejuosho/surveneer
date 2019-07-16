@@ -9,10 +9,26 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        options: {
+        questionInstruction: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        option1: {
             type: DataTypes.STRING,
             allowNull: false
-        }
+        },
+        option2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        option3: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        option4: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
     });
 
     Question.associate = (models) => {

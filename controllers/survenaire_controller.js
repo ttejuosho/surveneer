@@ -52,7 +52,8 @@ router.post('/survey/new', (req, res) => {
                 db.Survey.create({
                     surveyName: req.body.surveyName,
                     getId: req.body.getId,
-                    surveyNotes: req.body.surveyNotes
+                    surveyNotes: req.body.surveyNotes,
+                    surveyInstructions: req.body.surveyInstructions
                 }).then((dbSurvey) => {
                     //set the Id in the returned object as SurveyId (Object Destructuring)
                     const {
@@ -156,17 +157,23 @@ router.post('/question/new/:surveyId', (req, res) => {
             SurveySurveyId: req.params.surveyId
         }
         res.render("question/new", err);
-    } else if (req.body.options == "") {
+    } else if (req.body.option1 == "") {
         var err = {
             optionsError: "Please choose an option.",
             SurveySurveyId: req.params.surveyId
         }
         res.render("question/new", err);
     } else {
+        console.log(req.body);
         db.Question.create({
             question: req.body.question,
-            options: req.body.options,
+            option1: req.body.option1,
+            questionInstruction: req.body.questionInstruction,
+            option2: (req.body.option2 == undefined ? null : req.body.option2),
+            option3: (req.body.option3 == undefined ? null : req.body.option3),
+            option4: (req.body.option4 == undefined ? null : req.body.option4),
             SurveySurveyId: req.params.surveyId
+            
         }).then((dbQuestion) => {
             //console.log(dbQuestion, "LINE 181");
             return res.render('question/new', dbQuestion.dataValues);
@@ -197,7 +204,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
         where: {
             surveyId: req.params.surveyId
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "option1", "option2", "option3", "option4"] }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
         res.render('survey/survey', survey.dataValues);
