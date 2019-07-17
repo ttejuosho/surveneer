@@ -284,6 +284,7 @@ router.post('/responses', (req, res) => {
         //console.log(dbRespondent.dataValues);
         return res.redirect('/mysurveys/' + req.body.surveyId);
     }).catch((err) => {
+        console.log(err);
         res.render('error', err);
     });
 
