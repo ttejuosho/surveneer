@@ -88,7 +88,7 @@ router.get('/questions/:questionId/update', (req, res) => {
     db.Question
         .findByPk(req.params.questionId)
         .then((dbQuestion) => {
-            //console.log(dbQuestion.dataValues);
+            console.log(dbQuestion.dataValues);
             res.render('question/update', dbQuestion.dataValues);
         });
 });
@@ -97,8 +97,15 @@ router.get('/questions/:questionId/update', (req, res) => {
 router.put('/questions/:questionId/update', (req, res) => {
     const dbQuestion = {
         question: req.body.question,
-        options: req.body.options
+        optionType: req.body.optionType,
+        questionInstruction: (req.body.questionInstruction == undefined ? null : req.body.questionInstruction),
+        option1: (req.body.option1 == undefined ? null : req.body.option1),
+        option2: (req.body.option2 == undefined ? null : req.body.option2),
+        option3: (req.body.option3 == undefined ? null : req.body.option3),
+        option4: (req.body.option4 == undefined ? null : req.body.option4),
+        SurveySurveyId: req.body.SurveyId,
     };
+    //console.log(dbQuestion);
     db.Question.update(dbQuestion, {
         where: {
             questionId: req.params.questionId
@@ -157,7 +164,7 @@ router.post('/question/new/:surveyId', (req, res) => {
             SurveySurveyId: req.params.surveyId
         }
         res.render("question/new", err);
-    } else if (req.body.option1 == "") {
+    } else if (req.body.optionType == "") {
         var err = {
             optionsError: "Please choose an option.",
             SurveySurveyId: req.params.surveyId
@@ -167,13 +174,13 @@ router.post('/question/new/:surveyId', (req, res) => {
         console.log(req.body);
         db.Question.create({
             question: req.body.question,
-            option1: req.body.option1,
+            optionType: req.body.optionType,
             questionInstruction: req.body.questionInstruction,
+            SurveySurveyId: req.params.surveyId,
+            option1: (req.body.option1 == undefined ? null : req.body.option1),
             option2: (req.body.option2 == undefined ? null : req.body.option2),
             option3: (req.body.option3 == undefined ? null : req.body.option3),
-            option4: (req.body.option4 == undefined ? null : req.body.option4),
-            SurveySurveyId: req.params.surveyId
-            
+            option4: (req.body.option4 == undefined ? null : req.body.option4)
         }).then((dbQuestion) => {
             //console.log(dbQuestion, "LINE 181");
             return res.render('question/new', dbQuestion.dataValues);
@@ -190,7 +197,7 @@ router.get('/mysurveys', function(req, res) {
     db.Survey.findAll({
         where: where,
         order: req.query.order || [],
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
     }).then(function(surveys) {
         res.json(surveys);
     }).catch(function(err) {
@@ -204,7 +211,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
         where: {
             surveyId: req.params.surveyId
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "option1", "option2", "option3", "option4"] }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
         res.render('survey/survey', survey.dataValues);
@@ -219,7 +226,7 @@ router.get('/surveys/:surveyId/view', (req, res) => {
         where: {
             surveyId: req.params.surveyId
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "option1", "option2", "option3", "option4"] }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
         res.render('survey/view', survey.dataValues);
@@ -234,7 +241,7 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
         where: {
             surveyId: req.params.surveyId
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "option1", "option2", "option3", "option4"]  }]
+        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
         survey.dataValues['layout'] = false;
@@ -246,43 +253,43 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 
 //Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-// console.log(req.body);
-// for (var i in req.body){ 
-//     if (req.body[i].length < 1) { 
-//     var err = { error: "Please enter a response for all items" }
-//     res.render('error', err);
-//     }
-// }
-var qandaArray = [];
-for (var i = 0; i < req.body.questionLength; i++){
-    var qanda = {
-        QuestionQuestionId: req.body["questionId" + i],
-        answer: req.body["answer" + i],
-        SurveySurveyId: req.body.surveyId
+    // console.log(req.body);
+    // for (var i in req.body){ 
+    //     if (req.body[i].length < 1) { 
+    //     var err = { error: "Please enter a response for all items" }
+    //     res.render('error', err);
+    //     }
+    // }
+    var qandaArray = [];
+    for (var i = 0; i < req.body.questionLength; i++) {
+        var qanda = {
+            QuestionQuestionId: req.body["questionId" + i],
+            answer: req.body["answer" + i],
+            SurveySurveyId: req.body.surveyId
+        }
+        qandaArray.push(qanda);
     }
-    qandaArray.push(qanda);
-}
 
-//console.log(qandaArray);
-for (var i = 0; i < qandaArray.length; i++){
-    db.Response.create(qandaArray[i])
-}
+    //console.log(qandaArray);
+    for (var i = 0; i < qandaArray.length; i++) {
+        db.Response.create(qandaArray[i])
+    }
 
-db.Respondent.create({
-    respondentName: req.body.respondentName,
-    respondentEmail: req.body.respondentEmail,
-    respondentPhone: req.body.respondentPhone,
-    SurveySurveyId: req.body.surveyId
-}).then((dbRespondent) => {
-    //console.log(dbRespondent.dataValues);
-    return res.redirect('/mysurveys/' + req.body.surveyId);
-}).catch((err) => {
-    res.render('error', err);
-});
+    db.Respondent.create({
+        respondentName: req.body.respondentName,
+        respondentEmail: req.body.respondentEmail,
+        respondentPhone: req.body.respondentPhone,
+        SurveySurveyId: req.body.surveyId
+    }).then((dbRespondent) => {
+        //console.log(dbRespondent.dataValues);
+        return res.redirect('/mysurveys/' + req.body.surveyId);
+    }).catch((err) => {
+        res.render('error', err);
+    });
 
 });
 
-router.get('/responses/:SurveySurveyId/view', (req, res)=>{
+router.get('/responses/:SurveySurveyId/view', (req, res) => {
     db.Response.findOne({
         where: {
             SurveySurveyId: req.params.SurveySurveyId

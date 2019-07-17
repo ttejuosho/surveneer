@@ -1,26 +1,33 @@
-    <div class="col-md-12">
+<div class="col-md-12">
     <div class="card">
         <div class="card-header">
-        <h5 class="title">Update Question</h5>
+            <h5 class="title">Update Question</h5>
         </div>
         <div class="card-body">
-        <form id="newQuestionForm" action="/questions/{{questionId}}/update?_method=PUT" method="POST">
-        <div class="messages text-danger font-weight-bold">{{error}}</div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                    <label>Question</label>
-                    <textarea id="question" name="question" rows="2" cols="80" class="form-control" value="">{{question}}</textarea>
-                    <div class="messages text-danger font-weight-bold">{{questionError}}</div>
+            <form id="newQuestionForm" action="/questions/{{questionId}}/update?_method=PUT" method="POST">
+                <div class="messages text-danger font-weight-bold">{{error}}</div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Question</label>
+                            <textarea id="question" name="question" rows="2" cols="80" class="form-control"
+                                value="">{{question}}</textarea>
+                            <div class="messages text-danger font-weight-bold">{{questionError}}</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label>Options</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Options</label>
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="YesNo" checked>
+                                {{#ifEquals optionType "YesNo"}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="YesNo" checked>
+                                {{else}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="YesNo">
+                                {{/ifEquals}}
                                 Yes/No
                                 <span class="form-check-sign"></span>
                             </label>
@@ -28,7 +35,13 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="TrueFalse" >
+                                {{#ifEquals optionType "TrueFalse"}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="TrueFalse" checked>
+                                {{else}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="TrueFalse">
+                                {{/ifEquals}}
                                 True/False
                                 <span class="form-check-sign"></span>
                             </label>
@@ -36,7 +49,13 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="MultipleChoice" >
+                                {{#ifEquals optionType "MultipleChoice"}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="MultipleChoice" checked>
+                                {{else}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="MultipleChoice">
+                                {{/ifEquals}}
                                 Multiple Choice
                                 <span class="form-check-sign"></span>
                             </label>
@@ -44,7 +63,13 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="ShortAnswer" >
+                                {{#ifEquals optionType "ShortAnswer"}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="ShortAnswer" checked>
+                                {{else}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="ShortAnswer">
+                                {{/ifEquals}}
                                 Short Answer
                                 <span class="form-check-sign"></span>
                             </label>
@@ -52,45 +77,198 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" >
+                                {{#ifEquals optionType "LongAnswer"}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="LongAnswer" checked>
+                                {{else}}
+                                <input class="form-check-input" type="radio" name="optionType" id="options"
+                                    value="LongAnswer">
+                                {{/ifEquals}}
                                 Long Answer
                                 <span class="form-check-sign"></span>
                             </label>
                         </div>
-                        
-                        <div class="form-check form-check-radio">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" >
-                                Likert-type
-                                <span class="form-check-sign"></span>
-                                
-                            </label>
-                            <small class="form-text text-muted ml-3" style="display: unset;">( 1 to 5 scale, strongly agree to strongly disagree. )</small>
-                        </div>
 
-                        <div class="form-check form-check-radio disabled">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="options" id="options" value="LongAnswer" disabled>
-                                Custom Options
-                                <span class="form-check-sign"></span>
-                            </label>
-                            <small class="form-text text-muted ml-3" style="display: unset;">( currently not supported. )</small>
-                        </div>
-                        <div class="messages text-danger font-weight-bold">{{optionsError}}</div>
-                </div>
-            </div>
-            <div class="row d-none">
-                <div class="col-md-12">
-                    <div class="form-group">
-                    <input class="form-check-input" type="text" name="SurveyId" id="SurveyId" value={{SurveySurveyId}} >
-                    </div>
-                </div>
-            </div>
-        <div class="card-footer">
-            <a href="/mysurveys/{{SurveySurveyId}}"><button type="button" class="btn btn-fill btn-sm btn-primary">Back</button></a>
-            <button type="submit" class="btn btn-fill btn-sm btn-primary float-right">Update</button>
-        </div>
-        </form>
+                        {{#ifIncludes optionType "Likert"}}
+                        <div id="LikertOptionDiv" class="form-check form-check-radio d-none">
+                            {{else}}
+                            <div id="LikertOptionDiv" class="form-check form-check-radio">
+                                {{/ifIncludes}}
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="optionType" id="LikertOption"
+                                        value="Likert">
+                                    Likert-type
+                                    <span class="form-check-sign"></span>
+                                </label>
+                                <small class="form-text text-muted ml-3" style="display: unset;">(Scales)</small>
+                            </div>
+
+                            {{#ifIncludes optionType "Likert"}}
+                            <div id="LikertMoreOptions" class="">
+                                {{else}}
+                                <div id="LikertMoreOptions" class="d-none">
+                                    {{/ifIncludes}}
+                                    <div class="form-check form-check-radio">
+                                        <label class="form-check-label">
+                                            {{#ifEquals optionType "LikertAgreement"}}
+                                            <input class="form-check-input LikertAgreement" type="radio"
+                                                name="optionType" id="options" value="LikertAgreement" checked>
+                                            {{else}}
+                                            <input class="form-check-input LikertAgreement" type="radio"
+                                                name="optionType" id="options" value="LikertAgreement">
+                                            {{/ifEquals}}
+                                            Likert - Agreement
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                        <small class="form-text text-muted ml-3" style="display: unset;">(Scale:
+                                            Strongly Agree to Strongly Disagree)</small>
+                                    </div>
+                                    <div class="form-check form-check-radio">
+                                        <label class="form-check-label">
+                                            {{#ifEquals optionType "LikertQuality"}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertQuality" checked>
+                                            {{else}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertQuality">
+                                            {{/ifEquals}}
+                                            Likert - Quality
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                        <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Very
+                                            Good to Very Poor)</small>
+                                    </div>
+                                    <div class="form-check form-check-radio">
+                                        <label class="form-check-label">
+                                            {{#ifEquals optionType "LikertValue"}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertValue" checked>
+                                            {{else}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertValue">
+                                            {{/ifEquals}}
+                                            Likert - Value
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                        <small class="form-text text-muted ml-3" style="display: unset;">(Scale: High to
+                                            None.)</small>
+                                    </div>
+                                    <div class="form-check form-check-radio">
+                                        <label class="form-check-label">
+                                            {{#ifEquals optionType "LikertFrequency"}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertFrequency" checked>
+                                            {{else}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertFrequency">
+                                            {{/ifEquals}}
+                                            Likert - Frequency
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                        <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Very
+                                            Frequently to Never)</small>
+                                    </div>
+                                    <div class="form-check form-check-radio">
+                                        <label class="form-check-label">
+                                            {{#ifEquals optionType "LikertImportance"}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertImportance" checked>
+                                            {{else}}
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="LikertImportance">
+                                            {{/ifEquals}}
+                                            Likert - Important
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                        <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Very
+                                            Important to Not Important)</small>
+                                    </div>
+                                </div>
+
+                                <div id="MultipleChoiceDiv" class="form-check form-check-radio">
+                                    <label class="form-check-label">
+                                        {{#ifEquals optionType "MultipleChoice"}}
+                                        <input class="form-check-input MultipleChoiceOption" type="radio"
+                                            name="optionType" id="MultipleChoiceOption" value="MultipleChoice" checked>
+                                        {{else}}
+                                        <input class="form-check-input MultipleChoiceOption" type="radio"
+                                            name="optionType" id="MultipleChoiceOption" value="MultipleChoice">
+                                        {{/ifEquals}}
+                                        Multiple Choice
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+
+                                {{#ifEquals optionType "MultipleChoice"}}
+                                <div id="MultipleChoiceMoreOptions" class="">
+                                    {{else}}
+                                    <div id="MultipleChoiceMoreOptions" class="d-none">
+                                        {{/ifEquals}}
+                                        <small class="form-text text-muted">Choose from one of the options
+                                            below.</small>
+                                        <div class="form-group">
+                                            <label for="option1">Option 1</label>
+                                            <input type="text"
+                                                class="form-control MultipleChoiceInput MultipleChoiceOption1"
+                                                name="option1" id="options" value="{{option1}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="option2">Option 2</label>
+                                            <input type="text" class="form-control MultipleChoiceInput" name="option2"
+                                                id="options" value="{{option2}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="option3">Option 3</label>
+                                            <input type="text" class="form-control MultipleChoiceInput" name="option3"
+                                                id="options" value="{{option3}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="option4">Option 4</label>
+                                            <input type="text" class="form-control MultipleChoiceInput" name="option4"
+                                                id="options" value="{{option4}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-check form-check-radio disabled">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="optionType" id="options"
+                                                value="CustomOption" disabled>
+                                            Custom Options
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                        <small class="form-text text-muted ml-3" style="display: unset;">( currently not
+                                            supported. )</small>
+                                    </div>
+                                    <div class="messages text-danger font-weight-bold">{{optionsError}}</div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <label>Instructions</label>
+                                    {{#if questionInstruction}}
+                                    <input class="form-control" type="text" name="questionInstruction" id="questionInstruction" value="{{questionInstruction}}" >
+                                    {{else}}
+                                    <input class="form-control" type="text" name="questionInstruction" id="questionInstruction" placeholder="If any, enter instructions for this item" >
+                                    {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-none">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-check-input" type="text" name="SurveyId" id="SurveyId"
+                                            value={{SurveySurveyId}}>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="/mysurveys/{{SurveySurveyId}}"><button type="button"
+                                        class="btn btn-fill btn-sm btn-primary">Back</button></a>
+                                <button type="submit"
+                                    class="btn btn-fill btn-sm btn-primary float-right">Update</button>
+                            </div>
+            </form>
         </div>
     </div>
-    </div>    
+</div>

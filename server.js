@@ -20,12 +20,15 @@ var exphbs = require("express-handlebars");
 var hbs = exphbs.create({
     helpers: {
         ifEquals: function(arg1, arg2, options) {
-                return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
-            },
-        counter: function(value, options){
+            return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        },
+        ifIncludes: function(arg1, arg2, options) {
+            return (arg1.includes(arg2)) ? options.fn(this) : options.inverse(this);
+        },
+        counter: function(value, options) {
             return parseInt(value) + 1;
         },
-        getLength: function(obj){
+        getLength: function(obj) {
             return obj.length
         }
     },

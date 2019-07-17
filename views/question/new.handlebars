@@ -20,7 +20,7 @@
                     <label>Options</label>
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="YesNo" checked>
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="YesNo" checked>
                                 Yes/No
                                 <span class="form-check-sign"></span>
                             </label>
@@ -28,7 +28,7 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="TrueFalse" >
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="TrueFalse" >
                                 True/False
                                 <span class="form-check-sign"></span>
                             </label>
@@ -36,7 +36,7 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="ShortAnswer" >
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="ShortAnswer" >
                                 Short Answer
                                 <span class="form-check-sign"></span>
                             </label>
@@ -44,7 +44,7 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="LongAnswer" >
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="LongAnswer" >
                                 Long Answer
                                 <span class="form-check-sign"></span>
                             </label>
@@ -52,7 +52,7 @@
                         
                         <div id="LikertOptionDiv" class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="LikertOption" value="Likert">
+                                <input class="form-check-input" type="radio" name="optionType" id="LikertOption" value="Likert">
                                 Likert-type
                                 <span class="form-check-sign"></span>
                             </label>
@@ -62,7 +62,7 @@
 <div id="LikertMoreOptions" class="d-none">
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input LikertAgreement" type="radio" name="option1" id="options" value="LikertAgreement">
+                                <input class="form-check-input LikertAgreement" type="radio" name="optionType" id="options" value="LikertAgreement">
                                 Likert - Agreement
                                 <span class="form-check-sign"></span>
                             </label>
@@ -70,7 +70,7 @@
                         </div>
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="LikertQuality">
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="LikertQuality">
                                 Likert - Quality
                                 <span class="form-check-sign"></span>
                             </label>
@@ -78,7 +78,7 @@
                         </div>
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="LikertValue">
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="LikertValue">
                                 Likert - Value
                                 <span class="form-check-sign"></span>
                             </label>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="LikertFrequency">
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="LikertFrequency">
                                 Likert - Frequency
                                 <span class="form-check-sign"></span>
                             </label>
@@ -94,7 +94,7 @@
                         </div>
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="LikertImportance">
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="LikertImportance">
                                 Likert - Important
                                 <span class="form-check-sign"></span>
                             </label>
@@ -104,7 +104,7 @@
 
                         <div id="MultipleChoiceDiv" class="form-check form-check-radio">
                             <label class="form-check-label">
-                                <input class="form-check-input MultipleChoiceOption" type="radio" name="option1" id="MultipleChoiceOption" value="MultipleChoice">
+                                <input class="form-check-input MultipleChoiceOption" type="radio" name="optionType" id="MultipleChoiceOption" value="MultipleChoice">
                                 Multiple Choice
                                 <span class="form-check-sign"></span>
                             </label>
@@ -114,7 +114,7 @@
                         <small class="form-text text-muted">Choose from one of the options below.</small>
                         <div class="form-group">
                             <label for="option1">Option 1</label>
-                            <input type="text" class="form-control MultipleChoiceInput MultipleChoiceOption1" id="options" placeholder="option1">
+                            <input type="text" class="form-control MultipleChoiceInput MultipleChoiceOption1" name="option1" id="options" placeholder="option1">
                         </div>
                         <div class="form-group">
                             <label for="option2">Option 2</label>
@@ -133,7 +133,7 @@
 
                         <div class="form-check form-check-radio disabled">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="option1" id="options" value="CustomOption" disabled>
+                                <input class="form-check-input" type="radio" name="optionType" id="CustomOptions" value="CustomOption" disabled>
                                 Custom Options
                                 <span class="form-check-sign"></span>
                             </label>
