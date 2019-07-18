@@ -36,8 +36,6 @@ $(function() {
             $('#LikertMoreOptions').removeClass('d-none');
             $('#MultipleChoiceMoreOptions').addClass('d-none');
             $('#MultipleChoiceDiv').removeClass('d-none');
-            //$('#MultipleChoiceOption').removeAttr('name');
-            //$('.MultipleChoiceOption1').removeAttr('name');
             $('input.LikertAgreement').prop("checked", true);
             $('.MultipleChoiceOption').prop("checked", false);
         } else if ($(this).val() === 'MultipleChoice') {
@@ -46,9 +44,6 @@ $(function() {
             $('#LikertOptionDiv').removeClass('d-none');
             $('#LikertMoreOptions').addClass('d-none');
             $('#MultipleChoiceMoreOptions').removeClass('d-none');
-            //$('#MultipleChoiceDiv').addClass('d-none');
-            //$('.MultipleChoiceOption1').attr('name', 'optionType');
-            //$('#MultipleChoiceOption').removeAttr('name');
 
         } else if (!$(this).val().includes('Likert')) {
             $(this).prop("checked", true);
@@ -58,7 +53,6 @@ $(function() {
             $('#MultipleChoiceDiv').removeClass('d-none');
             $('#MultipleChoiceMoreOptions').addClass('d-none');
             $('.MultipleChoiceOption1').removeAttr('name');
-            //$('#MultipleChoiceOption').removeAttr('name');
         }
     });
 

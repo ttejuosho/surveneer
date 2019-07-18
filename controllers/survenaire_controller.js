@@ -260,34 +260,58 @@ router.post('/responses', (req, res) => {
     //     res.render('error', err);
     //     }
     // }
-    var qandaArray = [];
-    for (var i = 0; i < req.body.questionLength; i++) {
-        var qanda = {
-            QuestionQuestionId: req.body["questionId" + i],
-            answer: req.body["answer" + i],
-            SurveySurveyId: req.body.surveyId
-        }
-        qandaArray.push(qanda);
-    }
-
-    //console.log(qandaArray);
-    for (var i = 0; i < qandaArray.length; i++) {
-        db.Response.create(qandaArray[i])
-    }
-
     db.Respondent.create({
         respondentName: req.body.respondentName,
         respondentEmail: req.body.respondentEmail,
         respondentPhone: req.body.respondentPhone,
         SurveySurveyId: req.body.surveyId
     }).then((dbRespondent) => {
-        //console.log(dbRespondent.dataValues);
-        return res.redirect('/mysurveys/' + req.body.surveyId);
+        console.log("Saved Respondent ==>> ");
+        var qandaArray = [];
+        for (var i = 0; i < req.body.questionLength; i++) {
+            var qanda = {
+                QuestionQuestionId: req.body["questionId" + i],
+                answer: req.body["answer" + i],
+                RespondentRespondentId: dbRespondent.dataValues.respondentId,
+                SurveySurveyId: req.body.surveyId
+            }
+            qandaArray.push(qanda);
+        }
+
+        //console.log(qandaArray);
+        for (var i = 0; i < qandaArray.length; i++) {
+            db.Response.create(qandaArray[i])
+        }
+        console.log("Saved All Questions");
+        //Now increment Number of respondents
+        db.Survey.findOne({
+            where: {
+                surveyId: req.body.surveyId
+            }
+        }).then((dbSurvey) => {
+            dbSurvey.dataValues.numberOfRespondents += 1;
+            const updatedSurvey = {
+                surveyName: dbSurvey.dataValues.surveyName,
+                getId: dbSurvey.dataValues.getId,
+                numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                surveyInstructions: dbSurvey.dataValues.surveyInstructions,
+                surveyNotes: dbSurvey.dataValues.surveyNotes
+            }
+            db.Survey.update(updatedSurvey, {
+                where: {
+                    surveyId: dbSurvey.dataValues.surveyId
+                }
+            }).then((dbSurvey) => {
+                //console.log(dbSurvey);
+                console.log("Number of respondent Updated");
+                return res.redirect('/mysurveys/' + req.body.surveyId);
+            });
+        });
+
     }).catch((err) => {
         console.log(err);
         res.render('error', err);
     });
-
 });
 
 router.get('/responses/:SurveySurveyId/view', (req, res) => {

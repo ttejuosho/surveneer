@@ -18,6 +18,12 @@ module.exports = (sequelize, DataTypes) => {
                 onDelete: 'cascade'
             }
         });
+        Response.belongsTo(models.Respondent, {
+            foreignKey: {
+                allowNull: false,
+                onDelete: 'cascade'
+            }
+        });
     }
     return Response;
 }

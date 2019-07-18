@@ -1,0 +1,26 @@
+MYSQL Sample Queries
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+====> Drop Columns
+begin;
+alter table questions drop column createdAt;
+alter table questions drop column updatedAt;
+commit;
+
+-- addColumns
+begin;
+ALTER TABLE surveys
+ADD COLUMN numberOfRespondents INT DEFAULT 0 AFTER getId;
+commit;
+
+
+drop database survenaire;
+create database survenaire;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+
+USE survenaire;
+INSERT INTO questions (question, options)
+VALUES ('Are you here?', 'YesNo');
+
+USE Survenaire;
+UPDATE surveys SET surveyName = 'The Challenge', getId = 'False'
+Where id = 1;

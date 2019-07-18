@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         numberOfRespondents: {
             type: DataTypes.INTEGER,
-            allowNull:
+            defaultValue: 0,
+            allowNull: true
         }
     });
 
