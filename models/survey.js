@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
         surveyNotes: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        numberOfRespondents: {
+            type: DataTypes.INTEGER,
+            allowNull:
         }
     });
 

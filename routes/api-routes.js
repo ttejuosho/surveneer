@@ -91,10 +91,10 @@ module.exports = (app) => {
     });
 
     //Get a question by Id
-    app.get("/api/questions/:id", (req, res) => {
+    app.get("/api/questions/:questionId", (req, res) => {
         db.Question.findOne({
             where: {
-                id: req.params.id
+                questionId: req.params.questionId
             }
         }).then(function(Question) {
             res.json(Question);
@@ -105,7 +105,7 @@ module.exports = (app) => {
     app.get("/api/survey/questions/:SurveyId", (req, res) => {
         db.Question.findAll({
             where: {
-                SurveyId: req.params.SurveyId
+                SurveySurveyId: req.params.SurveyId
             }
         }).then(function(dbQuestion) {
             res.json(dbQuestion);
@@ -113,11 +113,16 @@ module.exports = (app) => {
     });
 
     //Create a new question
-    app.post('/api/question/:SurveyId', (req, res) => {
+    app.post('/api/question/:surveyId', (req, res) => {
         db.Question.create({
             question: req.body.question,
-            options: req.body.options,
-            SurveyId: req.params.SurveyId
+            optionType: req.body.optionType,
+            questionInstruction: req.body.questionInstruction,
+            SurveySurveyId: req.params.surveyId,
+            option1: (req.body.option1 == undefined ? null : req.body.option1),
+            option2: (req.body.option2 == undefined ? null : req.body.option2),
+            option3: (req.body.option3 == undefined ? null : req.body.option3),
+            option4: (req.body.option4 == undefined ? null : req.body.option4)
         }).then((dbQuestion) => {
             res.json(dbQuestion);
         });
@@ -136,40 +141,43 @@ module.exports = (app) => {
     });
 
     //Update a Question
-    app.put('/api/questions/', (req, res) => {
-        db.Question.update({
+    app.put('/api/questions/:questionId/update', (req, res) => {
+        const dbQuestion = {
             question: req.body.question,
-            options: req.body.options
-        }, {
+            optionType: req.body.optionType,
+            questionInstruction: (req.body.questionInstruction == undefined ? null : req.body.questionInstruction),
+            option1: (req.body.option1 == undefined ? null : req.body.option1),
+            option2: (req.body.option2 == undefined ? null : req.body.option2),
+            option3: (req.body.option3 == undefined ? null : req.body.option3),
+            option4: (req.body.option4 == undefined ? null : req.body.option4),
+            SurveySurveyId: req.body.SurveyId,
+        };
+        db.Question.update(dbQuestion, {
             where: {
-                id: req.body.id
+                questionId: req.params.questionId
             }
         }).then((dbQuestion) => {
             res.json(dbQuestion);
         });
     });
 
-    //Get Responses by Survey ID
+    //Get Number of Responses to a Survey
     app.get('/api/responses/:surveyId', (req, res) => {
-        db.Response.count({
-            where: {
-                SurveySurveyId: req.params.surveyId,
-                answer: 'No'
-            }
-        }).then(function(dbResponse) {
+        db.Response.count({ distinct: true, col: 'QuestionQuestionId' }).then(function(dbResponse) {
             res.json(dbResponse);
         });
-
-        // db.Response.count({
-        //     distinct: 'No',
-        //     where: {
-        //         SurveySurveyId: req.params.surveyId
-        //     }
-        // }).then((count)=>{
-        //     res.json(count);
-        // });
     });
 }
+    //     db.Response.count({
+    //         distinct: 'Yes',
+    //         where: {
+    //             SurveySurveyId: req.params.surveyId
+    //         }
+    //     }).then((count)=>{
+    //         res.json(count);
+    //     });
+    // });
+
 
 // begin;
 // alter table questions drop column createdAt;
