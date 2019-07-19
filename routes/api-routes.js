@@ -41,7 +41,7 @@ module.exports = (app) => {
             db.Survey.findAll({
                 where: where,
                 order: req.query.order || [],
-                include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] }]
+                include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
             }).then(function(surveys) {
                 res.json(surveys);
             }).catch(function(err) {
@@ -56,7 +56,7 @@ module.exports = (app) => {
                     surveyId: req.params.surveyId
                 },
                 include: [
-                    { model: db.Question, as: "Questions", attributes: ["questionId", "question", "options"] },
+                    { model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4" ] },
                     { model: db.Response, as: "Responses", attributes: ["QuestionQuestionId", "answer"] }
                 ]
             }).then(function(survey) {
@@ -74,8 +74,9 @@ module.exports = (app) => {
                     questionId: req.params.questionId
                 },
                 include: [
-                    { model: db.Survey, as: "Survey", attributes: ["surveyName"] },
-                    { model: db.Response, as: "Responses", attributes: ["answer"] }
+                    { model: db.Survey, as: "Survey", attributes: ["surveyName", "numberOfRespondents", "surveyNotes"] },
+                    { model: db.Response, as: "Responses", attributes: ["answer"] },
+                    { model: db.Respondent, as: "Respondents", attributes: ["respondentName", "respondentEmail", "respondentPhone"] }
                 ]
             }).then(function(dbQuestion) {
                 res.json(dbQuestion);
@@ -193,6 +194,7 @@ module.exports = (app) => {
             });
         });
 
+    //Get all responses to a survey from a respondent
         app.get('/api/getResponse/:surveyId/:respondentId', (req, res) => {
             db.Response.findAll({
                 where: {
@@ -203,7 +205,19 @@ module.exports = (app) => {
                 res.json(dbRespondent);
             });
         });
-    }
+
+    //Get all responses to a question
+        app.get('/api/question/responses/:questionId', (req,res) => {
+            db.Response.findAll({
+                where: {
+                    QuestionQuestionId: req.params.questionId
+                }
+            }).then((dbQuestion) => {
+                res.json(dbQuestion);
+            });
+        });
+
+}
     //     db.Response.count({
     //         distinct: 'Yes',
     //         where: {

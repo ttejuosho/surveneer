@@ -19,13 +19,19 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    // Respondent.associate = (models) => {
+    Respondent.associate = (models) => {
     //     Respondent.belongsTo(models.Response, {
     //         foreignKey: {
     //             allowNull: false,
     //             onDelete: 'cascade'
     //         }
     //     });
-    // }
+        Respondent.hasMany(models.Question, {
+            foreignKey: {
+                allowNull: false,
+                onDelete: 'cascade'
+            }
+        });
+    }
     return Respondent;
 }
