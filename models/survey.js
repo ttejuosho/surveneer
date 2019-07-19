@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: true
         }
+        // numberOfQuestions: {
+        //     type: DataTypes.INTEGER,
+        //     defaultValue: 0,
+        //     allowNull: true
+        // }
     });
 
     Survey.associate = (models) => {
