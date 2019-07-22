@@ -209,18 +209,18 @@
 
         <div id="collapseOne{{@index}}" class="collapse" role="tabpanel" aria-labelledby="headingOne{{@index}}">
         <div id="Respondent{{@index}}" class="card-body">
-            <h5>Phone Number: {{respondentPhone}} </h5>   </br>
+            <h5>Phone Number: {{respondentPhone}}</h5> 
             <h5>Email Address: {{respondentEmail}}</h5>
             <div class="row">
                 <div class="col-md-6 pr-md-1">
                     {{#each ../Questions}} 
-                        <span>{{question}} :  </span>          
+                        <h5>{{question}} :  </h5>          
                     {{/each}}
                 </div>
                 <div class="col-md-6 pr-md-1">
                     {{#each ../Responses}}
                         {{#ifEquals RespondentRespondentId ../respondentId}}              
-                            <span>{{answer}}</span>
+                            <h5>{{answer}}</h5>
                         {{/ifEquals}} 
                     {{/each}}
                 </div>
