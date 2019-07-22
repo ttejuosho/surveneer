@@ -195,7 +195,19 @@ module.exports = (app) => {
             where: {
                 SurveySurveyId: req.params.surveyId,
                 RespondentRespondentId: req.params.respondentId
-            }
+            },
+            //include: [ { model: db.Respondent, as: "Respondent", attributes: ["respondentName", "respondentEmail", "respondentPhone"] }]
+        }).then((dbRespondent) => {
+            res.json(dbRespondent);
+        });
+    });
+
+    //Get All Respondents to a Survey
+    app.get('/api/getRespondents/:surveyId', (req, res) => {
+        db.Respondent.findAll({
+            where: {
+                SurveySurveyId: req.params.surveyId
+            },
         }).then((dbRespondent) => {
             res.json(dbRespondent);
         });
@@ -213,9 +225,6 @@ module.exports = (app) => {
         });
     });
 
-    app.get('/api/response/question/:responseId', (req, res) => {
-
-    });
 
     //Get all responses for a survey and see respondents
     app.get('/api/survey/response/:surveyId', (req, res) => {

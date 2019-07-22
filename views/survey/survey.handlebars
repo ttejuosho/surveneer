@@ -93,18 +93,29 @@
     </div>
 </div>
 
-<div class="row">
+{{!-- <div class="row">
     <div class="col-md-12">
         <div class="form-group">
         <label>Created At</label>
         <input id="createdAt" name="createdAt" type="text" class="form-control form-control-sm" value="{{createdAt}}" readonly>
         </div>
     </div>
-</div>
+</div> --}}
 </div>
 </div>
 
-<h2 class="mb-0">Questions</h2>
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" href="#QuestionSection" id="QuestionTab" data-toggle="tab" role="tab" aria-controls="QuestionSection" aria-selected="true">Questions</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#ResponseSection" id="ResponseTab" data-toggle="tab" role="tab" aria-controls="ResponseSection" aria-selected="false">Responses</a>
+  </li>
+</ul>
+
+{{!-- Tab Content --}}
+<div class="tab-content">
+    <div id="QuestionSection" class="tab-pane fade show active" role="tabpanel" aria-labelledby="Question-tab">
 {{#each Questions}}
     <div class="card">
         <div class="card-header pt-1">
@@ -182,8 +193,60 @@
         </div>
     </div>
 {{/each}}
+</div>
+
+{{!-- Response Section --}}
+<div id="ResponseSection" class="tab-pane fade" role="tabpanel" aria-labelledby="Response-tab">
+    {{#each Respondents}}
+    <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
+    <div class="card card-plain">
+        <div class="card-header" role="tab" id="headingOne{{@index}}">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne{{@index}}" aria-expanded="true" aria-controls="collapseOne{{@index}}">
+            {{respondentName}}
+                <i class="tim-icons icon-minimal-down"></i>
+            </a>
+        </div>
+
+        <div id="collapseOne{{@index}}" class="collapse" role="tabpanel" aria-labelledby="headingOne{{@index}}">
+        <div id="Respondent{{@index}}" class="card-body">
+            <h5>Phone Number: {{respondentPhone}} </h5>   </br>
+            <h5>Email Address: {{respondentEmail}}</h5>
+            <div class="row">
+                <div class="col-md-6 pr-md-1">
+                    {{#each ../Questions}} 
+                        <span>{{question}} :  </span>          
+                    {{/each}}
+                </div>
+                <div class="col-md-6 pr-md-1">
+                    {{#each ../Responses}}
+                        {{#ifEquals RespondentRespondentId ../respondentId}}              
+                            <span>{{answer}}</span>
+                        {{/ifEquals}} 
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    {{else}}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                <label>No responses yet.</label>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>
+{{!-- End Response Section --}}
 
 </div>
+{{!-- End Tab Content --}}
+
+
+</div>
+{{!-- End  --}}
 
 <script>
     var openModal  = (questionId) => {

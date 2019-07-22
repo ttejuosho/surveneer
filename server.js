@@ -30,6 +30,10 @@ var hbs = exphbs.create({
         },
         getLength: function(obj) {
             return obj.length
+        },
+        increment: function(value, options){
+            var c = 0;
+            return c += 1;
         }
     },
     defaultLayout: "main"

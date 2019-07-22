@@ -211,14 +211,84 @@ router.get('/mysurveys/:surveyId', function(req, res) {
         where: {
             surveyId: req.params.surveyId
         },
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
+        include: [
+            { model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
+            { model: db.Response, as: "Responses", attributes: ["QuestionQuestionId", "RespondentRespondentId", "answer"] },
+            { model: db.Respondent, as: "Respondents", attributes: ["respondentId", "respondentName", "respondentEmail", "respondentPhone"] }
+        ]
     }).then(function(survey) {
-        //console.log(survey.dataValues);
-        res.render('survey/survey', survey.dataValues);
+        var hbsObject = survey.dataValues;
+        var respondents = hbsObject.Respondents;
+        var responses = hbsObject.Responses;
+        var questions = hbsObject.Questions;
+        var Obj = {};
+        Obj['surveyId'] = hbsObject.surveyId;
+        Obj['surveyName'] = hbsObject.surveyName;
+        Obj['getId'] = hbsObject.getId;
+        Obj['surveyInstructions'] = hbsObject.surveyInstructions;
+        Obj['surveyNotes'] = hbsObject.surveyNotes;
+        Obj['numberOfRespondents'] = hbsObject.numberOfRespondents;
+        Obj['UserUserId'] = hbsObject.UserUserId;
+        Obj['Responses'] = [];
+        
+        res.render('survey/survey', hbsObject);
     }).catch(function(err) {
         res.render('error', err);
     });
 });
+
+// router.get('/mysurveys/:surveyId', function(req, res) {
+//     var obj;
+//     db.Respondent.findAll({
+//         where: {
+//             SurveySurveyId: req.params.surveyId
+//         },
+//     }).then((dbRespondent) => {
+// for (var j = 0; j < dbRespondent.length; j++){
+//         obj = dbRespondent[j].dataValues;
+//         obj['Questions'] = [];
+//         obj['Responses'] = [];
+//         //console.log(obj);
+//         db.Question.findAll({
+//             where: {
+//                 SurveySurveyId: req.params.surveyId
+//             }
+//         }).then(function(dbQuestion) {
+//             //obj.questions.push(qbQuestion)
+//             for (var i = 0; i < dbQuestion.length; i++ ){
+//                 obj.Questions.push(dbQuestion[i].dataValues);
+//             }
+//             //console.log(obj);
+//             db.Response.findAll({
+//                 where: {
+//                     SurveySurveyId: req.params.surveyId,
+//                     RespondentRespondentId: obj.respondentId
+//                 }
+//             }).then((dbResponse) => {
+//                 for (var i = 0; i < dbResponse.length; i++ ){
+//                     obj.Responses.push(dbResponse[i].dataValues);
+//                 }
+//                 db.Survey.findOne({
+//                     where: {
+//                         surveyId: req.params.surveyId
+//                     }
+//                 }).then((dbSurvey) => {
+//                     obj['surveyName'] = dbSurvey.dataValues.surveyName;
+//                     obj['numberOfRespondents'] = dbSurvey.dataValues.numberOfRespondents;
+//                     obj['getId'] = dbSurvey.dataValues.getId;
+//                     obj['surveyNotes'] = dbSurvey.dataValues.surveyNotes;
+//                     obj['surveyInstructions'] = dbSurvey.dataValues.surveyInstructions;
+//                     //console.log(obj);
+//                     res.render('survey/survey', obj);
+//                 });
+                
+//             });
+//         });
+//     }
+//     });//END
+// });
+
+
 
 //View Route For a Survey (Internal)
 router.get('/surveys/:surveyId/view', (req, res) => {
@@ -308,7 +378,6 @@ router.post('/responses', (req, res) => {
         });
 
     }).catch((err) => {
-        console.log(err);
         res.render('error', err);
     });
 });
