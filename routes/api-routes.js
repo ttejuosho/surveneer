@@ -196,8 +196,11 @@ module.exports = (app) => {
                 SurveySurveyId: req.params.surveyId,
                 RespondentRespondentId: req.params.respondentId
             },
-            //include: [ { model: db.Respondent, as: "Respondent", attributes: ["respondentName", "respondentEmail", "respondentPhone"] }]
+            include: [{ model: db.Respondent, as: "Respondent", attributes: ["respondentName", "respondentEmail", "respondentPhone"] }]
         }).then((dbRespondent) => {
+            // for (var i = 0; i < dbRespondent.length; i++){
+
+            // }
             res.json(dbRespondent);
         });
     });
