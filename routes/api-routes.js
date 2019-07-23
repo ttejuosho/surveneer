@@ -196,6 +196,7 @@ module.exports = (app) => {
                 SurveySurveyId: req.params.surveyId,
                 RespondentRespondentId: req.params.respondentId
             },
+            //include: [{ association: 'Respondent' }]
             include: [{ model: db.Respondent, as: "Respondent", attributes: ["respondentName", "respondentEmail", "respondentPhone"] }]
         }).then((dbRespondent) => {
             // for (var i = 0; i < dbRespondent.length; i++){
@@ -261,3 +262,6 @@ module.exports = (app) => {
     });
 
 }
+
+
+// SELECT * FROM Answers inner join Respondents ON Answers.responsedentID = Respondents.RespondentsID inner join Questions on Questions.QuestionID = Answers.QuestionID
