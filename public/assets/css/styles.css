@@ -1,0 +1,4 @@
+.main-panel>.partial-content {
+    padding: 78px 78px 30px 78px;
+    min-height: calc(100vh - 70px);
+}
