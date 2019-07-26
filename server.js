@@ -2,10 +2,10 @@ var express = require("express");
 var path = require('path');
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
-var passport   = require('passport')
-var session    = require('express-session')
-//var env        = require('dotenv').load()
-// bring in the models
+var passport = require('passport')
+var session = require('express-session')
+    //var env        = require('dotenv').load()
+    // bring in the models
 var db = require("./models");
 var app = express();
 
@@ -46,7 +46,7 @@ var hbs = exphbs.create({
         getLength: function(obj) {
             return obj.length
         },
-        increment: function(value, options){
+        increment: function(value, options) {
             var c = 0;
             return c += 1;
         }
@@ -58,7 +58,7 @@ app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 var routes = require("./controllers/survenaire_controller");
 
-var authRoute = require('./routes/auth.js')(app, passport);
+require('./routes/auth.js')(app, passport);
 
 //load passport strategies
 require('./config/passport/passport.js')(passport, db.User);
@@ -77,6 +77,6 @@ app.use("/question", routes);
 var port = process.env.PORT || 3000;
 db.sequelize.sync().then(function() {
     app.listen(port);
-}).catch(function(err){
-    console.log(err,"Oh no !! Something went wrong with the Database!");
+}).catch(function(err) {
+    console.log(err, "Oh no !! Something went wrong with the Database!");
 });
