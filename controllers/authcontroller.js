@@ -40,13 +40,8 @@ exports.sessionUserId = function(req, res) {
     });
 }
 
-
 exports.logout = function(req, res) {
     req.session.destroy(function(err) {
         res.redirect('/');
     });
 }
-
-// exports.newSurvey = function(req, res) {
-//     res.render('survey/new');
-// }

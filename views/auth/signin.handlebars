@@ -1,60 +1,31 @@
-
-
-<div class="row row-grid justify-content-between align-items-center">
-            <div class="col-lg-6">
-              <h3 class="display-3 text-white">A beautiful Black Design
-                <span class="text-white">completed with examples</span>
-              </h3>
-              <p class="text-white mb-3">The Design System comes with four pre-built pages to help you get started faster. You can change the text and images and you're good to go. More importantly, looking at them will give you a picture of what you can built with this powerful Bootstrap 4 Design System.</p>
-              <div class="btn-wrapper">
-                <a href="examples/register-page.html" class="btn btn-info">Register Page</a>
-              </div>
-            </div>
-            <div class="col-lg-6 mb-lg-auto">
-              <div class="card card-register">
-                <div class="card-header">
-                  <img class="card-img" src="/assets/img/square1.png" alt="Card image">
-                  <h4 class="card-title">Register</h4>
-                </div>
-                <div class="card-body">
-                  <form class="form">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text">
-                          <i class="tim-icons icon-single-02"></i>
-                        </div>
-                      </div>
-                      <input type="text" class="form-control" placeholder="Full Name">
-                    </div>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text">
-                          <i class="tim-icons icon-email-85"></i>
-                        </div>
-                      </div>
-                      <input type="text" placeholder="Email" class="form-control">
-                    </div>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text">
-                          <i class="tim-icons icon-lock-circle"></i>
-                        </div>
-                      </div>
-                      <input type="text" class="form-control" placeholder="Password">
-                    </div>
-                    <div class="form-check text-left">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox">
-                        <span class="form-check-sign"></span>
-                        I agree to the
-                        <a href="javascript:void(0)">terms and conditions</a>.
-                      </label>
-                    </div>
-                  </form>
-                </div>
-                <div class="card-footer">
-                  <a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>
-                </div>
-              </div>
+<div class="col-lg-6 mb-lg-auto">
+  <div class="card card-register">
+    <div class="card-header">
+      <img class="card-img" src="/assets/img/square1.png" alt="Card image">
+      <h4 class="card-title">Log In</h4>
+    </div>
+    <div class="card-body">
+      <form class="form" action="/signin" method="POST">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="tim-icons icon-email-85"></i>
             </div>
           </div>
+          <input type="text" class="form-control" name="emailAddress" placeholder="Email">
+        </div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="tim-icons icon-lock-circle"></i>
+            </div>
+          </div>
+          <input type="password" class="form-control" name="password" placeholder="Password">
+        </div>
+        <div class="input-group mt-4">
+            <button type="submit" class="col btn btn-primary">Log In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
