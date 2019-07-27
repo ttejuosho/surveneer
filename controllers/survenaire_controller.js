@@ -15,13 +15,16 @@ router.get('/analytics', (req, res) => {
 });
 
 router.get('/surveys', (req, res) => {
-    db.Survey.findAll({})
-        .then((dbSurvey) => {
-            var surveys = {
-                survey: dbSurvey
-            };
-            return res.render("surveys", surveys);
-        });
+    db.Survey.findAll({
+        where: {
+            UserUserId: req.session.passport.user
+        }
+    }).then((dbSurvey) => {
+        var surveys = {
+            survey: dbSurvey
+        };
+        return res.render("surveys", surveys);
+    });
 });
 
 router.get('/survey/new', (req, res) => {

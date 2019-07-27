@@ -13,14 +13,17 @@ exports.signin = function(req, res) {
 
 exports.surveys = function(req, res) {
     //console.log("Session Id of user " + req.sessionID);
-    db.Survey.findAll({})
-        .then((dbSurvey) => {
+    db.Survey.findAll({
+        where: {
+            UserUserId: req.session.passport.user
+        }
+    }).then((dbSurvey) => {
             var surveys = {
                 survey: dbSurvey
             };
             surveys['userId'] = req.session.passport.user;
             return res.render("surveys", surveys);
-        });
+    });
 }
 
 //prints out the user info from the session id

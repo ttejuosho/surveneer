@@ -6,8 +6,12 @@ var db = require("../models");
 module.exports = (app) => {
 
     //Get all Surveys
-    app.get("/api/surveys", (req, res) => {
-        db.Survey.findAll({}).then(function(dbSurvey) {
+    app.get("/api/surveys/:userId", (req, res) => {
+        db.Survey.findAll({
+            where: {
+                UserUserId: req.params.userId
+            }
+        }).then(function(dbSurvey) {
             res.json(dbSurvey);
         });
     });

@@ -25,7 +25,8 @@ module.exports = function(app, passport) {
 
     //route for new Survey Page
     app.get('/survey/new', isLoggedIn);
-
+    app.get('/profile', isLoggedIn);
+    
     //route for logging out
     app.get('/logout', authController.logout);
 
