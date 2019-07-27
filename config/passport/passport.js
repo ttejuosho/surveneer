@@ -76,7 +76,6 @@ module.exports = function(passport, user) {
         },
 
         function(req, email, password, done) {
-            console.log("In the CallBack Function");
             var User = user;
             var isValidPassword = function(userpass, password) {
                 return bCrypt.compareSync(password, userpass);
@@ -87,7 +86,6 @@ module.exports = function(passport, user) {
                     emailAddress: email
                 }
             }).then(function(user) {
-                console.log(user);
                 if (!user) {
                     return done(null, false, {
                         message: 'Email does not exist'

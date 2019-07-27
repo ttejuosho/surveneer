@@ -5,14 +5,14 @@
       <h4 class="card-title">Log In</h4>
     </div>
     <div class="card-body">
-      <form class="form" action="/signin" method="POST">
+      <form id="signinForm" class="form" action="/signin" method="POST">
         <div class="input-group">
           <div class="input-group-prepend">
             <div class="input-group-text">
               <i class="tim-icons icon-email-85"></i>
             </div>
           </div>
-          <input type="text" class="form-control" name="emailAddress" placeholder="Email">
+          <input type="text" class="form-control" name="emailAddress" placeholder="Email" required>
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -20,7 +20,7 @@
               <i class="tim-icons icon-lock-circle"></i>
             </div>
           </div>
-          <input type="password" class="form-control" name="password" placeholder="Password">
+          <input type="password" class="form-control" name="password" placeholder="Password" required>
         </div>
         <div class="input-group mt-4">
             <button type="submit" class="col btn btn-primary">Log In</button>

@@ -3,7 +3,7 @@ var router = express.Router();
 var db = require("../models");
 
 router.get('/', (req, res) => {
-    res.redirect('/index');
+    res.redirect('/signin');
 });
 
 router.get('/index', (req, res) => {
@@ -339,5 +339,47 @@ router.get('/responses/:SurveySurveyId/view', (req, res) => {
         res.render('error', err);
     });
 });
+
+//Get Route to Update Question
+router.get('/profile', (req, res) => {
+    db.User
+        .findByPk(req.session.passport.user)
+        .then((dbUser) => {
+            console.log(dbUser.dataValues);
+            res.render('user/profile', dbUser.dataValues);
+        });
+});
+
+//Post Route to Update User Info
+router.put('/user/update', (req,res) => {
+    var updatedUserInfo = {
+        name: req.body.name,
+        emailAddress: req.body.emailAddress,
+        phoneNumber: req.body.phoneNumber
+    }
+    //Validate User Info
+    if (req.body.name == "") {
+        updatedUserInfo['nameError'] = "Whats your name ?";
+        return res.render('user/profile', updatedUserInfo);
+    } else if (req.body.emailAddress == ""){
+        updatedUserInfo["emailAddressError"] = "Uhm... Im going to need your email address."; 
+        return res.render('user/profile', updatedUserInfo);
+    } else if (req.body.phoneNumber == ""){
+        updatedUserInfo['phoneNumberError'] = "What if I want to call you."; 
+        return res.render('user/profile', updatedUserInfo);
+    } else {
+
+        db.User.update(updatedUserInfo, {
+            where: {
+                userId: req.session.passport.user
+            }
+        }).then((dbUser) => {
+            res.redirect('/profile');
+        }).catch((err) => {
+            res.render('error', err);
+        });
+}
+});
+
 
 module.exports = router;

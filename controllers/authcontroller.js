@@ -12,14 +12,15 @@ exports.signin = function(req, res) {
 }
 
 exports.surveys = function(req, res) {
-    // Prints out the sessions object
-    console.log(req.session);
-
-    // Prints out the session ID
-    console.log(req.session.passport.user);
-    console.log("Session Id of user " + req.sessionID);
-
-    res.render("surveys");
+    //console.log("Session Id of user " + req.sessionID);
+    db.Survey.findAll({})
+        .then((dbSurvey) => {
+            var surveys = {
+                survey: dbSurvey
+            };
+            surveys['userId'] = req.session.passport.user;
+            return res.render("surveys", surveys);
+        });
 }
 
 //prints out the user info from the session id
@@ -42,6 +43,6 @@ exports.sessionUserId = function(req, res) {
 
 exports.logout = function(req, res) {
     req.session.destroy(function(err) {
-        res.redirect('/');
+        res.redirect('/signin');
     });
 }

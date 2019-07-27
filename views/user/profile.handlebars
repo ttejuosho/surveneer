@@ -1,0 +1,75 @@
+<div class="col-md-8">
+    <div class="card card-user">
+        <div class="card-header">
+            User Profile
+        </div>
+        <div class="card-body">
+            <form id="userProfileForm" action="/user/update?_method=PUT" method="POST">
+                <div class="messages text-danger font-weight-bold">{{error}}</div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label>Name</label>
+                        <input id="name" name="name" type="text" class="form-control" value="{{name}}">
+                        <div class="messages text-danger font-weight-bold">{{nameError}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label>Email Address</label>
+                        <input id="emailAddress" name="emailAddress" type="text" class="form-control" value="{{emailAddress}}">
+                        <div class="messages text-danger font-weight-bold">{{emailAddressError}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label>Phone Number</label>
+                        <input id="phoneNumber" name="phoneNumber" type="text" class="form-control" value="{{phoneNumber}}">
+                        <div class="messages text-danger font-weight-bold">{{phoneNumberError}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-fill btn-primary btn-sm float-right">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="card card-user">
+        <div class="card-body">
+        <p class="card-text">
+            <div class="author">
+            <div class="block block-one"></div>
+            <div class="block block-two"></div>
+            <div class="block block-three"></div>
+            <div class="block block-four"></div>
+            <a href="javascript:void(0)">
+                <img class="avatar" src="/assets/img/tai.jpg" alt="...">
+                <h5 class="title">{{name}}</h5>
+            </a>
+            <p class="description">{{emailAddress}}</p>
+            <p class="description">{{phoneNumber}}</p>
+            </div>
+        </p>
+        <div class="card-description">
+            Even when I get it right the first time, I still look for a better way of solving a problem. Failing is okay, just make sure you dont make the same mistake twice. 
+            What problems can I help you resolve, think with me. 
+        </div>
+        </div>
+        <div class="card-footer">
+        <div class="button-container">
+            <button href="https://www.github.com/ttejuosho" target="_blank" class="btn btn-icon btn-round btn-github">
+            <i class="fab fa-github"></i>
+            </button>
+            <button href="javascript:void(0)" class="btn btn-icon btn-round btn-twitter">
+            <i class="fab fa-twitter"></i>
+            </button>
+            <button href="https://www.linkedin.com/in/ttejuosho" target="_blank" class="btn btn-icon btn-round btn-linkedin">
+            <i class="fab fa-linkedin"></i>
+            </button>
+        </div>
+        </div>
+    </div>
+</div>
