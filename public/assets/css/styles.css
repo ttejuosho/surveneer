@@ -45,7 +45,7 @@ img {
 }
 
 .card-register .card-header {
-    padding: 0 0 50px;
+    padding: 0 0 40px;
     overflow: hidden;
 }
 
@@ -57,3 +57,17 @@ img {
 .card-header:first-child {
     border-radius: calc(0.2857rem - 0.0625rem) calc(0.2857rem - 0.0625rem) 0 0;
 }
+
+@media (max-width: 800px) { 
+    .main-panel>.partial-content {
+        padding: 70px 10px 0px 20px;
+        min-height: calc(100vh - 70px);
+    }
+ }
+
+ @media (max-width: 450px) { 
+    .card-register .card-header {
+        padding: 0 0 15px;
+        overflow: hidden;
+    }
+ }
