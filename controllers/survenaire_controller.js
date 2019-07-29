@@ -50,12 +50,13 @@ router.post('/survey/new', (req, res) => {
             }
         }).then((dbSurvey) => {
             if (dbSurvey == null) {
-                //console.log(req.body);
                 db.Survey.create({
                     surveyName: req.body.surveyName,
                     getId: req.body.getId,
                     surveyNotes: req.body.surveyNotes,
-                    surveyInstructions: req.body.surveyInstructions
+                    surveyInstructions: req.body.surveyInstructions,
+                    numberOfRespondents: 0,
+                    UserUserId: req.session.passport.user
                 }).then((dbSurvey) => {
                     //set the Id in the returned object as SurveyId (Object Destructuring)
                     const {
@@ -114,7 +115,7 @@ router.put('/questions/:questionId/update', (req, res) => {
         }
     }).then((dbQuestion) => {
         //dbQuestion is returned which is ID of updated survey  
-        res.redirect('/mysurveys/' + dbQuestion);
+        res.redirect('/mysurveys/' + req.body.SurveyId);
     }).catch((err) => {
         res.render('error', err);
     });
@@ -184,8 +185,30 @@ router.post('/question/new/:surveyId', (req, res) => {
             option3: (req.body.option3 == undefined ? null : req.body.option3),
             option4: (req.body.option4 == undefined ? null : req.body.option4)
         }).then((dbQuestion) => {
-            //console.log(dbQuestion, "LINE 181");
-            return res.render('question/new', dbQuestion.dataValues);
+            //After successfully saving new question, Update number of Questions on the survey
+            db.Survey.findOne({
+                where: {
+                    surveyId: req.params.surveyId
+                }
+            }).then((dbSurvey) => {
+                dbSurvey.dataValues.numberOfQuestions += 1;
+                const updatedSurvey = {
+                    surveyName: dbSurvey.dataValues.surveyName,
+                    getId: dbSurvey.dataValues.getId,
+                    numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                    numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+                    surveyInstructions: dbSurvey.dataValues.surveyInstructions,
+                    surveyNotes: dbSurvey.dataValues.surveyNotes
+                }
+                db.Survey.update(updatedSurvey, {
+                    where: {
+                        surveyId: dbSurvey.dataValues.surveyId
+                    }
+                }).then((dbSurvey) => {
+                    console.log(dbSurvey);
+                    return res.render('question/new', dbQuestion.dataValues);
+                });
+            });        
         }).catch((err) => {
             //console.log(err);
             res.render('error', err);

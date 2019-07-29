@@ -193,6 +193,32 @@ module.exports = (app) => {
         });
     });
 
+    //Update number of questions
+    app.get('/api/survey/newQuestion/:surveyId', (req, res) => {
+        db.Survey.findOne({
+            where: {
+                surveyId: req.params.surveyId
+            }
+        }).then((dbSurvey) => {
+            dbSurvey.dataValues.numberOfQuestions += 1;
+            const updatedSurvey = {
+                surveyName: dbSurvey.dataValues.surveyName,
+                getId: dbSurvey.dataValues.getId,
+                numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+                surveyInstructions: dbSurvey.dataValues.surveyInstructions,
+                surveyNotes: dbSurvey.dataValues.surveyNotes
+            }
+            db.Survey.update(updatedSurvey, {
+                where: {
+                    surveyId: dbSurvey.dataValues.surveyId
+                }
+            }).then((dbSurvey) => {
+                res.json(dbSurvey);
+            });
+        });
+    });
+
     //Get all responses to a survey from a respondent
     app.get('/api/getResponse/:surveyId/:respondentId', (req, res) => {
         db.Response.findAll({
