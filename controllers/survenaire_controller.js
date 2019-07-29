@@ -14,18 +14,18 @@ router.get('/analytics', (req, res) => {
     return res.render("survey/analytics");
 });
 
-router.get('/surveys', (req, res) => {
-    db.Survey.findAll({
-        where: {
-            UserUserId: req.session.passport.user
-        }
-    }).then((dbSurvey) => {
-        var surveys = {
-            survey: dbSurvey
-        };
-        return res.render("surveys", surveys);
-    });
-});
+// router.get('/surveys', (req, res) => {
+//     db.Survey.findAll({
+//         where: {
+//             UserUserId: req.session.passport.user
+//         }
+//     }).then((dbSurvey) => {
+//         var surveys = {
+//             survey: dbSurvey
+//         };
+//         return res.render("surveys", surveys);
+//     });
+// });
 
 router.get('/survey/new', (req, res) => {
     return res.render("survey/new");
@@ -143,12 +143,12 @@ router.get('/questions/:questionId/delete', (req, res) => {
 
 //Improvise Adapt & Overcome
 //Delete Route for Survey
-router.get('/surveys/:id/delete', (req, res) => {
-    db.Survey.findByPk(req.params.id)
+router.get('/surveys/:surveyId/delete', (req, res) => {
+    db.Survey.findByPk(req.params.surveyId)
         .then((dbSurvey) => {
             db.Survey.destroy({
                 where: {
-                    id: dbSurvey.dataValues.id
+                    surveyId: dbSurvey.dataValues.surveyId
                 }
             }).then(() => { res.redirect('/surveys') })
         }).catch((err) => {

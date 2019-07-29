@@ -6,7 +6,7 @@
             <div class="modal-body pt-0 pr-0"><p><span class="text-danger font-weight-bold">Delete</span> ?? Okay...I hope you know what you're doing.</p></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
-                <a href="/surveys/{{surveyId}}/delete"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
+                <a id="deleteSurveyBtn"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
             </div>
           </div>
         </div>
@@ -16,7 +16,7 @@
             <div class="col-lg-4">
                 <div class="card card-chart">
                     <div class="card-header"> 
-                        <i data-toggle="modal" data-target="#confirmDeleteSurveyModal" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
+                        <i onclick="openModal({{surveyId}})" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
                         <h3 class="card-title"><i class="tim-icons icon-atom text-primary"></i><a href="/mysurveys/{{surveyId}}">{{surveyName}}</a></h3>
                         <h5 class="card-category">{{numberOfRespondents}} Questions</h5>
                         <h5 class="card-category">{{numberOfRespondents}} Respondent(s)</h5>
@@ -42,6 +42,14 @@
     </div>
 </div>
 <script>
-        // Initialize Demo Charts
+
+        function openModal (surveyId) {
+         $('#confirmDeleteSurveyModal').modal({
+             backdrop: false
+         });
+    $('#confirmDeleteSurveyModal').modal('show');
+    $('#deleteSurveyBtn').attr('href', '/surveys/' + surveyId + '/delete')
+  }
+          // Initialize Demo Charts
     demo.initDashboardPageCharts();
 </script>
