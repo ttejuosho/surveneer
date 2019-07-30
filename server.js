@@ -4,8 +4,6 @@ var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
 var passport = require('passport')
 var session = require('express-session')
-    //var env        = require('dotenv').load()
-    // bring in the models
 var db = require("./models");
 var app = express();
 
@@ -22,13 +20,11 @@ app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride("_method"));
-//app.set('view options', { layout: 'prelogin' });
 
 // For Passport
 app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-
 
 var exphbs = require("express-handlebars");
 

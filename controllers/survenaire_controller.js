@@ -14,19 +14,6 @@ router.get('/analytics', (req, res) => {
     return res.render("survey/analytics");
 });
 
-// router.get('/surveys', (req, res) => {
-//     db.Survey.findAll({
-//         where: {
-//             UserUserId: req.session.passport.user
-//         }
-//     }).then((dbSurvey) => {
-//         var surveys = {
-//             survey: dbSurvey
-//         };
-//         return res.render("surveys", surveys);
-//     });
-// });
-
 router.get('/survey/new', (req, res) => {
     return res.render("survey/new");
 });
