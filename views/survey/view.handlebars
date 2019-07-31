@@ -8,9 +8,10 @@
     <div class="messages text-danger font-weight-bold">{{Error}}</div>
     <div class="form-group d-none">
         <input type="text" id="surveyId" name="surveyId" value="{{surveyId}}" />
-    </div>
-    <div class="form-group d-none">
         <input type="text" id="questionLength" name="questionLength" value="{{getLength Questions}}" />
+    </div>
+    <div class="form-group">
+        <blockquote class="blockquote mb-0"><h4>{{preSurveyInstructions}}</h4></blockquote>
     </div>
     {{#ifEquals getId "true"}}
     <div class="row">

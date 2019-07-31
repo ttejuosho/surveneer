@@ -41,7 +41,8 @@ router.post('/survey/new', (req, res) => {
                     surveyName: req.body.surveyName,
                     getId: req.body.getId,
                     surveyNotes: req.body.surveyNotes,
-                    surveyInstructions: req.body.surveyInstructions,
+                    preSurveyInstructions: req.body.preSurveyInstructions,
+                    postSurveyInstructions: req.body.postSurveyInstructions,
                     numberOfRespondents: 0,
                     UserUserId: req.session.passport.user
                 }).then((dbSurvey) => {
@@ -184,7 +185,8 @@ router.post('/question/new/:surveyId', (req, res) => {
                     getId: dbSurvey.dataValues.getId,
                     numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
                     numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
-                    surveyInstructions: dbSurvey.dataValues.surveyInstructions,
+                    preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+                    postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                     surveyNotes: dbSurvey.dataValues.surveyNotes
                 }
                 db.Survey.update(updatedSurvey, {
@@ -308,7 +310,8 @@ router.post('/responses', (req, res) => {
                 surveyName: dbSurvey.dataValues.surveyName,
                 getId: dbSurvey.dataValues.getId,
                 numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-                surveyInstructions: dbSurvey.dataValues.surveyInstructions,
+                preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+                postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                 surveyNotes: dbSurvey.dataValues.surveyNotes
             }
             var hbObject = {
@@ -320,7 +323,8 @@ router.post('/responses', (req, res) => {
                 surveyName: dbSurvey.dataValues.surveyName,
                 getId: dbSurvey.dataValues.getId,
                 numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-                surveyInstructions: dbSurvey.dataValues.surveyInstructions,
+                preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+                postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                 surveyNotes: dbSurvey.dataValues.surveyNotes
             }
 
@@ -329,9 +333,9 @@ router.post('/responses', (req, res) => {
                     surveyId: dbSurvey.dataValues.surveyId
                 }
             }).then((dbSurvey) => {
-                //console.log(hbObject);
-                console.log("Number of respondent Updated");
-                return res.redirect('/mysurveys/' + req.body.surveyId);
+                //console.log(dbSurvey); //Returns Survey ID
+                var hbsObject = { layout: false }
+                return res.render('survey/complete', hbsObject);
             });
         });
 

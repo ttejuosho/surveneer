@@ -51,11 +51,21 @@
                     </div>
                 </div>
             </div>
-            <div id="surveyInstructionsInput" class="row d-none mt-3">
+            <div class="row d-none mt-3 surveyInstructionsInput">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <label>Survey Instructions</label>
-                    <input id="surveyInstructions" name="surveyInstructions" type="text" class="form-control" placeholder="Enter instructions for this survey">
+                    <label>Pre-Survey Instructions</label>
+                    <input id="surveyInstructions" name="preSurveyInstructions" type="text" class="form-control mb-0" placeholder="Enter pre instructions for this survey">
+                    <small id="preSurveyInstructionsHelp" class="form-text text-muted">Will be displayed with the survey items</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-none mt-3 surveyInstructionsInput">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Post-Survey Instructions</label>
+                    <input id="postSurveyInstructions" name="postSurveyInstructions" type="text" class="form-control mb-0" placeholder="Enter post instructions for this survey">
+                    <small id="postSurveyInstructionsHelp" class="form-text text-muted">Will be displayed when the survey is complete</small>
                     </div>
                 </div>
             </div>
