@@ -133,7 +133,7 @@ $(function() {
     });
 
     $("input[name='getInstructions']").on('change', function() {
-        $('#surveyInstructionsInput').toggleClass('d-none');
+        $('.surveyInstructionsInput').toggleClass('d-none');
     });
 
     $("input[name='optionType']").on('change', function() {
