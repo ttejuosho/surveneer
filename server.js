@@ -7,7 +7,6 @@ var session = require('express-session')
 var db = require("./models");
 var app = express();
 
-
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + "/public"));
 
@@ -16,7 +15,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
-
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride("_method"));
@@ -67,7 +65,6 @@ app.use("/new", routes);
 app.use("/delete", routes);
 app.use("/survey", routes);
 app.use("/question", routes);
-
 
 // listen on port 3000
 var port = process.env.PORT || 3000;
