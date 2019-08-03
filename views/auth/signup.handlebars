@@ -5,7 +5,7 @@
       <h4 class="card-title">Register</h4>
     </div>
     <div class="card-body">
-      <form id="signupForm" class="form" action="/signup" method="POST">
+      <form id="signupForm" class="form" action="/signup" method="POST" enctype="multipart/form-data">
       <fieldset>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -39,6 +39,19 @@
           </div>
           <input type="password" class="form-control" name="password" placeholder="Password" required>
         </div>
+
+<div class="input-group">
+  <div class="input-group-prepend">
+    {{!-- <i class="tim-icons icon-attach-87"></i> --}}
+  {{!-- <div class="custom-filee">
+    <div class="input-group-textt"> --}}
+    <label class="custom-file-label" for="inputGroupFile01">Profile Image
+    </label>
+  {{!-- </div>
+  </div> --}}
+</div>
+<input type="file" class="custom-file-input" id="profileImage" name="profileImage" aria-describedby="inputGroupFileAddon01">
+</div>
         <div class="input-group mt-4">
           <button type="submit" class="col btn btn-primary">Sign Up</button>
         </div>

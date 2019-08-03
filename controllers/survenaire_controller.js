@@ -79,7 +79,7 @@ router.get('/questions/:questionId/update', (req, res) => {
     db.Question
         .findByPk(req.params.questionId)
         .then((dbQuestion) => {
-            console.log(dbQuestion.dataValues);
+            //console.log(dbQuestion.dataValues);
             res.render('question/update', dbQuestion.dataValues);
         });
 });

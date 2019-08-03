@@ -1,5 +1,5 @@
 var authController = require('../controllers/authcontroller.js');
-
+var upload = 
 module.exports = function(app, passport) {
 
     //route for signup page
@@ -9,11 +9,19 @@ module.exports = function(app, passport) {
     app.get('/signin', authController.signin);
 
     app.post('/signup', (req, res, next) => {
+      upload(req, res, (err) => {
+        if(err){
+          var msg = { error : 'Sign Up Failed', layout: 'partials/prelogin' }
+          return res.render('auth/signup', msg);
+      } else if (req.file === undefined){
+        var msg = { error : 'no img attached', layout: 'partials/prelogin' }
+          return res.render('auth/signup', msg);
+      }else {
         passport.authenticate('local-signup', (err, user, info) =>{
             if (err) {
                 return next(err); // will generate a 500 error
               }
-              if (!user) {
+              if (user) {
                 var msg = { error : 'Sign Up Failed: Username already exists', layout: 'partials/prelogin' }
                 return res.render('auth/signup', msg);
               }
@@ -25,6 +33,9 @@ module.exports = function(app, passport) {
                 res.redirect('/surveys');
               });
         })(req, res, next);
+      }
+      })
+        
     });
 
     app.post('/signin', function(req, res, next) {

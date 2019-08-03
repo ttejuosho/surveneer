@@ -20,11 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         phoneNumber: {
             type: DataTypes.BIGINT,
             allowNull: true
+        },
+        profileImage: {
+            type: DataTypes.BLOB('long'),
+            allowNull: true
         }
-        // profileImage: {
-        //     type: DataTypes.BLOB('long'),
-        //     allowNull: true
-        // }
     });
 
     User.associate = (models) => {
