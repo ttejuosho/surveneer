@@ -162,7 +162,7 @@ router.post('/question/new/:surveyId', (req, res) => {
         }
         res.render("question/new", err);
     } else {
-        console.log(req.body);
+        //console.log(req.body);
         db.Question.create({
             question: req.body.question,
             optionType: req.body.optionType,
@@ -362,8 +362,9 @@ router.get('/profile', (req, res) => {
     db.User
         .findByPk(req.session.passport.user)
         .then((dbUser) => {
-            console.log(dbUser.dataValues);
-            res.render('user/profile', dbUser.dataValues);
+            var hbsObject = dbUser.dataValues;
+            hbsObject['initials'] = hbsObject.name.split(" ")[0][0] + hbsObject.name.split(" ")[1][0];
+            res.render('user/profile', hbsObject);
         });
 });
 
@@ -385,7 +386,6 @@ router.put('/user/update', (req,res) => {
         updatedUserInfo['phoneNumberError'] = "What if I want to call you."; 
         return res.render('user/profile', updatedUserInfo);
     } else {
-
         db.User.update(updatedUserInfo, {
             where: {
                 userId: req.session.passport.user

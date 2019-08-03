@@ -10,6 +10,7 @@ const multer = require('multer');
 
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/uploads"));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.json());
@@ -27,7 +28,7 @@ app.use(passport.session()); // persistent login sessions
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
-    destination: './public/uploads/',
+    destination: './uploads/',
     filename: function(req, file, cb){
       cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -56,7 +57,7 @@ function checkFileType(file, cb){
     } else {
       cb('Error: Images Only!');
     }
-  }
+}
 
 var exphbs = require("express-handlebars");
 
@@ -86,13 +87,13 @@ app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 var routes = require("./controllers/survenaire_controller");
 
-require('./routes/auth.js')(app, passport);
+require('./routes/auth.js')(upload, app, passport);
 
 //load passport strategies
 require('./config/passport/passport.js')(passport, db.User);
 
 require("./routes/api-routes.js")(app);
-require('./routes/auth')(app);
+//require('./routes/auth')(app);
 app.use("/", routes);
 app.use("/update", routes);
 app.use("/new", routes);

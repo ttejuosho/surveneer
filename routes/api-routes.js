@@ -5,8 +5,26 @@ var db = require("../models");
 // =============================================================
 module.exports = (app) => {
 
-    //Get all Surveys
-    app.get("/api/surveys/:userId", (req, res) => {
+    //Get a User
+    app.get("/api/users/:userId", (req, res) => {
+        db.User.findAll({
+            where: {
+                userId: req.params.userId
+            }
+        }).then(function(dbUser) {
+            res.json(dbUser);
+        });
+    });
+
+    //Get all Users
+    app.get("/api/users", (req, res) => {
+        db.User.findAll().then(function(dbUser) {
+            res.json(dbUser);
+        });
+    });
+
+    //Get all Surveys by a User
+    app.get("/api/surveys/user/:userId", (req, res) => {
         db.Survey.findAll({
             where: {
                 UserUserId: req.params.userId

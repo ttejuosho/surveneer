@@ -51,9 +51,9 @@ module.exports = function(passport, user) {
                         password: userPassword,
                         name: req.body.name,
                         phoneNumber: req.body.phoneNumber,
-                        profileImage: req.file
+                        profileImage: req.file.filename
                     };
-                console.log(data.profileImage);
+                
                     User.create(data).then(function(newUser, created) {
                         if (!newUser) {
                             return done(null, false);

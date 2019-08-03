@@ -1,6 +1,6 @@
 var authController = require('../controllers/authcontroller.js');
-var upload = 
-module.exports = function(app, passport) {
+
+module.exports = function(upload, app, passport) {
 
     //route for signup page
     app.get('/signup', authController.signup);
@@ -13,28 +13,28 @@ module.exports = function(app, passport) {
         if(err){
           var msg = { error : 'Sign Up Failed', layout: 'partials/prelogin' }
           return res.render('auth/signup', msg);
-      } else if (req.file === undefined){
-        var msg = { error : 'no img attached', layout: 'partials/prelogin' }
-          return res.render('auth/signup', msg);
-      }else {
-        passport.authenticate('local-signup', (err, user, info) =>{
-            if (err) {
-                return next(err); // will generate a 500 error
-              }
-              if (user) {
-                var msg = { error : 'Sign Up Failed: Username already exists', layout: 'partials/prelogin' }
-                return res.render('auth/signup', msg);
-              }
-              req.login(user, signupErr => {
-                if(signupErr){
-                var msg = { error : 'Sign up Failed', layout: 'partials/prelogin' }
-                return res.render('auth/signup', msg);
-                } 
-                res.redirect('/surveys');
-              });
-        })(req, res, next);
-      }
-      })
+        } else if (req.file === undefined){
+          var msg = { error : 'no img attached', layout: 'partials/prelogin' }
+            return res.render('auth/signup', msg);
+        } else {
+          passport.authenticate('local-signup', (err, user, info) =>{
+              if (err) {
+                  return next(err); // will generate a 500 error
+                }
+                if (!user) {
+                  var msg = { error : 'Sign Up Failed: Username already exists', layout: 'partials/prelogin' }
+                  return res.render('auth/signup', msg);
+                }
+                req.login(user, signupErr => {
+                  if(signupErr){
+                  var msg = { error : 'Sign up Failed', layout: 'partials/prelogin' }
+                  return res.render('auth/signup', msg);
+                  } 
+                  res.redirect('/surveys');
+                });
+          })(req, res, next);
+        }
+      });
         
     });
 

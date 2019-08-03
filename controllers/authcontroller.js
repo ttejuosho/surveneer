@@ -12,17 +12,28 @@ exports.signin = function(req, res) {
 }
 
 exports.surveys = function(req, res) {
+    var surveys = {};
     //console.log("Session Id of user " + req.sessionID);
     db.Survey.findAll({
         where: {
             UserUserId: req.session.passport.user
         }
     }).then((dbSurvey) => {
-            var surveys = {
-                survey: dbSurvey
-            };
-            surveys['userId'] = req.session.passport.user;
+        surveys['survey'] = dbSurvey;
+        surveys['userId'] = req.session.passport.user;
+        db.User.findAll({
+            where: {
+                userId: req.session.passport.user
+            }
+        }).then(function(dbUser) {
+            surveys['name'] = dbUser[0].dataValues.name;
+            surveys['initials'] = dbUser[0].dataValues.name.split(" ")[0][0] + dbUser[0].dataValues.name.split(" ")[1][0];
+            surveys['emailAddress'] = dbUser[0].dataValues.emailAddress;
+            surveys['phoneNumber'] = dbUser[0].dataValues.phoneNumber;
+            surveys['profileImage'] = dbUser[0].dataValues.profileImage;
             return res.render("surveys", surveys);
+        });
+        
     });
 }
 
@@ -30,7 +41,6 @@ exports.surveys = function(req, res) {
 exports.sessionUserId = function(req, res) {
     //body of the session
     var sessionUser = req.session;
-    //res.send(sessionUserId);
 
     //console.log the id of the user
     console.log(sessionUser.passport.user, " ======user id number=====");
