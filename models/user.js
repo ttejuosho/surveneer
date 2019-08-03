@@ -13,14 +13,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        password : {
+        password: {
             type: DataTypes.STRING,
-            allowNull: false 
+            allowNull: false
         },
         phoneNumber: {
             type: DataTypes.BIGINT,
             allowNull: true
         }
+        // profileImage: {
+        //     type: DataTypes.BLOB('long'),
+        //     allowNull: true
+        // }
     });
 
     User.associate = (models) => {

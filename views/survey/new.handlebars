@@ -5,7 +5,7 @@
         <h5 class="title">New Survey</h5>
         </div>
         <div class="card-body">
-        <form id="newSurveyForm" action="/survey/new" method="POST">
+        <form id="newSurveyForm" action="/survey/new" method="POST" enctype="multipart/form-data">
         <div class="messages text-danger font-weight-bold">{{error}}</div>
             <div class="row">
                 <div class="col-md-12">
@@ -47,6 +47,16 @@
                         <span class="form-check-sign">
                             <span class="check"></span>
                         </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input type="file" class="form-control-file" id="profileImage">
+                        Profile Image
                         </label>
                     </div>
                 </div>
