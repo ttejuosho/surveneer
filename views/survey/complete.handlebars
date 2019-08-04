@@ -33,7 +33,9 @@
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
                         <h4>Thank you for your time !!! We got your responses.</h4>
-                        <h4>{{postSurveyInstructions}}</h4>
+                        {{#if postSurveyInstructions}}
+                            <h4>{{postSurveyInstructions}}</h4>
+                        {{/if}}
                     </blockquote>
                 </div>
             </div>

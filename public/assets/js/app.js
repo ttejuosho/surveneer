@@ -171,4 +171,19 @@ $(function() {
         }
     });
 
+
+    $('#editSurvey').on('click', () => {
+        $('.surveyEditInput').removeAttr('readonly');
+        $('#surveyUpdateButton').removeClass('d-none');
+        $('#surveySaveButton').removeClass('d-none');
+        $('#editSurvey').addClass('d-none');
+    });
+
+    $('#surveySaveButton').on('click', () => {
+      $('.surveyEditInput').attr('readonly', true);
+      $('#surveyUpdateButton').addClass('d-none');
+      $('#surveySaveButton').addClass('d-none');
+      $('#editSurvey').removeClass('d-none');
+  });
+
 });

@@ -12,28 +12,20 @@ exports.signin = function(req, res) {
 }
 
 exports.surveys = function(req, res) {
-    var surveys = {};
-    //console.log("Session Id of user " + req.sessionID);
     db.Survey.findAll({
         where: {
             UserUserId: req.session.passport.user
         }
     }).then((dbSurvey) => {
+        var surveys = {};
         surveys['survey'] = dbSurvey;
         surveys['userId'] = req.session.passport.user;
-        db.User.findAll({
-            where: {
-                userId: req.session.passport.user
-            }
-        }).then(function(dbUser) {
-            surveys['name'] = dbUser[0].dataValues.name;
-            surveys['initials'] = dbUser[0].dataValues.name.split(" ")[0][0] + dbUser[0].dataValues.name.split(" ")[1][0];
-            surveys['emailAddress'] = dbUser[0].dataValues.emailAddress;
-            surveys['phoneNumber'] = dbUser[0].dataValues.phoneNumber;
-            surveys['profileImage'] = dbUser[0].dataValues.profileImage;
-            return res.render("surveys", surveys);
-        });
-        
+        surveys['name'] = req.session.globalUser.name;
+        surveys['initials'] = req.session.globalUser.initials;
+        surveys['emailAddress'] = req.session.globalUser.emailAddress;
+        surveys['phoneNumber'] = req.session.globalUser.phoneNumber;
+        surveys['profileImage'] = req.session.globalUser.profileImage;
+        return res.render("surveys", surveys);
     });
 }
 

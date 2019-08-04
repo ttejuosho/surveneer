@@ -10,9 +10,11 @@
         <input type="text" id="surveyId" name="surveyId" value="{{surveyId}}" />
         <input type="text" id="questionLength" name="questionLength" value="{{getLength Questions}}" />
     </div>
+    {{#if preSurveyInstructions}}
     <div class="form-group">
         <blockquote class="blockquote mb-0"><h4>{{preSurveyInstructions}}</h4></blockquote>
     </div>
+    {{/if}}
     {{#ifEquals getId "true"}}
     <div class="row">
         <div class="col-md-4 pr-md-1">

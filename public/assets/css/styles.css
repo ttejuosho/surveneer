@@ -11,6 +11,10 @@
     width: 350px;
 }
 
+.tab-content{
+    min-height: 300px;
+}
+
 .card-register .card-img {
     left: 0;
     top: -15%;

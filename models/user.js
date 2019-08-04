@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         profileImage: {
-            type: DataTypes.BLOB('long'),
+            type: DataTypes.STRING,
             allowNull: true
         }
     });

@@ -3,28 +3,26 @@ var router = express.Router();
 var db = require("../models");
 
 router.get('/', (req, res) => {
-    res.redirect('/signin');
+    res.redirect('/index');
 });
 
 router.get('/index', (req, res) => {
-    return res.render("index");
+    return res.render("index", req.session.globalUser);
 });
 
 router.get('/analytics', (req, res) => {
-    return res.render("survey/analytics");
+    return res.render("survey/analytics", req.session.globalUser);
 });
 
-router.get('/survey/new', (req, res) => {
-    return res.render("survey/new");
+router.get('/newSurvey', (req, res) => {
+    console.log(req.session.globalUser);
+    return res.render("survey/new", req.session.globalUser);
 });
 
 //New Survey POST Route
-router.post('/survey/new', (req, res) => {
-    if (!req.body.getId) {
-        req.body.getId = false;
-    }
+router.post('/newSurvey', (req, res) => {
     //Validate Survey Name
-    if (req.body.surveyName == "") {
+    if (req.body.surveyName === "") {
         var err = {
             surveyNameError: "Survey Name is required."
         }
@@ -53,7 +51,6 @@ router.post('/survey/new', (req, res) => {
                     } = dbSurvey.dataValues;
 
                     hbsObject.SurveySurveyId = dbSurvey.dataValues.surveyId;
-                    //console.log(hbsObject);
                     return res.render('question/new', hbsObject);
                 }).catch((err) => {
                     res.render('error', err);
@@ -68,9 +65,36 @@ router.post('/survey/new', (req, res) => {
     }
 });
 
+//Post Route to update Survey Information
+router.post('/updateSurvey', (req,res) => { 
+    const updatedSurveyInfo = {
+        surveyName: req.body.surveyName,
+        surveyNotes: req.body.surveyNotes,
+        preSurveyInstructions: req.body.preSurveyInstructions,
+        postSurveyInstructions: req.body.postSurveyInstructions
+    }
+    db.Survey.update(updatedSurveyInfo, {
+        where: {
+            surveyId: req.body.surveyId
+        }
+    }).catch((err) => {
+        res.render('error', err);
+    });
+ });
+
+
 //Add Question to Survey Get Route
 router.get('/question/new/:surveyId', (req, res) => {
-    var hbsObject = { surveyId: req.params.surveyId, SurveySurveyId: req.params.surveyId }
+    var hbsObject = { 
+        surveyId: req.params.surveyId, 
+        SurveySurveyId: req.params.surveyId,
+        userId: req.session.passport.user,
+        name: req.session.globalUser.name,
+        initials: req.session.globalUser.initials,
+        emailAddress: req.session.globalUser.emailAddress,
+        phoneNumber: req.session.globalUser.phoneNumber,
+        profileImage: req.session.globalUser.profileImage
+    }
     return res.render("question/new", hbsObject);
 });
 
@@ -206,18 +230,18 @@ router.post('/question/new/:surveyId', (req, res) => {
 });
 
 //======Get All User Surveys With Questions==================
-router.get('/mysurveys', function(req, res) {
-    where = (req.query.where && JSON.parse(req.query.where) || null);
-    db.Survey.findAll({
-        where: where,
-        order: req.query.order || [],
-        include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
-    }).then(function(surveys) {
-        res.json(surveys);
-    }).catch(function(err) {
-        res.render('error', err);
-    });
-});
+// router.get('/mysurveys', function(req, res) {
+//     where = (req.query.where && JSON.parse(req.query.where) || null);
+//     db.Survey.findAll({
+//         where: where,
+//         order: req.query.order || [],
+//         include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
+//     }).then(function(surveys) {
+//         res.json(surveys);
+//     }).catch(function(err) {
+//         res.render('error', err);
+//     });
+// });
 
 //=================Get One User Survey With Questions==========
 router.get('/mysurveys/:surveyId', function(req, res) {
@@ -232,6 +256,12 @@ router.get('/mysurveys/:surveyId', function(req, res) {
         ]
     }).then(function(survey) {
         var hbsObject = survey.dataValues;
+        hbsObject['initials'] = req.session.globalUser.initials;
+        hbsObject['name'] = req.session.globalUser.name;
+        hbsObject['emailAddress'] = req.session.globalUser.emailAddress;
+        hbsObject['phoneNumber'] = req.session.globalUser.phoneNumber;
+        hbsObject['profileImage'] = req.session.globalUser.profileImage;
+        console.log(req.session.globalUser);
         res.render('survey/survey', hbsObject);
     }).catch(function(err) {
         res.render('error', err);
@@ -364,6 +394,7 @@ router.get('/profile', (req, res) => {
         .then((dbUser) => {
             var hbsObject = dbUser.dataValues;
             hbsObject['initials'] = hbsObject.name.split(" ")[0][0] + hbsObject.name.split(" ")[1][0];
+            //console.log(hbsObject);
             res.render('user/profile', hbsObject);
         });
 });
