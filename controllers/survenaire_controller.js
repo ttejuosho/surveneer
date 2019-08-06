@@ -104,7 +104,13 @@ router.get('/questions/:questionId/update', (req, res) => {
         .findByPk(req.params.questionId)
         .then((dbQuestion) => {
             //console.log(dbQuestion.dataValues);
-            res.render('question/update', dbQuestion.dataValues);
+            var hbsObject = dbQuestion.dataValues;
+            hbsObject['initials'] = req.session.globalUser.initials;
+            hbsObject['name'] = req.session.globalUser.name;
+            hbsObject['emailAddress'] = req.session.globalUser.emailAddress;
+            hbsObject['phoneNumber'] = req.session.globalUser.phoneNumber;
+            hbsObject['profileImage'] = req.session.globalUser.profileImage;
+            res.render('question/update', hbsObject);
         });
 });
 
@@ -218,7 +224,7 @@ router.post('/question/new/:surveyId', (req, res) => {
                         surveyId: dbSurvey.dataValues.surveyId
                     }
                 }).then((dbSurvey) => {
-                    console.log(dbSurvey);
+                    //console.log(dbSurvey);
                     return res.render('question/new', dbQuestion.dataValues);
                 });
             });        
@@ -261,7 +267,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
         hbsObject['emailAddress'] = req.session.globalUser.emailAddress;
         hbsObject['phoneNumber'] = req.session.globalUser.phoneNumber;
         hbsObject['profileImage'] = req.session.globalUser.profileImage;
-        console.log(req.session.globalUser);
+        //console.log(survey.dataValues);
         res.render('survey/survey', hbsObject);
     }).catch(function(err) {
         res.render('error', err);
@@ -277,7 +283,14 @@ router.get('/surveys/:surveyId/view', (req, res) => {
         include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
     }).then(function(survey) {
         //console.log(survey.dataValues);
-        res.render('survey/view', survey.dataValues);
+        var hbsObject = survey.dataValues;
+        hbsObject['name'] = req.session.globalUser.name,
+        hbsObject['initials'] = req.session.globalUser.initials,
+        hbsObject['emailAddress'] = req.session.globalUser.emailAddress,
+        hbsObject['phoneNumber'] = req.session.globalUser.phoneNumber,
+        hbsObject['profileImage'] = req.session.globalUser.profileImage
+        //console.log(hbsObject);
+        res.render('survey/view', hbsObject);
     }).catch(function(err) {
         res.render('error', err);
     });

@@ -105,6 +105,7 @@ module.exports = function (upload, app, passport) {
   //route for new Survey Page
   app.get('/survey/new', isLoggedIn);
   app.get('/profile', isLoggedIn);
+  app.get('/index', isLoggedIn);
 
   //route for logging out
   app.get('/logout', authController.logout);

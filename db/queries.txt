@@ -24,3 +24,7 @@ VALUES ('Are you here?', 'YesNo');
 USE Survenaire;
 UPDATE surveys SET surveyName = 'The Challenge', getId = 'False'
 Where id = 1;
+
+USE Survenaire;
+DELETE FROM survenaire.Responses
+WHERE responseId = 1;

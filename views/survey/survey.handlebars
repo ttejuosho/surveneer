@@ -220,8 +220,10 @@
 
         <div id="collapseOne{{@index}}" class="collapse" role="tabpanel" aria-labelledby="headingOne{{@index}}">
         <div id="Respondent{{@index}}" class="card-body">
+            {{#ifEquals getId "true"}}
             <h5>Phone Number: {{respondentPhone}}</h5> 
             <h5>Email Address: {{respondentEmail}}</h5>
+            {{/ifEquals}}
             <div class="row">
                 <div class="col-md-6 pr-md-1">
                     {{#each ../Questions}} 
