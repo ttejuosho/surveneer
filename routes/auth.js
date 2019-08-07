@@ -8,6 +8,37 @@ module.exports = function (upload, app, passport) {
   //route for sigin page
   app.get('/signin', authController.signin);
 
+  app.post('/addSurveyImage/:surveyId', (req, res) => {
+    upload(req, res, (err) => {
+        // if (req.body.surveyImageName = ""){
+        //     var msg = {
+        //         error: 'Survey Image Name Required'
+        //       }
+        //       return res.render('survey/survey', msg);
+        // }
+
+        // if (req.file === undefined) {
+        //   var msg = {
+        //     error: 'Upload Failed: No Image Attached'
+        //   }
+        //   return res.render('survey/survey', msg);
+        // } else {
+            console.log(req.file.filename);
+            console.log(req.body.surveyImageName);
+            console.log(req.params.surveyId);
+
+            // db.SurveyImage.create({
+            //     surveyImageName: req.body.surveyImageName,
+            //     surveyImage: req.file.filename
+            // }).then((dbSurveyImage) => {
+
+            // }).catch((err) => {
+            //     res.render('error', err);
+            // });
+        //}
+    });
+});
+
   app.post('/signup', (req, res, next) => {
     upload(req, res, (err) => {
       if (req.file === undefined) {
@@ -22,8 +53,7 @@ module.exports = function (upload, app, passport) {
           layout: 'partials/prelogin'
         }
         return res.render('auth/signup', msg);
-      } else
-      if (err) {
+      } else if (err) {
         var msg = {
           error: 'Sign Up Failed',
           layout: 'partials/prelogin'
