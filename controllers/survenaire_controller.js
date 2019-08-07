@@ -7,16 +7,36 @@ router.get('/', (req, res) => {
 });
 
 router.get('/index', (req, res) => {
-    return res.render("index", req.session.globalUser);
+    var hbsObject = { 
+        name: req.session.globalUser.name,
+        initials: req.session.globalUser.initials,
+        emailAddress: req.session.globalUser.emailAddress,
+        phoneNumber: req.session.globalUser.phoneNumber,
+        profileImage: req.session.globalUser.profileImage
+    }
+    return res.render("index", hbsObject);
 });
 
 router.get('/analytics', (req, res) => {
-    return res.render("survey/analytics", req.session.globalUser);
+    var hbsObject = { 
+        name: req.session.globalUser.name,
+        initials: req.session.globalUser.initials,
+        emailAddress: req.session.globalUser.emailAddress,
+        phoneNumber: req.session.globalUser.phoneNumber,
+        profileImage: req.session.globalUser.profileImage
+    }
+    return res.render("survey/analytics", hbsObject);
 });
 
 router.get('/newSurvey', (req, res) => {
-    console.log(req.session.globalUser);
-    return res.render("survey/new", req.session.globalUser);
+    var hbsObject = { 
+        name: req.session.globalUser.name,
+        initials: req.session.globalUser.initials,
+        emailAddress: req.session.globalUser.emailAddress,
+        phoneNumber: req.session.globalUser.phoneNumber,
+        profileImage: req.session.globalUser.profileImage
+    }
+    return res.render("survey/new", hbsObject);
 });
 
 //New Survey POST Route
@@ -84,7 +104,7 @@ router.post('/updateSurvey', (req,res) => {
 
 
 //Add Question to Survey Get Route
-router.get('/question/new/:surveyId', (req, res) => {
+router.get('/newQuestion/:surveyId', (req, res) => {
     var hbsObject = { 
         surveyId: req.params.surveyId, 
         SurveySurveyId: req.params.surveyId,
@@ -99,7 +119,7 @@ router.get('/question/new/:surveyId', (req, res) => {
 });
 
 //Get Route to Update Question
-router.get('/questions/:questionId/update', (req, res) => {
+router.get('/updateQuestion/:questionId', (req, res) => {
     db.Question
         .findByPk(req.params.questionId)
         .then((dbQuestion) => {
@@ -115,7 +135,7 @@ router.get('/questions/:questionId/update', (req, res) => {
 });
 
 //Edit Route for Questions
-router.put('/questions/:questionId/update', (req, res) => {
+router.put('/updateQuestion/:questionId', (req, res) => {
     const dbQuestion = {
         question: req.body.question,
         optionType: req.body.optionType,
@@ -140,7 +160,7 @@ router.put('/questions/:questionId/update', (req, res) => {
 });
 
 //Delete Route for Questions
-router.get('/questions/:questionId/delete', (req, res) => {
+router.get('/deleteQuestion/:questionId', (req, res) => {
     db.Question.findByPk(req.params.questionId)
         .then((dbQuestion) => {
             //console.log(dbQuestion);
@@ -162,7 +182,7 @@ router.get('/questions/:questionId/delete', (req, res) => {
 
 //Improvise Adapt & Overcome
 //Delete Route for Survey
-router.get('/surveys/:surveyId/delete', (req, res) => {
+router.get('/deleteSurvey/:surveyId', (req, res) => {
     db.Survey.findByPk(req.params.surveyId)
         .then((dbSurvey) => {
             db.Survey.destroy({
@@ -175,7 +195,7 @@ router.get('/surveys/:surveyId/delete', (req, res) => {
         });
 });
 
-router.post('/question/new/:surveyId', (req, res) => {
+router.post('/newQuestion/:surveyId', (req, res) => {
     //TODO:    Validate Received SurveyId HERE
 
     //Validate Survey Name
@@ -224,8 +244,17 @@ router.post('/question/new/:surveyId', (req, res) => {
                         surveyId: dbSurvey.dataValues.surveyId
                     }
                 }).then((dbSurvey) => {
-                    //console.log(dbSurvey);
-                    return res.render('question/new', dbQuestion.dataValues);
+                    //console.log(dbQuestion.dataValues);
+                    var hbsObject = { 
+                        SurveySurveyId: dbQuestion.dataValues.SurveySurveyId,
+                        userId: req.session.passport.user,
+                        name: req.session.globalUser.name,
+                        initials: req.session.globalUser.initials,
+                        emailAddress: req.session.globalUser.emailAddress,
+                        phoneNumber: req.session.globalUser.phoneNumber,
+                        profileImage: req.session.globalUser.profileImage
+                    }
+                    return res.render('question/new', hbsObject);
                 });
             });        
         }).catch((err) => {
@@ -275,7 +304,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
 });
 
 //View Route For a Survey (Internal)
-router.get('/surveys/:surveyId/view', (req, res) => {
+router.get('/viewSurvey/:surveyId', (req, res) => {
     db.Survey.findOne({
         where: {
             surveyId: req.params.surveyId
@@ -357,7 +386,7 @@ router.post('/responses', (req, res) => {
                 postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                 surveyNotes: dbSurvey.dataValues.surveyNotes
             }
-            var hbObject = {
+            var hbsObject = {
                 respondentName: req.body.respondentName,
                 respondentEmail: req.body.respondentEmail,
                 respondentPhone: req.body.respondentPhone,
@@ -381,7 +410,6 @@ router.post('/responses', (req, res) => {
                 return res.render('survey/complete', hbsObject);
             });
         });
-
     }).catch((err) => {
         res.render('error', err);
     });
