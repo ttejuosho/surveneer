@@ -8,8 +8,11 @@ module.exports = function (upload, app, passport) {
   //route for sigin page
   app.get('/signin', authController.signin);
 
-  app.post('/addSurveyImage/:surveyId', (req, res) => {
+  app.post('/addSurveyImage/:surveyId', (req, res, next) => {
     upload(req, res, (err) => {
+      if (err) {
+        return next(err); // will generate a 500 error
+      }
         // if (req.body.surveyImageName = ""){
         //     var msg = {
         //         error: 'Survey Image Name Required'
