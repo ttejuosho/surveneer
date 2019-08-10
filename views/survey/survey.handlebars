@@ -34,6 +34,7 @@
 </div>
 <div class="card-body">
 <form id="updateSurveyForm" class="form" action="/updateSurvey" method="POST" target="updateSurvey_iframe">
+<fieldset>
 <div class="row d-none">
     <div class="col-md-12">
         <div class="form-group">
@@ -70,12 +71,12 @@
 
 <div class="row mb-3">
     <div class="col-md-12">
-        <div class="form-check">
+        <div class="form-check disabled">
         <label class="form-check-label">Get Respondent Information
         {{#ifEquals getId 0}}
-        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=false>
+        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>
         {{else}}
-        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=true checked>
+        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
@@ -85,12 +86,12 @@
 
 <div class="row mb-3">
     <div class="col-md-12">
-        <div class="form-check">
+        <div class="form-check disabled">
         <label class="form-check-label">Show Terms of Use
         {{#ifEquals showTOU 0}}
-        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=false> 
+        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled> 
         {{else}} 
-        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=true checked> 
+        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled> 
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
@@ -136,8 +137,9 @@
 
 </div>
 <div class="card-footer">
-<button id="surveySaveButton" class="btn btn-sm btn-primary d-none float-right">Update</button>
+    <button id="surveySaveButton" type="submit" class="btn btn-sm btn-primary d-none float-right">Update</button>
 </div>
+</fieldset>
 </form>
 <iframe id="updateSurvey_iframe" name="updateSurvey_iframe" style="display: none;"></iframe>
 </div>
@@ -289,19 +291,19 @@
 {{!-- End  --}}
 
 <script>
-    var openModal  = (questionId) => {
-         $('#confirmDeleteQuestionModal').modal({
-             backdrop: false
-         });
+var openModal  = (questionId) => {
+    $('#confirmDeleteQuestionModal').modal({
+        backdrop: false
+    });
     $('#confirmDeleteQuestionModal').modal('show');
     $('#modalDeleteBtn').attr('href', '/deleteQuestion/' + questionId )
   }
 
-    var openSurveyImageModal = (surveyId) => {
-        $('#addSurveyImageModal').modal({
-             backdrop: false
-         });
-         $('#addSurveyImageModal').modal('show');
-         //$('#addSurveyImageBtn').attr('href', '/addSurveyImage/' + surveyId )
-    }
+var openSurveyImageModal = (surveyId) => {
+    $('#addSurveyImageModal').modal({
+            backdrop: false
+        });
+        $('#addSurveyImageModal').modal('show');
+        //$('#addSurveyImageBtn').attr('href', '/addSurveyImage/' + surveyId )
+}
 </script>

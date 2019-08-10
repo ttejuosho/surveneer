@@ -43,12 +43,12 @@
 </div>
 <script>
 
-        function openModal (surveyId) {
-         $('#confirmDeleteSurveyModal').modal({
-             backdrop: false
-         });
+function openModal (surveyId) {
+    $('#confirmDeleteSurveyModal').modal({
+        backdrop: false
+    });
     $('#confirmDeleteSurveyModal').modal('show');
-    $('#deleteSurveyBtn').attr('href', '/surveys/' + surveyId + '/delete')
+    $('#deleteSurveyBtn').attr('href', '/deleteSurvey/' + surveyId)
   }
           // Initialize Demo Charts
     demo.initDashboardPageCharts();
