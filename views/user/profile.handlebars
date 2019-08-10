@@ -4,7 +4,7 @@
             User Profile
         </div>
         <div class="card-body">
-            <form id="userProfileForm" action="/user/update?_method=PUT" method="POST">
+            <form id="userProfileForm" class="form" action="/userUpdate" method="POST" enctype="multipart/form-data">
                 <div class="messages text-danger font-weight-bold">{{error}}</div>
                 <div class="row">
                     <div class="col-md-12">
@@ -23,10 +23,34 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                        <label>Phone Number</label>
-                        <input id="phoneNumber" name="phoneNumber" type="text" class="form-control" value="{{phoneNumber}}">
-                        <div class="messages text-danger font-weight-bold">{{phoneNumberError}}</div>
+                            <label>Phone Number</label>
+                            <input id="phoneNumber" name="phoneNumber" type="text" class="form-control" value="{{phoneNumber}}">
+                            <div class="messages text-danger font-weight-bold">{{phoneNumberError}}</div>
                         </div>
+                    </div>
+                    <div class="col-md-12"><label>Photo Upload</label></div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose Image</label>
+                        </div>
+                            <input type="file" class="custom-file-input" id="profileImage" name="profileImage" aria-describedby="inputGroupFileAddon01">
+                    </div>
+
+                    <div class="col-md-12">
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="profileImageRadio" id="surveyImageRadio" value="surveyimage"> Survey Image
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-radio form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="profileImageRadio" id="profileImageRadio" value="profileimage"> Profile Image
+                                    <span class="form-check-sign"></span>
+                                </label>
+                            </div>
+                            <div class="messages text-danger font-weight-bold mt-2">{{profileImageError}}</div>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -46,7 +70,7 @@
             <div class="block block-three"></div>
             <div class="block block-four"></div>
             <a href="javascript:void(0)">
-                <img class="avatar" src="./{{profileImage}}" alt="UserImage">
+                <img class="avatar" src="./{{profileImage}}" alt="Profile Image">
                 <h5 class="title">{{name}}</h5>
             </a>
             <p class="description">{{emailAddress}}</p>

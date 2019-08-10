@@ -1,66 +1,80 @@
-var authController = require('../controllers/authcontroller.js');
+/* eslint-disable require-jsdoc */
+/* eslint-disable max-len */
+const authController = require('../controllers/authcontroller.js');
+const db = require('../models');
 
-module.exports = function (upload, app, passport) {
-
-  //route for signup page
+module.exports = function(upload, app, passport) {
+  // route for signup page
   app.get('/signup', authController.signup);
 
-  //route for sigin page
+  // route for sigin page
   app.get('/signin', authController.signin);
 
-  app.post('/addSurveyImage/:surveyId', (req, res, next) => {
+  // Post Route to Update User Info
+  app.post('/userUpdate', (req, res) => {
     upload(req, res, (err) => {
-      if (err) {
-        return next(err); // will generate a 500 error
+      const updatedUserInfo = {
+        name: req.body.name,
+        emailAddress: req.body.emailAddress,
+        phoneNumber: req.body.phoneNumber,
+      };
+      // Validate User Info
+      if (req.file !== undefined && req.body.profileImageRadio == undefined) {
+        updatedUserInfo['profileImageError'] = 'Profile or Survey ? Which are you uploading ? ';
+        Object.assign(updatedUserInfo, req.session.globalUser);
+        return res.render('user/profile', updatedUserInfo);
+      } else if (req.body.name == '') {
+        Object.assign(updatedUserInfo, req.session.globalUser);
+        updatedUserInfo['nameError'] = 'Whats your name ?';
+        return res.render('user/profile', updatedUserInfo);
+      } else if (req.body.emailAddress == '') {
+        Object.assign(updatedUserInfo, req.session.globalUser);
+        updatedUserInfo['emailAddressError'] = 'Uhm... Im going to need your email address.';
+        return res.render('user/profile', updatedUserInfo);
+      } else if (req.body.phoneNumber == '') {
+        Object.assign(updatedUserInfo, req.session.globalUser);
+        updatedUserInfo['phoneNumberError'] = 'What if I want to call you.';
+        return res.render('user/profile', updatedUserInfo);
+      } else {
+        if (req.file !== undefined) {
+          if (req.body.profileImageRadio === 'profileimage') {
+            updatedUserInfo.profileImage = req.file.filename;
+          } else {
+            updatedUserInfo.surveyImage = req.file.filename;
+          }
+        }
+        db.User.update(updatedUserInfo, {
+          where: {
+            userId: req.session.passport.user,
+          },
+        }).then((dbUser) => {
+          res.redirect('/profile');
+        }).catch((err) => {
+          res.render('error', err);
+        });
       }
-        // if (req.body.surveyImageName = ""){
-        //     var msg = {
-        //         error: 'Survey Image Name Required'
-        //       }
-        //       return res.render('survey/survey', msg);
-        // }
-
-        // if (req.file === undefined) {
-        //   var msg = {
-        //     error: 'Upload Failed: No Image Attached'
-        //   }
-        //   return res.render('survey/survey', msg);
-        // } else {
-            console.log(req.file.filename);
-            console.log(req.body.surveyImageName);
-            console.log(req.params.surveyId);
-
-            // db.SurveyImage.create({
-            //     surveyImageName: req.body.surveyImageName,
-            //     surveyImage: req.file.filename
-            // }).then((dbSurveyImage) => {
-
-            // }).catch((err) => {
-            //     res.render('error', err);
-            // });
-        //}
     });
-});
+  });
 
   app.post('/signup', (req, res, next) => {
     upload(req, res, (err) => {
       if (req.file === undefined) {
-        var msg = {
+        const msg = {
           error: 'Sign Up Failed: No Image Attached',
-          layout: 'partials/prelogin'
-        }
+          layout: 'partials/prelogin',
+        };
         return res.render('auth/signup', msg);
-      } else if (req.body.name == "" || req.body.emailAddress == "" || req.body.phoneNumber == "") {
-        var msg = {
+      } else if (req.body.name == '' || req.body.emailAddress == '' || req.body.phoneNumber == '') {
+        const msg = {
           error: 'Name, Email, & Phone Number required ',
-          layout: 'partials/prelogin'
-        }
+          layout: 'partials/prelogin',
+        };
         return res.render('auth/signup', msg);
       } else if (err) {
-        var msg = {
+        const msg = {
           error: 'Sign Up Failed',
-          layout: 'partials/prelogin'
-        }
+          layout: 'partials/prelogin',
+        };
         return res.render('auth/signup', msg);
       } else {
         passport.authenticate('local-signup', (err, user, info) => {
@@ -68,18 +82,18 @@ module.exports = function (upload, app, passport) {
             return next(err); // will generate a 500 error
           }
           if (!user) {
-            var msg = {
+            const msg = {
               error: 'Sign Up Failed: Username already exists',
-              layout: 'partials/prelogin'
-            }
+              layout: 'partials/prelogin',
+            };
             return res.render('auth/signup', msg);
           }
-          req.login(user, signupErr => {
+          req.login(user, (signupErr) => {
             if (signupErr) {
-              var msg = {
+              const msg = {
                 error: 'Sign up Failed',
-                layout: 'partials/prelogin'
-              }
+                layout: 'partials/prelogin',
+              };
               return res.render('auth/signup', msg);
             }
             req.session.globalUser = {};
@@ -88,70 +102,69 @@ module.exports = function (upload, app, passport) {
             req.session.globalUser['emailAddress'] = user.emailAddress;
             req.session.globalUser['phoneNumber'] = user.phoneNumber;
             req.session.globalUser['profileImage'] = user.profileImage;
-            req.session.globalUser['initials'] = req.session.globalUser.name.split(" ")[0][0] + req.session.globalUser.name.split(" ")[1][0];
+            req.session.globalUser['initials'] = req.session.globalUser.name.split(' ')[0][0] + req.session.globalUser.name.split(' ')[1][0];
             res.redirect('/surveys');
           });
         })(req, res, next);
       }
     });
-
   });
 
-  app.post('/signin', function (req, res, next) {
-    passport.authenticate('local-signin', function (err, user, info) {
+  app.post('/signin', function(req, res, next) {
+    passport.authenticate('local-signin', function(err, user, info) {
       if (err) {
         return next(err); // will generate a 500 error
       }
-      //User is boolean
+      // User is boolean
       if (!user) {
-        var msg = {
+        const msg = {
           error: 'Your Username or Password was incorrect',
-          layout: 'partials/prelogin'
-        }
+          layout: 'partials/prelogin',
+        };
         return res.render('auth/signin', msg);
       }
 
-      req.login(user, loginErr => {
+      req.login(user, (loginErr) => {
         if (loginErr) {
-          var msg = {
+          const msg = {
             error: 'Authentication Failed',
-            layout: 'partials/prelogin'
-          }
+            layout: 'partials/prelogin',
+          };
           return res.render('auth/signin', msg);
         }
-        
+
         req.session.globalUser = {};
         req.session.globalUser['userId'] = user.userId;
         req.session.globalUser['name'] = user.name;
         req.session.globalUser['emailAddress'] = user.emailAddress;
         req.session.globalUser['phoneNumber'] = user.phoneNumber;
         req.session.globalUser['profileImage'] = user.profileImage;
-        req.session.globalUser['initials'] = req.session.globalUser.name.split(" ")[0][0] + req.session.globalUser.name.split(" ")[1][0];
+        req.session.globalUser['initials'] = req.session.globalUser.name.split(' ')[0][0] + req.session.globalUser.name.split(' ')[1][0];
         return res.redirect('/surveys');
       });
     })(req, res, next);
   });
 
-  //route for user dashboard
+  // route for user dashboard
   app.get('/surveys', isLoggedIn, authController.surveys);
 
-  //route for new Survey Page
+  // route for new Survey Page
   app.get('/newSurvey', isLoggedIn);
   app.get('/profile', isLoggedIn);
   app.get('/index', isLoggedIn);
   app.get('/newQuestion', isLoggedIn);
 
-  //route for logging out
+  // route for logging out
   app.get('/logout', authController.logout);
 
-  //======================WHERE THE MAGIC HAPPENS============================/
-  //this is the route that prints out the user information from the user table
+  // ======================WHERE THE MAGIC HAPPENS============================/
+  // this is the route that prints out the user information from the user table
   app.get('/sessionUserId', authController.sessionUserId);
 
   function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
+    if (req.isAuthenticated()) {
       return next();
+    }
     res.redirect('/signin');
   }
-
-}
+};

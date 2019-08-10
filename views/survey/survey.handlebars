@@ -12,40 +12,7 @@
           </div>
         </div>
     </div>
-
-    <div class="modal fade" id="addSurveyImageModal" tabindex="-1" role="dialog" aria-labelledby="addSurveyImageModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header"><h4 class="text-primary">Add an image to your survey</div>
-            <div class="modal-body pt-0 pr-0">
-                <form action="/addSurveyImage/{{surveyId}}" method="POST">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                            <label>Image Name</label>
-                            <input id="surveyImageName" name="surveyImageName" type="text" class="form-control" placeholder="Image Name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <label class="custom-file-label" for="inputGroupFile01">Survey Image
-                            </label>
-                        </div>
-                        <input type="file" class="custom-file-input" id="surveyImage" name="surveyImage" aria-describedby="inputGroupFileAddon01">
-                    </div>
-                    <div class="messages text-danger font-weight-bold">{{error}}</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
-                        <a id="addSurveyImageBtn"><button type="submit" class="btn btn-sm btn-danger">Upload</button></a>
-                    </div>
-                </form>
-            </div>
-
-          </div>
-        </div>
-    </div>
-
+    
     <div class="row justify-content-between ml-0 mr-0"> 
         <h2 class="mb-0">Survey Name: {{surveyName}}</h2> 
         <div class="btn-group">
@@ -55,7 +22,6 @@
                 </a>
                 <div class="dropdown-menu dropdown-black" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="/newQuestion/{{surveyId}}">Add Question to Survey</a>
-                    <a class="dropdown-item" href="#addSurveyImageModal" onclick="openSurveyImageModal({{surveyId}})" data-toggle="modal" data-target="#addSurveyImageModal">Add Image to Survey</a>
                     <a class="dropdown-item" href="/viewSurvey/{{surveyId}}">View Survey</a>
                     <a class="dropdown-item" href="/surveys/{{surveyId}}/view2">Respondent View</a>
                 </div>
