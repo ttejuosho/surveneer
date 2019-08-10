@@ -11,7 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     getId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: true,
+    },
+    showTOU: {
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: true,
     },
@@ -24,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     surveyNotes: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    surveyTOU: {
       type: DataTypes.STRING,
       allowNull: true,
     },

@@ -132,6 +132,11 @@ $(function() {
         $(this).val(this.checked ? true : false);
     });
 
+    $("input[name='showTOU']").on('change', function() {
+        $(this).val(this.checked ? true : false);
+        $('.surveyTOUInput').toggleClass('d-none');
+    });
+
     $("input[name='getInstructions']").on('change', function() {
         $('.surveyInstructionsInput').toggleClass('d-none');
     });
@@ -171,12 +176,13 @@ $(function() {
         }
     });
 
-
     $('#editSurvey').on('click', () => {
         $('.surveyEditInput').removeAttr('readonly');
         $('#surveyUpdateButton').removeClass('d-none');
         $('#surveySaveButton').removeClass('d-none');
         $('#editSurvey').addClass('d-none');
+        $('.form-check').removeClass('disabled');
+        $('.surveyEditCheck').attr('disabled', false);
     });
 
     $('#surveySaveButton').on('click', () => {
@@ -184,6 +190,8 @@ $(function() {
       $('#surveyUpdateButton').addClass('d-none');
       $('#surveySaveButton').addClass('d-none');
       $('#editSurvey').removeClass('d-none');
+      $('.form-check').addClass('disabled');
+      $('.surveyEditCheck').attr('disabled', true);
   });
 
 });

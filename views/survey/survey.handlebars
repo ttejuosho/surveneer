@@ -68,15 +68,32 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row mb-3">
     <div class="col-md-12">
-        <div class="form-group">
-        <label>Get Respondent Information</label>
+        <div class="form-check">
+        <label class="form-check-label">Get Respondent Information
         {{#ifEquals getId 0}}
-        <input id="getId" type="text" class="form-control form-control-sm" value="No" readonly>
+        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=false>
         {{else}}
-        <input id="getId" type="text" class="form-control form-control-sm" value="Yes" readonly>
+        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=true checked>
         {{/ifEquals}}
+        <span class="form-check-sign"><span class="check"></span></span>
+        </label>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="form-check">
+        <label class="form-check-label">Show Terms of Use
+        {{#ifEquals showTOU 0}}
+        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=false> 
+        {{else}} 
+        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=true checked> 
+        {{/ifEquals}}
+        <span class="form-check-sign"><span class="check"></span></span>
+        </label>
         </div>
     </div>
 </div>
@@ -107,6 +124,16 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Survey Terms of Use</label>
+        <textarea id="surveyTOU" name="surveyTOU" type="text" class="form-control form-control-sm surveyEditInput" readonly>{{surveyTOU}}</textarea>
+        </div>
+    </div>
+</div>
+
 </div>
 <div class="card-footer">
 <button id="surveySaveButton" class="btn btn-sm btn-primary d-none float-right">Update</button>

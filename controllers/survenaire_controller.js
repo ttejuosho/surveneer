@@ -10,14 +10,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/index', (req, res) => {
-  const hbsObject = {
-    name: req.session.globalUser.name,
-    initials: req.session.globalUser.initials,
-    emailAddress: req.session.globalUser.emailAddress,
-    phoneNumber: req.session.globalUser.phoneNumber,
-    profileImage: req.session.globalUser.profileImage,
-  };
-  return res.render('index', hbsObject);
+  return res.render('index', req.session.globalUser);
 });
 
 router.get('/analytics', (req, res) => {
@@ -48,10 +41,24 @@ router.post('/newSurvey', (req, res) => {
       },
     }).then((dbSurvey) => {
       if (dbSurvey == null) {
+        var cd = {
+          surveyName: req.body.surveyName,
+          getId: req.body.getId,
+          showTOU: req.body.showTOU,
+          surveyNotes: req.body.surveyNotes,
+          surveyTOU: req.body.surveyTOU,
+          preSurveyInstructions: req.body.preSurveyInstructions,
+          postSurveyInstructions: req.body.postSurveyInstructions,
+          numberOfRespondents: 0,
+          UserUserId: req.session.passport.user,
+        }
+        console.log(cd);
         db.Survey.create({
           surveyName: req.body.surveyName,
           getId: req.body.getId,
+          showTOU: req.body.showTOU,
           surveyNotes: req.body.surveyNotes,
+          surveyTOU: req.body.surveyTOU,
           preSurveyInstructions: req.body.preSurveyInstructions,
           postSurveyInstructions: req.body.postSurveyInstructions,
           numberOfRespondents: 0,
@@ -80,15 +87,18 @@ router.post('/newSurvey', (req, res) => {
   }
 });
 
-
 // Post Route to update Survey Information
 router.post('/updateSurvey', (req, res) => {
   const updatedSurveyInfo = {
     surveyName: req.body.surveyName,
+    getId: req.body.getId,
+    showTOU: req.body.showTOU,
     surveyNotes: req.body.surveyNotes,
+    surveyTOU: req.body.surveyTOU,
     preSurveyInstructions: req.body.preSurveyInstructions,
     postSurveyInstructions: req.body.postSurveyInstructions,
   };
+  console.log(updatedSurveyInfo);
   db.Survey.update(updatedSurveyInfo, {
     where: {
       surveyId: req.body.surveyId,
@@ -97,7 +107,6 @@ router.post('/updateSurvey', (req, res) => {
     res.render('error', err);
   });
 });
-
 
 // Add Question to Survey Get Route
 router.get('/newQuestion/:surveyId', (req, res) => {
