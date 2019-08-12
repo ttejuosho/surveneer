@@ -132,10 +132,10 @@ $(function() {
         $(this).val(this.checked ? true : false);
     });
 
-    $("input[name='showTOU']").on('change', function() {
-        $(this).val(this.checked ? true : false);
-        $('.surveyTOUInput').toggleClass('d-none');
-    });
+    // $("input[name='showTOU']").on('change', function() {
+    //     $(this).val(this.checked ? true : false);
+    //     $('.surveyTOUInput').toggleClass('d-none');
+    // });
 
     $("input[name='getInstructions']").on('change', function() {
         $('.surveyInstructionsInput').toggleClass('d-none');

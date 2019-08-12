@@ -277,7 +277,6 @@ module.exports = (app) => {
     });
   });
 
-
   // Get all responses for a survey and see respondents
   app.get('/api/survey/response/:surveyId', (req, res) => {
     db.Response.findAll({
