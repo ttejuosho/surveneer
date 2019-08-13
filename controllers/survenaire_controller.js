@@ -6,268 +6,268 @@ const router = express.Router();
 const db = require('../models');
 
 router.get('/', (req, res) => {
-  res.redirect('/index');
+    res.redirect('/index');
 });
 
 router.get('/index', (req, res) => {
-  return res.render('index', req.session.globalUser);
+    return res.render('index', req.session.globalUser);
 });
 
 router.get('/analytics', (req, res) => {
-  const hbsObject = {};
-  Object.assign(hbsObject, req.session.globalUser);
-  return res.render('survey/analytics', hbsObject);
+    const hbsObject = {};
+    Object.assign(hbsObject, req.session.globalUser);
+    return res.render('survey/analytics', hbsObject);
 });
 
 router.get('/newSurvey', (req, res) => {
-  const hbsObject = {};
-  Object.assign(hbsObject, req.session.globalUser);
-  return res.render('survey/new', hbsObject);
+    const hbsObject = {};
+    Object.assign(hbsObject, req.session.globalUser);
+    return res.render('survey/new', hbsObject);
 });
 
 // New Survey POST Route
 router.post('/newSurvey', (req, res) => {
-  // Validate Survey Name
-  if (req.body.surveyName === '') {
-    const err = {
-      surveyNameError: 'Survey Name is required.',
-    };
-    res.render('survey/new', err);
-  } else {
-    // Check for duplicate Survey Name
-    db.Survey.findOne({
-      where: {
-        surveyName: req.body.surveyName,
-      },
-    }).then((dbSurvey) => {
-      if (dbSurvey == null) {
-        var cd = {
-          surveyName: req.body.surveyName,
-          getId: req.body.getId,
-          showTOU: req.body.showTOU,
-          surveyNotes: req.body.surveyNotes,
-          surveyTOU: req.body.surveyTOU,
-          preSurveyInstructions: req.body.preSurveyInstructions,
-          postSurveyInstructions: req.body.postSurveyInstructions,
-          numberOfRespondents: 0,
-          UserUserId: req.session.passport.user,
-        }
-        console.log(cd);
-        db.Survey.create({
-          surveyName: req.body.surveyName,
-          getId: req.body.getId,
-          showTOU: req.body.showTOU,
-          surveyNotes: req.body.surveyNotes,
-          surveyTOU: req.body.surveyTOU,
-          preSurveyInstructions: req.body.preSurveyInstructions,
-          postSurveyInstructions: req.body.postSurveyInstructions,
-          numberOfRespondents: 0,
-          UserUserId: req.session.passport.user,
-        }).then((dbSurvey) => {
-          // set the Id in the returned object as SurveyId (Object Destructuring)
-          const {
-            // eslint-disable-next-line no-unused-vars
-            id,
-            ...hbsObject
-          } = dbSurvey.dataValues;
-
-          hbsObject.SurveySurveyId = dbSurvey.dataValues.surveyId;
-          Object.assign(hbsObject, req.session.globalUser);
-          return res.render('question/new', hbsObject);
-        }).catch((err) => {
-          res.render('error', err);
-        });
-      } else {
+    // Validate Survey Name
+    if (req.body.surveyName === '') {
         const err = {
-          error: dbSurvey.surveyName.toLowerCase() + ' already exists, please choose another name for your survey.',
+            surveyNameError: 'Survey Name is required.',
         };
         res.render('survey/new', err);
-      }
-    });
-  }
+    } else {
+        // Check for duplicate Survey Name
+        db.Survey.findOne({
+            where: {
+                surveyName: req.body.surveyName,
+            },
+        }).then((dbSurvey) => {
+            if (dbSurvey == null) {
+                var cd = {
+                    surveyName: req.body.surveyName,
+                    getId: req.body.getId,
+                    showTOU: req.body.showTOU,
+                    surveyNotes: req.body.surveyNotes,
+                    surveyTOU: req.body.surveyTOU,
+                    preSurveyInstructions: req.body.preSurveyInstructions,
+                    postSurveyInstructions: req.body.postSurveyInstructions,
+                    numberOfRespondents: 0,
+                    UserUserId: req.session.passport.user,
+                }
+                console.log(cd);
+                db.Survey.create({
+                    surveyName: req.body.surveyName,
+                    getId: req.body.getId,
+                    showTOU: req.body.showTOU,
+                    surveyNotes: req.body.surveyNotes,
+                    surveyTOU: req.body.surveyTOU,
+                    preSurveyInstructions: req.body.preSurveyInstructions,
+                    postSurveyInstructions: req.body.postSurveyInstructions,
+                    numberOfRespondents: 0,
+                    UserUserId: req.session.passport.user,
+                }).then((dbSurvey) => {
+                    // set the Id in the returned object as SurveyId (Object Destructuring)
+                    const {
+                        // eslint-disable-next-line no-unused-vars
+                        id,
+                        ...hbsObject
+                    } = dbSurvey.dataValues;
+
+                    hbsObject.SurveySurveyId = dbSurvey.dataValues.surveyId;
+                    Object.assign(hbsObject, req.session.globalUser);
+                    return res.render('question/new', hbsObject);
+                }).catch((err) => {
+                    res.render('error', err);
+                });
+            } else {
+                const err = {
+                    error: dbSurvey.surveyName.toLowerCase() + ' already exists, please choose another name for your survey.',
+                };
+                res.render('survey/new', err);
+            }
+        });
+    }
 });
 
 // Post Route to update Survey Information
 router.post('/updateSurvey', (req, res) => {
-  const updatedSurveyInfo = {
-    surveyName: req.body.surveyName,
-    getId: req.body.getId,
-    showTOU: req.body.showTOU,
-    surveyNotes: req.body.surveyNotes,
-    surveyTOU: req.body.surveyTOU,
-    preSurveyInstructions: req.body.preSurveyInstructions,
-    postSurveyInstructions: req.body.postSurveyInstructions,
-  };
-  console.log(updatedSurveyInfo);
-  db.Survey.update(updatedSurveyInfo, {
-    where: {
-      surveyId: req.body.surveyId,
-    },
-  }).catch((err) => {
-    res.render('error', err);
-  });
+    const updatedSurveyInfo = {
+        surveyName: req.body.surveyName,
+        getId: req.body.getId,
+        showTOU: req.body.showTOU,
+        surveyNotes: req.body.surveyNotes,
+        surveyTOU: req.body.surveyTOU,
+        preSurveyInstructions: req.body.preSurveyInstructions,
+        postSurveyInstructions: req.body.postSurveyInstructions,
+    };
+    console.log(updatedSurveyInfo);
+    db.Survey.update(updatedSurveyInfo, {
+        where: {
+            surveyId: req.body.surveyId,
+        },
+    }).catch((err) => {
+        res.render('error', err);
+    });
 });
 
 // Add Question to Survey Get Route
 router.get('/newQuestion/:surveyId', (req, res) => {
-  const hbsObject = {
-    surveyId: req.params.surveyId,
-    SurveySurveyId: req.params.surveyId,
-    userId: req.session.passport.user,
-  };
-  Object.assign(hbsObject, req.session.globalUser);
-  return res.render('question/new', hbsObject);
+    const hbsObject = {
+        surveyId: req.params.surveyId,
+        SurveySurveyId: req.params.surveyId,
+        userId: req.session.passport.user,
+    };
+    Object.assign(hbsObject, req.session.globalUser);
+    return res.render('question/new', hbsObject);
 });
 
 // Get Route to Update Question
 router.get('/updateQuestion/:questionId', (req, res) => {
-  db.Question
-      .findByPk(req.params.questionId)
-      .then((dbQuestion) => {
-        // console.log(dbQuestion.dataValues);
-        const hbsObject = dbQuestion.dataValues;
-        Object.assign(hbsObject, req.session.globalUser);
-        res.render('question/update', hbsObject);
-      });
+    db.Question
+        .findByPk(req.params.questionId)
+        .then((dbQuestion) => {
+            // console.log(dbQuestion.dataValues);
+            const hbsObject = dbQuestion.dataValues;
+            Object.assign(hbsObject, req.session.globalUser);
+            res.render('question/update', hbsObject);
+        });
 });
 
 // Edit Route for Questions
 router.put('/updateQuestion/:questionId', (req, res) => {
-  if (req.body.question == '') {
-    const hbsObject = {
-      questionError: 'Please enter a question.',
-      SurveySurveyId: req.body.SurveyId,
+    if (req.body.question == '') {
+        const hbsObject = {
+            questionError: 'Please enter a question.',
+            SurveySurveyId: req.body.SurveyId,
+        };
+        Object.assign(hbsObject, req.session.globalUser);
+        return res.render('question/new', hbsObject);
+    }
+    const dbQuestion = {
+        question: req.body.question,
+        optionType: req.body.optionType,
+        questionInstruction: (req.body.questionInstruction == undefined ? null : req.body.questionInstruction),
+        option1: (req.body.option1 == undefined ? null : req.body.option1),
+        option2: (req.body.option2 == undefined ? null : req.body.option2),
+        option3: (req.body.option3 == undefined ? null : req.body.option3),
+        option4: (req.body.option4 == undefined ? null : req.body.option4),
+        SurveySurveyId: req.body.SurveyId,
     };
-    Object.assign(hbsObject, req.session.globalUser);
-    return res.render('question/new', hbsObject);
-  }
-  const dbQuestion = {
-    question: req.body.question,
-    optionType: req.body.optionType,
-    questionInstruction: (req.body.questionInstruction == undefined ? null : req.body.questionInstruction),
-    option1: (req.body.option1 == undefined ? null : req.body.option1),
-    option2: (req.body.option2 == undefined ? null : req.body.option2),
-    option3: (req.body.option3 == undefined ? null : req.body.option3),
-    option4: (req.body.option4 == undefined ? null : req.body.option4),
-    SurveySurveyId: req.body.SurveyId,
-  };
     // console.log(dbQuestion);
-  db.Question.update(dbQuestion, {
-    where: {
-      questionId: req.params.questionId,
-    },
-  }).then((dbQuestion) => {
-    // dbQuestion is returned which is ID of updated survey
-    res.redirect('/mysurveys/' + req.body.SurveyId);
-  }).catch((err) => {
-    res.render('error', err);
-  });
+    db.Question.update(dbQuestion, {
+        where: {
+            questionId: req.params.questionId,
+        },
+    }).then((dbQuestion) => {
+        // dbQuestion is returned which is ID of updated survey
+        res.redirect('/mysurveys/' + req.body.SurveyId);
+    }).catch((err) => {
+        res.render('error', err);
+    });
 });
 
 // Delete Route for Questions
 router.get('/deleteQuestion/:questionId', (req, res) => {
-  db.Question.findByPk(req.params.questionId)
-      .then((dbQuestion) => {
-        // console.log(dbQuestion);
-        if (dbQuestion == null) {
-          const err = {
-            error: 'Question doesnt exist in db',
-          };
-        }
-        const SurveyId = dbQuestion.SurveySurveyId;
-        db.Question.destroy({
-          where: {
-            questionId: dbQuestion.questionId,
-          },
-        }).then(() => {
-          res.redirect('/mysurveys/' + SurveyId);
+    db.Question.findByPk(req.params.questionId)
+        .then((dbQuestion) => {
+            // console.log(dbQuestion);
+            if (dbQuestion == null) {
+                const err = {
+                    error: 'Question doesnt exist in db',
+                };
+            }
+            const SurveyId = dbQuestion.SurveySurveyId;
+            db.Question.destroy({
+                where: {
+                    questionId: dbQuestion.questionId,
+                },
+            }).then(() => {
+                res.redirect('/mysurveys/' + SurveyId);
+            });
+        }).catch((err) => {
+            res.render('error', err);
         });
-      }).catch((err) => {
-        res.render('error', err);
-      });
 });
 
 // Improvise Adapt & Overcome
 // Delete Route for Survey
 router.get('/deleteSurvey/:surveyId', (req, res) => {
-  db.Survey.findByPk(req.params.surveyId)
-      .then((dbSurvey) => {
-        db.Survey.destroy({
-          where: {
-            surveyId: dbSurvey.dataValues.surveyId,
-          },
-        }).then(() => {
-          res.redirect('/surveys');
+    db.Survey.findByPk(req.params.surveyId)
+        .then((dbSurvey) => {
+            db.Survey.destroy({
+                where: {
+                    surveyId: dbSurvey.dataValues.surveyId,
+                },
+            }).then(() => {
+                res.redirect('/surveys');
+            });
+        }).catch((err) => {
+            res.render('error', err);
         });
-      }).catch((err) => {
-        res.render('error', err);
-      });
 });
 
 router.post('/newQuestion/:surveyId', (req, res) => {
-  // TODO:    Validate Received SurveyId HERE
+    // TODO:    Validate Received SurveyId HERE
 
-  // Validate Question
-  if (req.body.question == '') {
-    const hbsObject = {
-      questionError: 'Please enter a question.',
-      SurveySurveyId: req.params.surveyId,
-    };
-    Object.assign(hbsObject, req.session.globalUser);
-    res.render('question/new', hbsObject);
-  } else if (req.body.optionType == '') {
-    const hbsObject = {
-      optionsError: 'Please choose an option.',
-      SurveySurveyId: req.params.surveyId,
-    };
-    Object.assign(hbsObject, req.session.globalUser);
-    res.render('question/new', hbsObject);
-  } else {
-    // console.log(req.body);
-    db.Question.create({
-      question: req.body.question,
-      optionType: req.body.optionType,
-      questionInstruction: req.body.questionInstruction,
-      SurveySurveyId: req.params.surveyId,
-      option1: (req.body.option1 == undefined ? null : req.body.option1),
-      option2: (req.body.option2 == undefined ? null : req.body.option2),
-      option3: (req.body.option3 == undefined ? null : req.body.option3),
-      option4: (req.body.option4 == undefined ? null : req.body.option4),
-    }).then((dbQuestion) => {
-      // After successfully saving new question, Update number of Questions on the survey
-      db.Survey.findOne({
-        where: {
-          surveyId: req.params.surveyId,
-        },
-      }).then((dbSurvey) => {
-        dbSurvey.dataValues.numberOfQuestions += 1;
-        const updatedSurvey = {
-          surveyName: dbSurvey.dataValues.surveyName,
-          getId: dbSurvey.dataValues.getId,
-          numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-          numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
-          preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
-          postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
-          surveyNotes: dbSurvey.dataValues.surveyNotes,
+    // Validate Question
+    if (req.body.question == '') {
+        const hbsObject = {
+            questionError: 'Please enter a question.',
+            SurveySurveyId: req.params.surveyId,
         };
-        db.Survey.update(updatedSurvey, {
-          where: {
-            surveyId: dbSurvey.dataValues.surveyId,
-          },
-        }).then((dbSurvey) => {
-          // console.log(dbQuestion.dataValues);
-          const hbsObject = {
-            SurveySurveyId: dbQuestion.dataValues.SurveySurveyId,
-            userId: req.session.passport.user,
-          };
-          Object.assign(hbsObject, req.session.globalUser);
-          return res.render('question/new', hbsObject);
+        Object.assign(hbsObject, req.session.globalUser);
+        res.render('question/new', hbsObject);
+    } else if (req.body.optionType == '') {
+        const hbsObject = {
+            optionsError: 'Please choose an option.',
+            SurveySurveyId: req.params.surveyId,
+        };
+        Object.assign(hbsObject, req.session.globalUser);
+        res.render('question/new', hbsObject);
+    } else {
+        // console.log(req.body);
+        db.Question.create({
+            question: req.body.question,
+            optionType: req.body.optionType,
+            questionInstruction: req.body.questionInstruction,
+            SurveySurveyId: req.params.surveyId,
+            option1: (req.body.option1 == undefined ? null : req.body.option1),
+            option2: (req.body.option2 == undefined ? null : req.body.option2),
+            option3: (req.body.option3 == undefined ? null : req.body.option3),
+            option4: (req.body.option4 == undefined ? null : req.body.option4),
+        }).then((dbQuestion) => {
+            // After successfully saving new question, Update number of Questions on the survey
+            db.Survey.findOne({
+                where: {
+                    surveyId: req.params.surveyId,
+                },
+            }).then((dbSurvey) => {
+                dbSurvey.dataValues.numberOfQuestions += 1;
+                const updatedSurvey = {
+                    surveyName: dbSurvey.dataValues.surveyName,
+                    getId: dbSurvey.dataValues.getId,
+                    numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                    numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+                    preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+                    postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
+                    surveyNotes: dbSurvey.dataValues.surveyNotes,
+                };
+                db.Survey.update(updatedSurvey, {
+                    where: {
+                        surveyId: dbSurvey.dataValues.surveyId,
+                    },
+                }).then((dbSurvey) => {
+                    // console.log(dbQuestion.dataValues);
+                    const hbsObject = {
+                        SurveySurveyId: dbQuestion.dataValues.SurveySurveyId,
+                        userId: req.session.passport.user,
+                    };
+                    Object.assign(hbsObject, req.session.globalUser);
+                    return res.render('question/new', hbsObject);
+                });
+            });
+        }).catch((err) => {
+            res.render('error', err);
         });
-      });
-    }).catch((err) => {
-      res.render('error', err);
-    });
-  }
+    }
 });
 
 // ======Get All User Surveys With Questions==================
@@ -286,154 +286,155 @@ router.post('/newQuestion/:surveyId', (req, res) => {
 
 // =================Get One User Survey With Questions==========
 router.get('/mysurveys/:surveyId', function(req, res) {
-  db.Survey.findOne({
-    where: {
-      surveyId: req.params.surveyId,
-    },
-    include: [
-      {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
-      {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
-      {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
-    ],
-  }).then(function(survey) {
-    const hbsObject = survey.dataValues;
-    Object.assign(hbsObject, req.session.globalUser);
-    // console.log(survey.dataValues);
-    res.render('survey/survey', hbsObject);
-  }).catch(function(err) {
-    res.render('error', err);
-  });
+    db.Survey.findOne({
+        where: {
+            surveyId: req.params.surveyId,
+        },
+        include: [
+            { model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] },
+            { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
+            { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
+        ],
+    }).then(function(survey) {
+        const hbsObject = survey.dataValues;
+        Object.assign(hbsObject, req.session.globalUser);
+        // console.log(survey.dataValues);
+        res.render('survey/survey', hbsObject);
+    }).catch(function(err) {
+        res.render('error', err);
+    });
 });
 
 // View Route For a Survey (Internal)
 router.get('/viewSurvey/:surveyId', (req, res) => {
-  db.Survey.findOne({
-    where: {
-      surveyId: req.params.surveyId,
-    },
-    include: [{model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']}],
-  }).then(function(survey) {
-    const hbsObject = survey.dataValues;
-    Object.assign(hbsObject, req.session.globalUser);
-    res.render('survey/view', hbsObject);
-  }).catch(function(err) {
-    res.render('error', err);
-  });
+    db.Survey.findOne({
+        where: {
+            surveyId: req.params.surveyId,
+        },
+        include: [{ model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] }],
+    }).then(function(survey) {
+        const hbsObject = survey.dataValues;
+        Object.assign(hbsObject, req.session.globalUser);
+        res.render('survey/view', hbsObject);
+    }).catch(function(err) {
+        res.render('error', err);
+    });
 });
 
 // View Route For a Survey (Public) Without Layout
 router.get('/surveys/:surveyId/view2', (req, res) => {
-  db.Survey.findOne({
-    where: {
-      surveyId: req.params.surveyId,
-    },
-    include: [{model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']}],
-  }).then(function(survey) {
-    // console.log(survey.dataValues);
-    survey.dataValues['layout'] = false;
-    res.render('survey/view2', survey.dataValues);
-  }).catch(function(err) {
-    res.render('error', err);
-  });
+    db.Survey.findOne({
+        where: {
+            surveyId: req.params.surveyId,
+        },
+        include: [{ model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] }],
+    }).then(function(survey) {
+        // console.log(survey.dataValues);
+        survey.dataValues['layout'] = false;
+        //console.log(survey.dataValues);
+        res.render('survey/view2', survey.dataValues);
+    }).catch(function(err) {
+        res.render('error', err);
+    });
 });
 
 // Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-  // console.log(req.body);
-  // for (var i in req.body){
-  //     if (req.body[i].length < 1) {
-  //     var err = { error: "Please enter a response for all items" }
-  //     res.render('error', err);
-  //     }
-  // }
-  db.Respondent.create({
-    respondentName: req.body.respondentName,
-    respondentEmail: req.body.respondentEmail,
-    respondentPhone: req.body.respondentPhone,
-    SurveySurveyId: req.body.surveyId,
-  }).then((dbRespondent) => {
-    const qandaArray = [];
-    for (let i = 0; i < req.body.questionLength; i++) {
-      const qanda = {
-        QuestionQuestionId: req.body['questionId' + i],
-        answer: req.body['answer' + i],
-        RespondentRespondentId: dbRespondent.dataValues.respondentId,
-        SurveySurveyId: req.body.surveyId,
-      };
-      qandaArray.push(qanda);
-    }
-
-    // console.log(qandaArray);
-    for (let i = 0; i < qandaArray.length; i++) {
-      db.Response.create(qandaArray[i]);
-    }
-    // Now increment Number of respondents
-    db.Survey.findOne({
-      where: {
-        surveyId: req.body.surveyId,
-      },
-    }).then((dbSurvey) => {
-      dbSurvey.dataValues.numberOfRespondents += 1;
-      const updatedSurvey = {
-        surveyName: dbSurvey.dataValues.surveyName,
-        getId: dbSurvey.dataValues.getId,
-        numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-        preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
-        postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
-        surveyNotes: dbSurvey.dataValues.surveyNotes,
-      };
-      const hbsObject = {
+    // console.log(req.body);
+    // for (var i in req.body){
+    //     if (req.body[i].length < 1) {
+    //     var err = { error: "Please enter a response for all items" }
+    //     res.render('error', err);
+    //     }
+    // }
+    db.Respondent.create({
         respondentName: req.body.respondentName,
         respondentEmail: req.body.respondentEmail,
         respondentPhone: req.body.respondentPhone,
-        surveyId: req.body.surveyId,
-        qanda: qandaArray,
-        surveyName: dbSurvey.dataValues.surveyName,
-        getId: dbSurvey.dataValues.getId,
-        numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-        preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
-        postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
-        surveyNotes: dbSurvey.dataValues.surveyNotes,
-      };
+        SurveySurveyId: req.body.surveyId,
+    }).then((dbRespondent) => {
+        const qandaArray = [];
+        for (let i = 0; i < req.body.questionLength; i++) {
+            const qanda = {
+                QuestionQuestionId: req.body['questionId' + i],
+                answer: req.body['answer' + i],
+                RespondentRespondentId: dbRespondent.dataValues.respondentId,
+                SurveySurveyId: req.body.surveyId,
+            };
+            qandaArray.push(qanda);
+        }
 
-      db.Survey.update(updatedSurvey, {
-        where: {
-          surveyId: dbSurvey.dataValues.surveyId,
-        },
-      }).then((dbSurvey) => {
-        // console.log(dbSurvey); //Returns Survey ID
-        const hbsObject = {layout: false};
-        return res.render('survey/complete', hbsObject);
-      });
+        // console.log(qandaArray);
+        for (let i = 0; i < qandaArray.length; i++) {
+            db.Response.create(qandaArray[i]);
+        }
+        // Now increment Number of respondents
+        db.Survey.findOne({
+            where: {
+                surveyId: req.body.surveyId,
+            },
+        }).then((dbSurvey) => {
+            dbSurvey.dataValues.numberOfRespondents += 1;
+            const updatedSurvey = {
+                surveyName: dbSurvey.dataValues.surveyName,
+                getId: dbSurvey.dataValues.getId,
+                numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+                postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
+                surveyNotes: dbSurvey.dataValues.surveyNotes,
+            };
+            const hbsObject = {
+                respondentName: req.body.respondentName,
+                respondentEmail: req.body.respondentEmail,
+                respondentPhone: req.body.respondentPhone,
+                surveyId: req.body.surveyId,
+                qanda: qandaArray,
+                surveyName: dbSurvey.dataValues.surveyName,
+                getId: dbSurvey.dataValues.getId,
+                numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+                postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
+                surveyNotes: dbSurvey.dataValues.surveyNotes,
+            };
+
+            db.Survey.update(updatedSurvey, {
+                where: {
+                    surveyId: dbSurvey.dataValues.surveyId,
+                },
+            }).then((dbSurvey) => {
+                // console.log(dbSurvey); //Returns Survey ID
+                const hbsObject = { layout: false };
+                return res.render('survey/complete', hbsObject);
+            });
+        });
+    }).catch((err) => {
+        res.render('error', err);
     });
-  }).catch((err) => {
-    res.render('error', err);
-  });
 });
 
 router.get('/responses/:SurveySurveyId/view', (req, res) => {
-  db.Response.findOne({
-    where: {
-      SurveySurveyId: req.params.SurveySurveyId,
-    },
-  }).then(function(responses) {
-    // console.log(responses);
-    res.render('response/view', responses.dataValues);
-  }).catch(function(err) {
-    res.render('error', err);
-  });
+    db.Response.findOne({
+        where: {
+            SurveySurveyId: req.params.SurveySurveyId,
+        },
+    }).then(function(responses) {
+        // console.log(responses);
+        res.render('response/view', responses.dataValues);
+    }).catch(function(err) {
+        res.render('error', err);
+    });
 });
 
 // Get Route to Update Question
 router.get('/profile', (req, res) => {
-  db.User
-      .findByPk(req.session.passport.user)
-      .then((dbUser) => {
-        const hbsObject = dbUser.dataValues;
-        hbsObject['initials'] = hbsObject.name.split(' ')[0][0] + hbsObject.name.split(' ')[1][0];
-        // console.log(hbsObject);
-        res.render('user/profile', hbsObject);
-      });
+    db.User
+        .findByPk(req.session.passport.user)
+        .then((dbUser) => {
+            const hbsObject = dbUser.dataValues;
+            hbsObject['initials'] = hbsObject.name.split(' ')[0][0] + hbsObject.name.split(' ')[1][0];
+            // console.log(hbsObject);
+            res.render('user/profile', hbsObject);
+        });
 });
 
 module.exports = router;
