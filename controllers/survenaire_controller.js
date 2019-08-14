@@ -437,4 +437,38 @@ router.get('/profile', (req, res) => {
         });
 });
 
+router.get('/complete', (req,res) => {
+  return res.render('survey/complete', { layout: false });
+});
+
+//Get all QuestionIds for a survey and count number of options specified
+router.get('/chart/:surveyId/:option', (req,res) => {
+  var qidArray = [];
+  db.Question.findAll({
+    where: { SurveySurveyId: req.params.surveyId },
+    attributes: ['QuestionId']
+  }).then((dbQuestion) => {
+    for (var i = 0; i < dbQuestion.length; i++){
+      qidArray.push(dbQuestion[i].dataValues.QuestionId);
+    }
+    console.log(qidArray);
+
+for(var i = 0; i < qidArray.length; i++){
+  db.Response.count({
+    where: {
+      SurveySurveyId: req.params.surveyId,
+      QuestionQuestionId: qidArray[i],
+      answer: req.params.option
+    }
+  }).then((dbResponse) => {
+    console.log("Number of " + req.params.option + " for this question is " + dbResponse);
+  });
+}
+
+
+
+
+  });
+});
+
 module.exports = router;

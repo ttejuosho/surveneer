@@ -307,6 +307,37 @@ module.exports = (app) => {
       res.json(dbResponse);
     });
   });
+
+//Get All QuestionIds for a survey
+app.get('/api/survey/qids/:surveyId', (req,res) => {
+  db.Question.findAll({
+    where: { SurveySurveyId: req.params.surveyId },
+    attributes: ['QuestionId']
+  }).then((dbQuestion) => {
+    var qidArray = [];
+    for (var i = 0; i < dbQuestion.length; i++){
+      qidArray.push(dbQuestion[i].QuestionId);
+    }
+    console.log(qidArray);
+    res.json(dbQuestion);
+  });
+});
+
+  //Get all Responses to a question
+app.get('/api/survey/res2aq/:surveyId/:questionId/:option', (req,res) => {
+  db.Response.findAll({
+    where: {
+      SurveySurveyId: req.params.surveyId,
+      QuestionQuestionId: req.params.questionId,
+      answer: req.params.option
+    }
+  }).then((dbResponse) => {
+    res.json(dbResponse.count);
+  });
+});
+
+
+
 };
 
 
