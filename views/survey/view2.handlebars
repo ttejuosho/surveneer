@@ -35,12 +35,33 @@
         <input type="text" id="surveyId" name="surveyId" value="{{surveyId}}" />
         <input type="text" id="questionLength" name="questionLength" value="{{getLength Questions}}" />
     </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Terms & Agreement</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{surveyTOU}}
+                </div>
+                <div class="modal-footer">
+                    <a href="/complete"><button type="button" class="btn btn-secondary" >Decline</button></a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Agree</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
     {{#if preSurveyInstructions}}
     <div class="form-group">
         <blockquote class="blockquote mb-0"><h4>{{preSurveyInstructions}}</h4></blockquote>
     </div>
     {{/if}}
-    {{#ifEquals getId "true"}}
+    {{#ifEquals getId true}}
     <div class="row">
         <div class="col-md-4 pr-md-1">
             <div class="form-group">
@@ -68,6 +89,7 @@
             <div class="col-md-12 mb-3 qanda">
                 <div class="form-group mb-1">
                     <h4>Question {{counter @index}}</h4>
+                    {{#if questionInstruction}}<h6>Information: {{questionInstruction}}</h6>{{/if}}
                     <input type="text" name="questionId{{@index}}" id="questionId" class="questionId d-none" value="{{questionId}}" />
                     <p class="question">{{question}}</p>
                 </div>
@@ -356,12 +378,12 @@
             <script>
               document.write(new Date().getFullYear())
             </script>
-            <a href="http://ttejuosho.herokuapp.com" target="_blank">Taiwo Tejuosho</a>
+            <a href="http://ttejuosho.herokuapp.com" target="_blank">Powered By SurvEneer</a>
           </div>
         </div>
       </footer>
 </body>
-</html>
+
 <!--   Core JS Files   -->
   <script src="/assets/js/core/jquery.min.js"></script>
   <script src="/assets/js/core/popper.min.js"></script>
@@ -381,4 +403,16 @@
   <script type="text/javascript" src="/assets/js/DataTables/datatables.min.js"></script>
   <script type="text/javascript" src="/assets/js/app.js"></script>
   <!-- Black Dashboard DEMO methods, don't include it in your project! -->
+  
   <script src="/assets/demo/demo.js"></script>
+    {{#ifEquals showTOU true}}
+        <script type="text/javascript">
+            $(function () {
+                $("#exampleModal").modal({
+                    backdrop: false,
+                    show: true
+                });
+            });
+        </script>
+    {{/ifEquals}}
+</html>

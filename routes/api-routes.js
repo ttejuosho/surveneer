@@ -277,7 +277,6 @@ module.exports = (app) => {
     });
   });
 
-
   // Get all responses for a survey and see respondents
   app.get('/api/survey/response/:surveyId', (req, res) => {
     db.Response.findAll({
@@ -308,6 +307,72 @@ module.exports = (app) => {
       res.json(dbResponse);
     });
   });
+
+//Get All QuestionIds for a survey
+app.get('/api/survey/qids/:surveyId', (req,res) => {
+  db.Question.findAll({
+    where: { SurveySurveyId: req.params.surveyId },
+    attributes: ['QuestionId']
+  }).then((dbQuestion) => {
+    var qidArray = [];
+    for (var i = 0; i < dbQuestion.length; i++){
+      qidArray.push(dbQuestion[i].QuestionId);
+    }
+    console.log(qidArray);
+    res.json(dbQuestion);
+  });
+});
+
+  //Get all Responses to a question
+app.get('/api/survey/res2aq/:surveyId/:questionId/:option', (req,res) => {
+  db.Response.findAll({
+    where: {
+      SurveySurveyId: req.params.surveyId,
+      QuestionQuestionId: req.params.questionId,
+      answer: req.params.option
+    }
+  }).then((dbResponse) => {
+    res.json(dbResponse.count);
+  });
+});
+
+//Get all QuestionIds for a survey and count number of options specified
+app.get('/api/optionCount/:surveyId/:option', (req,res) => {
+  var results = {
+    surveyId: req.params.surveyId,
+    questionIds: [],
+    yes: [],
+    no: [],
+    true: [],
+    false: []
+  }
+  db.Question.findAll({
+    where: { SurveySurveyId: req.params.surveyId },
+    attributes: ['QuestionId']
+  }).then((dbQuestion) => {
+    for (var i = 0; i < dbQuestion.length; i++){
+      results.questionIds.push(dbQuestion[i].dataValues.QuestionId);
+    }
+    console.log(results.questionIds);
+
+    for(var i = 0; i < results.questionIds.length; i++){
+      db.Response.count({
+        where: {
+          SurveySurveyId: req.params.surveyId,
+          QuestionQuestionId: results.questionIds[i],
+          answer: req.params.option
+        }
+      }).then((dbResponse) => {
+        results.yes.push(dbResponse);
+        //console.log(results);
+      });
+    }
+    return res.json(results);
+  });
+
+
+});
+
 };
 
 

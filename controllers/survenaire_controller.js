@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 const express = require('express');
@@ -187,16 +188,35 @@ router.get('/deleteQuestion/:questionId', (req, res) => {
           where: {
             questionId: dbQuestion.questionId,
           },
-        }).then(() => {
-          res.redirect('/mysurveys/' + SurveyId);
+        }).catch((err) => {
+          res.render('error', err);
         });
-      }).catch((err) => {
-        res.render('error', err);
+        // Update Number of Questions in the database
+        db.Survey.findOne({
+          where: {
+            surveyId: SurveyId,
+          },
+        }).then((dbSurvey) => {
+          dbSurvey.dataValues.numberOfQuestions -= 1;
+          const updatedSurvey = {
+            numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+          };
+
+          db.Survey.update(updatedSurvey, {
+            where: {
+              surveyId: dbSurvey.dataValues.surveyId,
+            },
+          }).then(() => {
+            res.redirect('/mysurveys/' + SurveyId);
+          });
+        }).catch((err) => {
+          res.render('error', err);
+        });
       });
 });
 
 // Improvise Adapt & Overcome
-// Delete Route for Survey
+// Delete Route for Survey (Needs Revisit)
 router.get('/deleteSurvey/:surveyId', (req, res) => {
   db.Survey.findByPk(req.params.surveyId)
       .then((dbSurvey) => {
@@ -214,7 +234,6 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
 
 router.post('/newQuestion/:surveyId', (req, res) => {
   // TODO:    Validate Received SurveyId HERE
-
   // Validate Question
   if (req.body.question == '') {
     const hbsObject = {
@@ -267,8 +286,12 @@ router.post('/newQuestion/:surveyId', (req, res) => {
           const hbsObject = {
             SurveySurveyId: dbQuestion.dataValues.SurveySurveyId,
             userId: req.session.passport.user,
+            confirmation: 'Question Saved',
           };
           Object.assign(hbsObject, req.session.globalUser);
+          if (req.body.action === 'Finish') {
+            return res.redirect('/mysurveys/' + req.params.surveyId);
+          }
           return res.render('question/new', hbsObject);
         });
       });
@@ -339,6 +362,7 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
   }).then(function(survey) {
     // console.log(survey.dataValues);
     survey.dataValues['layout'] = false;
+    // console.log(survey.dataValues);
     res.render('survey/view2', survey.dataValues);
   }).catch(function(err) {
     res.render('error', err);
@@ -442,6 +466,43 @@ router.get('/profile', (req, res) => {
         // console.log(hbsObject);
         res.render('user/profile', hbsObject);
       });
+});
+
+router.get('/complete', (req, res) => {
+  return res.render('survey/complete', {layout: false});
+});
+
+// Get all QuestionIds for a survey and count number of options specified
+router.get('/chart/:surveyId/:option', (req, res) => {
+  const results = {
+    surveyId: req.params.surveyId,
+    yes: [],
+    no: [],
+    true: [],
+    false: [],
+  };
+  db.Question.findAll({
+    where: {SurveySurveyId: req.params.surveyId},
+    attributes: ['QuestionId'],
+  }).then((dbQuestion) => {
+    for (var i = 0; i < dbQuestion.length; i++) {
+      results.yes.push(dbQuestion[i].dataValues.QuestionId);
+    }
+    console.log(results.yes);
+
+    for (var i = 0; i < results.yes.length; i++) {
+      db.Response.count({
+        where: {
+          SurveySurveyId: req.params.surveyId,
+          QuestionQuestionId: results.yes[i],
+          answer: req.params.option,
+        },
+      }).then((dbResponse) => {
+        results.yes.push(dbResponse);
+      });
+    }
+    return res.json(results);
+  });
 });
 
 module.exports = router;
