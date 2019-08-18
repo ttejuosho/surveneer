@@ -20,11 +20,7 @@ exports.surveys = function(req, res) {
     const surveys = {};
     surveys['survey'] = dbSurvey;
     surveys['userId'] = req.session.passport.user;
-    surveys['name'] = req.session.globalUser.name;
-    surveys['initials'] = req.session.globalUser.initials;
-    surveys['emailAddress'] = req.session.globalUser.emailAddress;
-    surveys['phoneNumber'] = req.session.globalUser.phoneNumber;
-    surveys['profileImage'] = req.session.globalUser.profileImage;
+    Object.assign(surveys, req.session.globalUser);
     return res.render('surveys', surveys);
   });
 };
