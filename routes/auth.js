@@ -2,8 +2,35 @@
 /* eslint-disable max-len */
 const authController = require('../controllers/authcontroller.js');
 const db = require('../models');
+// eslint-disable-next-line new-cap
+require('dotenv').config();
 
 module.exports = function(upload, app, passport) {
+  app.get('/callback', (req, res, next) => {
+    passport.authenticate('auth0', (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.redirect('/signin');
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        const returnTo = req.session.returnTo;
+        delete req.session.returnTo;
+        req.session.globalUser = {};
+        req.session.globalUser['userId'] = user.id;
+        req.session.globalUser['emailAddress'] = user.displayName;
+        req.session.globalUser['profileImage'] = user.picture;
+        // req.session.globalUser['phoneNumber'] = user.phoneNumber;
+        // req.session.globalUser['initials'] = req.session.globalUser.name.split(' ')[0][0] + req.session.globalUser.name.split(' ')[1][0];
+        res.redirect(returnTo || '/surveys');
+      });
+    })(req, res, next);
+  });
+
   // route for signup page
   app.get('/signup', authController.signup);
 

@@ -33,10 +33,10 @@
       <div class="sidebar-wrapper">
         <div class="logo">
           <a href="/profile" class="simple-text logo-mini">
-            {{initials}}
+            {{#if initials}} {{initials}} {{else}} SU {{/if}}
           </a>
           <a href="/profile" class="simple-text logo-normal">
-            {{name}}
+            {{#if name}} {{name}} {{else}} Surveneer User {{/if}}
           </a>
         </div>
         <ul class="nav">
@@ -122,7 +122,7 @@
               <li class="dropdown nav-item">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                   <div class="photo">
-                    <img src="../{{profileImage}}" alt="Profile Photo">
+                    <img {{#if profileImage}} {{#ifIncludes profileImage 'http'}} src="{{profileImage}}" {{else}} src="../{{profileImage}}" {{/ifIncludes}} {{else}} src="./assets/img/default-avatar.png" {{/if}}alt="Profile Photo">
                   </div>
                   <b class="caret d-none d-lg-block d-xl-block"></b>
                   <p class="d-lg-none">

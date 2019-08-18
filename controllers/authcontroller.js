@@ -1,7 +1,8 @@
 // const path = require('path');
 // const express = require('express');
 const db = require('../models');
-// const exports = module.exports = {};
+const util = require('util');
+const querystring = require('querystring');
 
 exports.signup = function(req, res) {
   res.render('auth/signup', {title: 'Sign Up', layout: 'partials/prelogin'});
@@ -20,11 +21,9 @@ exports.surveys = function(req, res) {
     const surveys = {};
     surveys['survey'] = dbSurvey;
     surveys['userId'] = req.session.passport.user;
-    surveys['name'] = req.session.globalUser.name;
-    surveys['initials'] = req.session.globalUser.initials;
-    surveys['emailAddress'] = req.session.globalUser.emailAddress;
-    surveys['phoneNumber'] = req.session.globalUser.phoneNumber;
-    surveys['profileImage'] = req.session.globalUser.profileImage;
+    if (req.session.globalUser) {
+      Object.assign(surveys, req.session.globalUser);
+    }
     return res.render('surveys', surveys);
   });
 };
@@ -46,8 +45,33 @@ exports.sessionUserId = function(req, res) {
   });
 };
 
+// exports.logout = function(req, res) {
+//   req.session.destroy(function(err) {
+//     res.redirect('/signin');
+//   });
+// };
+
 exports.logout = function(req, res) {
-  req.session.destroy(function(err) {
-    res.redirect('/signin');
+  req.logOut();
+
+  let returnTo = req.protocol + '://' + req.hostname;
+  const port = req.connection.localPort;
+
+  if (port !== undefined && port !== 80 && port !== 443) {
+    returnTo =
+      process.env.NODE_ENV === 'production'
+        ? `${returnTo}/`
+        : `${returnTo}:${port}/`;
+  }
+
+  const logoutURL = new URL(
+      util.format('https://%s/logout', process.env.AUTH0_DOMAIN)
+  );
+  const searchString = querystring.stringify({
+    client_id: process.env.AUTH0_CLIENT_ID,
+    returnTo: returnTo,
   });
+  logoutURL.search = searchString;
+
+  res.redirect(logoutURL);
 };

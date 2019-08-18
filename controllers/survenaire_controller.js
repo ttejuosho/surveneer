@@ -4,10 +4,18 @@ const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const db = require('../models');
+const passport = require('passport');
+
+router.get('/login', passport.authenticate('auth0', {
+  scope: 'openid email profile',
+}), (req, res) => {
+  res.redirect('/index');
+});
 
 router.get('/', (req, res) => {
   res.redirect('/index');
 });
+
 
 router.get('/index', (req, res) => {
   return res.render('index', req.session.globalUser);
@@ -41,7 +49,7 @@ router.post('/newSurvey', (req, res) => {
       },
     }).then((dbSurvey) => {
       if (dbSurvey == null) {
-        var cd = {
+        const cd = {
           surveyName: req.body.surveyName,
           getId: req.body.getId,
           showTOU: req.body.showTOU,
@@ -51,7 +59,7 @@ router.post('/newSurvey', (req, res) => {
           postSurveyInstructions: req.body.postSurveyInstructions,
           numberOfRespondents: 0,
           UserUserId: req.session.passport.user,
-        }
+        };
         console.log(cd);
         db.Survey.create({
           surveyName: req.body.surveyName,
