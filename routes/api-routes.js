@@ -336,7 +336,42 @@ app.get('/api/survey/res2aq/:surveyId/:questionId/:option', (req,res) => {
   });
 });
 
+//Get all QuestionIds for a survey and count number of options specified
+app.get('/api/optionCount/:surveyId/:option', (req,res) => {
+  var results = {
+    surveyId: req.params.surveyId,
+    questionIds: [],
+    yes: [],
+    no: [],
+    true: [],
+    false: []
+  }
+  db.Question.findAll({
+    where: { SurveySurveyId: req.params.surveyId },
+    attributes: ['QuestionId']
+  }).then((dbQuestion) => {
+    for (var i = 0; i < dbQuestion.length; i++){
+      results.questionIds.push(dbQuestion[i].dataValues.QuestionId);
+    }
+    console.log(results.questionIds);
 
+    for(var i = 0; i < results.questionIds.length; i++){
+      db.Response.count({
+        where: {
+          SurveySurveyId: req.params.surveyId,
+          QuestionQuestionId: results.questionIds[i],
+          answer: req.params.option
+        }
+      }).then((dbResponse) => {
+        results.yes.push(dbResponse);
+        //console.log(results);
+      });
+    }
+    return res.json(results);
+  });
+
+
+});
 
 };
 

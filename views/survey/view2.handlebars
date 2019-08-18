@@ -405,15 +405,14 @@
   <!-- Black Dashboard DEMO methods, don't include it in your project! -->
   
   <script src="/assets/demo/demo.js"></script>
-      {{#ifEquals showTOU true}}
-    <script type="text/javascript">
-        $(function () {
-            $("#exampleModal").modal({
-                backdrop: false,
-                show: true
+    {{#ifEquals showTOU true}}
+        <script type="text/javascript">
+            $(function () {
+                $("#exampleModal").modal({
+                    backdrop: false,
+                    show: true
+                });
             });
-        });
-    </script>
-
+        </script>
     {{/ifEquals}}
 </html>
