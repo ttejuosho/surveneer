@@ -341,10 +341,16 @@ app.get('/api/optionCount/:surveyId/:option', (req,res) => {
   var results = {
     surveyId: req.params.surveyId,
     questionIds: [],
-    yes: [],
-    no: [],
-    true: [],
-    false: []
+    answerCounts: [
+      //Yes Count
+      [],
+      //No Count
+      [],
+      //True Count
+      [],
+      //False Count
+      []
+    ],
   }
   db.Question.findAll({
     where: { SurveySurveyId: req.params.surveyId },
@@ -353,23 +359,21 @@ app.get('/api/optionCount/:surveyId/:option', (req,res) => {
     for (var i = 0; i < dbQuestion.length; i++){
       results.questionIds.push(dbQuestion[i].dataValues.QuestionId);
     }
-    console.log(results.questionIds);
-
-    for(var i = 0; i < results.questionIds.length; i++){
-      db.Response.count({
-        where: {
-          SurveySurveyId: req.params.surveyId,
-          QuestionQuestionId: results.questionIds[i],
-          answer: req.params.option
-        }
-      }).then((dbResponse) => {
-        results.yes.push(dbResponse);
-        //console.log(results);
-      });
-    }
-    return res.json(results);
   });
 
+  for(var i = 0; i < results.questionIds.length; i++){
+    db.Response.count({
+      where: {
+        SurveySurveyId: req.params.surveyId,
+        QuestionQuestionId: results.questionIds[i],
+        answer: req.params.option
+      }
+    }).then((dbResponse) => {
+      results.answerCounts[i].push(dbResponse);
+      //console.log(results);
+      return res.json(results);
+    });
+  }
 
 });
 

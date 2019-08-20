@@ -8,29 +8,29 @@ module.exports = function(passport, user) {
   const LocalStrategy = require('passport-local').Strategy;
 
   // creates a cookie for the user sessions
-  // passport.serializeUser(function(user, done) {
-  //   done(null, user.userId);
-  // });
+  passport.serializeUser(function(user, done) {
+    done(null, user.userId);
+  });
 
   // used to deserialize the user
   // reads the cookie
-  // passport.deserializeUser(function(userId, done) {
-  //   User.findByPk(userId).then(function(user) {
-  //     if (user) {
-  //       done(null, user.get());
-  //     } else {
-  //       done(user.errors, null);
-  //     }
-  //   });
+  passport.deserializeUser(function(userId, done) {
+    User.findByPk(userId).then(function(user) {
+      if (user) {
+        done(null, user.get());
+      } else {
+        done(user.errors, null);
+      }
+    });
+  });
+
+  // passport.serializeUser(function(user, done) {
+  //   done(null, user);
   // });
 
-  passport.serializeUser(function(user, done) {
-    done(null, user);
-  });
-
-  passport.deserializeUser(function(user, done) {
-    done(null, user);
-  });
+  // passport.deserializeUser(function(user, done) {
+  //   done(null, user);
+  // });
 
   passport.use('local-signup', new LocalStrategy({
     usernameField: 'emailAddress',
