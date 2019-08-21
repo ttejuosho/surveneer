@@ -337,44 +337,13 @@ app.get('/api/survey/res2aq/:surveyId/:questionId/:option', (req,res) => {
 });
 
 //Get all QuestionIds for a survey and count number of options specified
-app.get('/api/optionCount/:surveyId/:option', (req,res) => {
-  var results = {
-    surveyId: req.params.surveyId,
-    questionIds: [],
-    answerCounts: [
-      //Yes Count
-      [],
-      //No Count
-      [],
-      //True Count
-      [],
-      //False Count
-      []
-    ],
-  }
+app.get('/api/optionCount/:surveyId', (req,res) => {
   db.Question.findAll({
-    where: { SurveySurveyId: req.params.surveyId },
-    attributes: ['QuestionId']
+    where: {SurveySurveyId: req.params.surveyId},
+    attributes: ['questionId', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
   }).then((dbQuestion) => {
-    for (var i = 0; i < dbQuestion.length; i++){
-      results.questionIds.push(dbQuestion[i].dataValues.QuestionId);
-    }
+    return res.json(dbQuestion);
   });
-
-  for(var i = 0; i < results.questionIds.length; i++){
-    db.Response.count({
-      where: {
-        SurveySurveyId: req.params.surveyId,
-        QuestionQuestionId: results.questionIds[i],
-        answer: req.params.option
-      }
-    }).then((dbResponse) => {
-      results.answerCounts[i].push(dbResponse);
-      //console.log(results);
-      return res.json(results);
-    });
-  }
-
 });
 
 };

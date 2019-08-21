@@ -398,7 +398,67 @@ router.post('/responses', (req, res) => {
     // console.log(qandaArray);
     for (let i = 0; i < qandaArray.length; i++) {
       db.Response.create(qandaArray[i]);
+      //Update Response Counts in DB
+      if (qandaArray[i].answer.toLowerCase() === 'yes'){
+        db.Question.findOne({
+          where: {
+              questionId: qandaArray[i].QuestionQuestionId
+          }
+        }).then((dbQuestion)=>{
+            dbQuestion.dataValues.YesResponseCount += 1;
+            var updatedQuestion = { YesResponseCount: dbQuestion.dataValues.YesResponseCount }
+            db.Question.update(updatedQuestion, {
+                where: {
+                    questionId: dbQuestion.dataValues.questionId
+                }
+            });
+        });
+      } else if (qandaArray[i].answer.toLowerCase() === 'no'){
+        db.Question.findOne({
+            where: {
+                questionId: qandaArray[i].QuestionQuestionId
+            }
+          }).then((dbQuestion)=>{
+              dbQuestion.dataValues.NoResponseCount += 1;
+              var updatedQuestion = { NoResponseCount: dbQuestion.dataValues.NoResponseCount }
+              db.Question.update(updatedQuestion, {
+                  where: {
+                    questionId: dbQuestion.dataValues.questionId
+                  }
+              });
+          });
+      } else if (qandaArray[i].answer.toLowerCase() === 'true'){
+        db.Question.findOne({
+            where: {
+                questionId: qandaArray[i].QuestionQuestionId
+            }
+          }).then((dbQuestion)=>{
+              dbQuestion.dataValues.TrueResponseCount += 1;
+              var updatedQuestion = { TrueResponseCount: dbQuestion.dataValues.TrueResponseCount }
+              db.Question.update(updatedQuestion, {
+                  where: {
+                    questionId: dbQuestion.dataValues.questionId
+                  }
+              });
+          });
+      } else if (qandaArray[i].answer.toLowerCase() === 'false'){
+        db.Question.findOne({
+            where: {
+                questionId: qandaArray[i].QuestionQuestionId
+            }
+          }).then((dbQuestion)=>{
+              dbQuestion.dataValues.FalseResponseCount += 1;
+              var updatedQuestion = { FalseResponseCount: dbQuestion.dataValues.FalseResponseCount }
+              db.Question.update(updatedQuestion, {
+                  where: {
+                    questionId: dbQuestion.dataValues.questionId
+                  }
+              });
+          });
+      }
+
     }
+
     // Now increment Number of respondents
     db.Survey.findOne({
       where: {
@@ -473,7 +533,7 @@ router.get('/complete', (req, res) => {
 });
 
 // Get all QuestionIds for a survey and count number of options specified
-router.get('/chart/:surveyId/:option', (req, res) => {
+router.get('/chart/:surveyId', (req, res) => {
   const results = {
     surveyId: req.params.surveyId,
     yes: [],
@@ -483,25 +543,10 @@ router.get('/chart/:surveyId/:option', (req, res) => {
   };
   db.Question.findAll({
     where: {SurveySurveyId: req.params.surveyId},
-    attributes: ['QuestionId'],
+    attributes: ['questionId', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
   }).then((dbQuestion) => {
-    for (var i = 0; i < dbQuestion.length; i++) {
-      results.yes.push(dbQuestion[i].dataValues.QuestionId);
-    }
-    console.log(results.yes);
-
-    for (var i = 0; i < results.yes.length; i++) {
-      db.Response.count({
-        where: {
-          SurveySurveyId: req.params.surveyId,
-          QuestionQuestionId: results.yes[i],
-          answer: req.params.option,
-        },
-      }).then((dbResponse) => {
-        results.yes.push(dbResponse);
-      });
-    }
-    return res.json(results);
+    console.log(dbQuestion);
+    return res.json(dbQuestion);
   });
 });
 

@@ -33,6 +33,22 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
+        YesResponseCount: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        NoResponseCount: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        TrueResponseCount: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        FalseResponseCount: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
     });
 
     Question.associate = (models) => {
