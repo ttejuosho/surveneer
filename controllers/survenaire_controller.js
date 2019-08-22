@@ -534,18 +534,23 @@ router.get('/complete', (req, res) => {
 
 // Get all QuestionIds for a survey and count number of options specified
 router.get('/chart/:surveyId', (req, res) => {
-  const results = {
+  var results = {
     surveyId: req.params.surveyId,
-    yes: [],
-    no: [],
-    true: [],
-    false: [],
+    optionType: [],
+    answerCounts: []
   };
   db.Question.findAll({
     where: {SurveySurveyId: req.params.surveyId},
-    attributes: ['questionId', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
+    attributes: ['optionType','YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
   }).then((dbQuestion) => {
-    console.log(dbQuestion);
+    for (var i = 0; i < dbQuestion.length; i++){
+        var arr = Object.values(dbQuestion[i].dataValues).filter((e)=>{
+            return e != null;
+        });
+        results.optionType.push(arr.shift());
+        results.answerCounts.push(arr);
+    }
+    console.log(results);
     return res.json(dbQuestion);
   });
 });
