@@ -74,6 +74,11 @@ module.exports = function(upload, app, passport) {
             updatedUserInfo.profileImage = req.file.filename;
           } else {
             updatedUserInfo.surveyImage = req.file.filename;
+            db.Survey.update(updatedUserInfo, {
+              where: { 
+                UserUserid: req.session.passport.user 
+              }
+            })
           }
         }
         db.User.update(updatedUserInfo, {

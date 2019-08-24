@@ -61,7 +61,7 @@ router.post('/newSurvey', (req, res) => {
           numberOfRespondents: 0,
           UserUserId: req.session.passport.user,
         };
-        console.log(cd);
+        //console.log(cd);
         db.Survey.create({
           surveyName: req.body.surveyName,
           getId: req.body.getId,
@@ -282,7 +282,6 @@ router.post('/newQuestion/:surveyId', (req, res) => {
             surveyId: dbSurvey.dataValues.surveyId,
           },
         }).then((dbSurvey) => {
-          // console.log(dbQuestion.dataValues);
           const hbsObject = {
             SurveySurveyId: dbQuestion.dataValues.SurveySurveyId,
             userId: req.session.passport.user,
@@ -329,7 +328,6 @@ router.get('/mysurveys/:surveyId', function(req, res) {
   }).then(function(survey) {
     const hbsObject = survey.dataValues;
     Object.assign(hbsObject, req.session.globalUser);
-    // console.log(survey.dataValues);
     res.render('survey/survey', hbsObject);
   }).catch(function(err) {
     res.render('error', err);
@@ -358,11 +356,10 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
     where: {
       surveyId: req.params.surveyId,
     },
-    include: [{model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']}],
+    include: [{model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']}]
   }).then(function(survey) {
-    // console.log(survey.dataValues);
     survey.dataValues['layout'] = false;
-    // console.log(survey.dataValues);
+    //console.log(survey.dataValues);
     res.render('survey/view2', survey.dataValues);
   }).catch(function(err) {
     res.render('error', err);
@@ -371,13 +368,6 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 
 // Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-  // console.log(req.body);
-  // for (var i in req.body){
-  //     if (req.body[i].length < 1) {
-  //     var err = { error: "Please enter a response for all items" }
-  //     res.render('error', err);
-  //     }
-  // }
   db.Respondent.create({
     respondentName: req.body.respondentName,
     respondentEmail: req.body.respondentEmail,
@@ -385,6 +375,7 @@ router.post('/responses', (req, res) => {
     SurveySurveyId: req.body.surveyId,
   }).then((dbRespondent) => {
     const qandaArray = [];
+
     for (let i = 0; i < req.body.questionLength; i++) {
       const qanda = {
         QuestionQuestionId: req.body['questionId' + i],
@@ -395,7 +386,6 @@ router.post('/responses', (req, res) => {
       qandaArray.push(qanda);
     }
 
-    // console.log(qandaArray);
     for (let i = 0; i < qandaArray.length; i++) {
       db.Response.create(qandaArray[i]);
       //Update Response Counts in DB
@@ -456,7 +446,6 @@ router.post('/responses', (req, res) => {
               });
           });
       }
-
     }
 
     // Now increment Number of respondents
@@ -493,7 +482,7 @@ router.post('/responses', (req, res) => {
           surveyId: dbSurvey.dataValues.surveyId,
         },
       }).then((dbSurvey) => {
-        // console.log(dbSurvey); //Returns Survey ID
+        //Returns Survey ID
         const hbsObject = {layout: false};
         return res.render('survey/complete', hbsObject);
       });
@@ -504,13 +493,13 @@ router.post('/responses', (req, res) => {
 });
 
 router.get('/responses/:SurveySurveyId/view', (req, res) => {
-  db.Response.findOne({
+  db.Response.findAll({
     where: {
       SurveySurveyId: req.params.SurveySurveyId,
     },
   }).then(function(responses) {
-    // console.log(responses);
-    res.render('response/view', responses.dataValues);
+      res.json(responses);
+    //res.render('response/view', responses.dataValues);
   }).catch(function(err) {
     res.render('error', err);
   });
@@ -523,7 +512,6 @@ router.get('/profile', (req, res) => {
       .then((dbUser) => {
         const hbsObject = dbUser.dataValues;
         hbsObject['initials'] = hbsObject.name.split(' ')[0][0] + hbsObject.name.split(' ')[1][0];
-        // console.log(hbsObject);
         res.render('user/profile', hbsObject);
       });
 });
@@ -551,7 +539,7 @@ router.get('/chart/:surveyId', (req, res) => {
         results.answerCounts.push(arr);
     }
     console.log(results);
-    return res.json(dbQuestion);
+    return res.json(results);
   });
 });
 
