@@ -346,6 +346,27 @@ app.get('/api/optionCount/:surveyId', (req,res) => {
   });
 });
 
+app.get('/api/charts/optionCounts/:surveyId', (req,res)=>{
+  var results = {
+    surveyId: req.params.surveyId,
+    optionType: [],
+    answerCounts: []
+  };
+  db.Question.findAll({
+    where: {SurveySurveyId: req.params.surveyId},
+    attributes: ['optionType','YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
+  }).then((dbQuestion) => {
+    for (var i = 0; i < dbQuestion.length; i++){
+        var arr = Object.values(dbQuestion[i].dataValues).filter((e)=>{
+            return e != null;
+        });
+        results.optionType.push(arr.shift());
+        results.answerCounts.push(arr);
+    }
+    return res.json(results);
+  });
+});
+
 };
 
 

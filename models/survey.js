@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    surveyImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     getId: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
