@@ -10,6 +10,8 @@ const db = require('./models');
 const app = express();
 const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 require('dotenv').config();
 
 const strategy = new Auth0Strategy(
@@ -31,6 +33,13 @@ const strategy = new Auth0Strategy(
       return done(null, profile);
     }
 );
+
+io.on('connection', function(socket) {
+  // This event will trigger when any user is connected.
+  // You can use 'socket' to emit and receive events.
+  socket.on('New Response Received', function(data) {
+  });
+});
 
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + '/public'));

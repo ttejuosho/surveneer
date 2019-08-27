@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models');
 const passport = require('passport');
+const io = require('socket.io');
 
 router.get('/login', passport.authenticate('auth0', {
   scope: 'openid email profile',
@@ -17,24 +18,7 @@ router.get('/', (req, res) => {
   res.redirect('/index');
 });
 
-
-router.get('/index', (req, res) => {
-  return res.render('index', req.session.globalUser);
-});
-
-router.get('/analytics', (req, res) => {
-  const hbsObject = {};
-  Object.assign(hbsObject, req.session.globalUser);
-  return res.render('survey/analytics', hbsObject);
-});
-
-router.get('/newSurvey', (req, res) => {
-  const hbsObject = {};
-  Object.assign(hbsObject, req.session.globalUser);
-  return res.render('survey/new', hbsObject);
-});
-
-// New Survey POST Route
+  // New Survey POST Route
 router.post('/newSurvey', (req, res) => {
   // Validate Survey Name
   if (req.body.surveyName === '') {
@@ -61,7 +45,7 @@ router.post('/newSurvey', (req, res) => {
           numberOfRespondents: 0,
           UserUserId: req.session.passport.user,
         };
-        //console.log(cd);
+        // console.log(cd);
         db.Survey.create({
           surveyName: req.body.surveyName,
           getId: req.body.getId,
@@ -82,6 +66,8 @@ router.post('/newSurvey', (req, res) => {
 
           hbsObject.SurveySurveyId = dbSurvey.dataValues.surveyId;
           Object.assign(hbsObject, req.session.globalUser);
+          // When any connected client emit this event, we will receive it here.
+          io.emit('You have a new response to your survey');
           return res.render('question/new', hbsObject);
         }).catch((err) => {
           res.render('error', err);
@@ -94,6 +80,22 @@ router.post('/newSurvey', (req, res) => {
       }
     });
   }
+});
+
+router.get('/index', (req, res) => {
+  return res.render('index', req.session.globalUser);
+});
+
+router.get('/analytics', (req, res) => {
+  const hbsObject = {};
+  Object.assign(hbsObject, req.session.globalUser);
+  return res.render('survey/analytics', hbsObject);
+});
+
+router.get('/newSurvey', (req, res) => {
+  const hbsObject = {};
+  Object.assign(hbsObject, req.session.globalUser);
+  return res.render('survey/new', hbsObject);
 });
 
 // Post Route to update Survey Information
@@ -356,10 +358,10 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
     where: {
       surveyId: req.params.surveyId,
     },
-    include: [{model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']}]
+    include: [{model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']}],
   }).then(function(survey) {
     survey.dataValues['layout'] = false;
-    //console.log(survey.dataValues);
+    // console.log(survey.dataValues);
     res.render('survey/view2', survey.dataValues);
   }).catch(function(err) {
     res.render('error', err);
@@ -388,63 +390,63 @@ router.post('/responses', (req, res) => {
 
     for (let i = 0; i < qandaArray.length; i++) {
       db.Response.create(qandaArray[i]);
-      //Update Response Counts in DB
-      if (qandaArray[i].answer.toLowerCase() === 'yes'){
+      // Update Response Counts in DB
+      if (qandaArray[i].answer.toLowerCase() === 'yes') {
         db.Question.findOne({
           where: {
-              questionId: qandaArray[i].QuestionQuestionId
-          }
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
         }).then((dbQuestion)=>{
-            dbQuestion.dataValues.YesResponseCount += 1;
-            var updatedQuestion = { YesResponseCount: dbQuestion.dataValues.YesResponseCount }
-            db.Question.update(updatedQuestion, {
-                where: {
-                    questionId: dbQuestion.dataValues.questionId
-                }
-            });
+          dbQuestion.dataValues.YesResponseCount += 1;
+          var updatedQuestion = {YesResponseCount: dbQuestion.dataValues.YesResponseCount};
+          db.Question.update(updatedQuestion, {
+            where: {
+              questionId: dbQuestion.dataValues.questionId,
+            },
+          });
         });
-      } else if (qandaArray[i].answer.toLowerCase() === 'no'){
+      } else if (qandaArray[i].answer.toLowerCase() === 'no') {
         db.Question.findOne({
+          where: {
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
+        }).then((dbQuestion)=>{
+          dbQuestion.dataValues.NoResponseCount += 1;
+          var updatedQuestion = {NoResponseCount: dbQuestion.dataValues.NoResponseCount};
+          db.Question.update(updatedQuestion, {
             where: {
-                questionId: qandaArray[i].QuestionQuestionId
-            }
-          }).then((dbQuestion)=>{
-              dbQuestion.dataValues.NoResponseCount += 1;
-              var updatedQuestion = { NoResponseCount: dbQuestion.dataValues.NoResponseCount }
-              db.Question.update(updatedQuestion, {
-                  where: {
-                    questionId: dbQuestion.dataValues.questionId
-                  }
-              });
+              questionId: dbQuestion.dataValues.questionId,
+            },
           });
-      } else if (qandaArray[i].answer.toLowerCase() === 'true'){
+        });
+      } else if (qandaArray[i].answer.toLowerCase() === 'true') {
         db.Question.findOne({
+          where: {
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
+        }).then((dbQuestion)=>{
+          dbQuestion.dataValues.TrueResponseCount += 1;
+          var updatedQuestion = {TrueResponseCount: dbQuestion.dataValues.TrueResponseCount};
+          db.Question.update(updatedQuestion, {
             where: {
-                questionId: qandaArray[i].QuestionQuestionId
-            }
-          }).then((dbQuestion)=>{
-              dbQuestion.dataValues.TrueResponseCount += 1;
-              var updatedQuestion = { TrueResponseCount: dbQuestion.dataValues.TrueResponseCount }
-              db.Question.update(updatedQuestion, {
-                  where: {
-                    questionId: dbQuestion.dataValues.questionId
-                  }
-              });
+              questionId: dbQuestion.dataValues.questionId,
+            },
           });
-      } else if (qandaArray[i].answer.toLowerCase() === 'false'){
+        });
+      } else if (qandaArray[i].answer.toLowerCase() === 'false') {
         db.Question.findOne({
+          where: {
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
+        }).then((dbQuestion)=>{
+          dbQuestion.dataValues.FalseResponseCount += 1;
+          var updatedQuestion = {FalseResponseCount: dbQuestion.dataValues.FalseResponseCount};
+          db.Question.update(updatedQuestion, {
             where: {
-                questionId: qandaArray[i].QuestionQuestionId
-            }
-          }).then((dbQuestion)=>{
-              dbQuestion.dataValues.FalseResponseCount += 1;
-              var updatedQuestion = { FalseResponseCount: dbQuestion.dataValues.FalseResponseCount }
-              db.Question.update(updatedQuestion, {
-                  where: {
-                    questionId: dbQuestion.dataValues.questionId
-                  }
-              });
+              questionId: dbQuestion.dataValues.questionId,
+            },
           });
+        });
       }
     }
 
@@ -482,7 +484,7 @@ router.post('/responses', (req, res) => {
           surveyId: dbSurvey.dataValues.surveyId,
         },
       }).then((dbSurvey) => {
-        //Returns Survey ID
+        // Returns Survey ID
         const hbsObject = {layout: false};
         return res.render('survey/complete', hbsObject);
       });
@@ -498,8 +500,8 @@ router.get('/responses/:SurveySurveyId/view', (req, res) => {
       SurveySurveyId: req.params.SurveySurveyId,
     },
   }).then(function(responses) {
-      res.json(responses);
-    //res.render('response/view', responses.dataValues);
+    res.json(responses);
+    // res.render('response/view', responses.dataValues);
   }).catch(function(err) {
     res.render('error', err);
   });
@@ -525,18 +527,18 @@ router.get('/chart/:surveyId', (req, res) => {
   var results = {
     surveyId: req.params.surveyId,
     optionType: [],
-    answerCounts: []
+    answerCounts: [],
   };
   db.Question.findAll({
     where: {SurveySurveyId: req.params.surveyId},
-    attributes: ['optionType','YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
+    attributes: ['optionType', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
   }).then((dbQuestion) => {
-    for (var i = 0; i < dbQuestion.length; i++){
-        var arr = Object.values(dbQuestion[i].dataValues).filter((e)=>{
-            return e != null;
-        });
-        results.optionType.push(arr.shift());
-        results.answerCounts.push(arr);
+    for (var i = 0; i < dbQuestion.length; i++) {
+      var arr = Object.values(dbQuestion[i].dataValues).filter((e)=>{
+        return e != null;
+      });
+      results.optionType.push(arr.shift());
+      results.answerCounts.push(arr);
     }
     console.log(results);
     return res.json(results);
