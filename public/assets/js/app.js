@@ -196,6 +196,16 @@ $(function() {
     $('.surveyEditCheck').attr('disabled', true);
   });
 
+  var socket = io();
+
+  //function sendNodeNotification(title, message, icon) {
+    socket.emit('show_notification', {
+        message: 'message',
+        title: 'title',
+        icon: icon,
+    });
+//}
+
   // Need Grouped Bar Charts https://codepen.io/Shokeen/pen/NpgbKg
   // Q1 [YesCount,NoCount]
   fetch('/api/charts/optionCounts/1').then(function(data) {

@@ -34,10 +34,14 @@ const strategy = new Auth0Strategy(
     }
 );
 
-io.on('connection', function(socket) {
-  // This event will trigger when any user is connected.
-  // You can use 'socket' to emit and receive events.
+io.on('connection', function (socket) {
   socket.on('New Response Received', function(data) {
+    console.log(data.title,data.message);
+    io.sockets.emit( 'show_notification', { 
+      title: data.title, 
+      message: data.message, 
+      icon: data.icon, 
+    });
   });
 });
 

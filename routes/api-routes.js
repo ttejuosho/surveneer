@@ -67,8 +67,9 @@ module.exports = (app) => {
         surveyId: req.params.surveyId,
       },
       include: [
-        {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
-        {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'answer']},
+      {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
+      {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
+      {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
       ],
     }).then(function(survey) {
       // console.log(survey);
