@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable max-len */
 $(function() {
   // console.log("App Loaded");
@@ -51,6 +52,7 @@ $(function() {
     });
 
     $('.switch-sidebar-mini input').on('switchChange.bootstrapSwitch', function() {
+      // eslint-disable-next-line no-unused-vars
       const $btn = $(this);
 
       // eslint-disable-next-line camelcase
@@ -196,15 +198,15 @@ $(function() {
     $('.surveyEditCheck').attr('disabled', true);
   });
 
-  var socket = io();
+  const socket = io();
 
-  //function sendNodeNotification(title, message, icon) {
-    socket.emit('show_notification', {
-        message: 'message',
-        title: 'title',
-        icon: icon,
-    });
-//}
+  // function sendNodeNotification(title, message, icon) {
+  socket.emit('show_notification', {
+    message: 'message',
+    title: 'title',
+    icon: icon,
+  });
+  // }
 
   // Need Grouped Bar Charts https://codepen.io/Shokeen/pen/NpgbKg
   // Q1 [YesCount,NoCount]

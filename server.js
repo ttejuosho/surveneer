@@ -10,6 +10,7 @@ const db = require('./models');
 const app = express();
 const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
+// eslint-disable-next-line new-cap
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 require('dotenv').config();
@@ -34,13 +35,13 @@ const strategy = new Auth0Strategy(
     }
 );
 
-io.on('connection', function (socket) {
+io.on('connection', function(socket) {
   socket.on('New Response Received', function(data) {
-    console.log(data.title,data.message);
-    io.sockets.emit( 'show_notification', { 
-      title: data.title, 
-      message: data.message, 
-      icon: data.icon, 
+    console.log(data.title, data.message);
+    io.sockets.emit( 'show_notification', {
+      title: data.title,
+      message: data.message,
+      icon: data.icon,
     });
   });
 });
