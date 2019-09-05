@@ -67,9 +67,9 @@ module.exports = (app) => {
         surveyId: req.params.surveyId,
       },
       include: [
-      {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
-      {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
-      {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
+        {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
+        {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
+        {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
       ],
     }).then(function(survey) {
       // console.log(survey);
@@ -309,65 +309,64 @@ module.exports = (app) => {
     });
   });
 
-//Get All QuestionIds for a survey
-app.get('/api/survey/qids/:surveyId', (req,res) => {
-  db.Question.findAll({
-    where: { SurveySurveyId: req.params.surveyId },
-    attributes: ['QuestionId']
-  }).then((dbQuestion) => {
-    var qidArray = [];
-    for (var i = 0; i < dbQuestion.length; i++){
-      qidArray.push(dbQuestion[i].QuestionId);
-    }
-    console.log(qidArray);
-    res.json(dbQuestion);
+  // Get All QuestionIds for a survey
+  app.get('/api/survey/qids/:surveyId', (req, res) => {
+    db.Question.findAll({
+      where: {SurveySurveyId: req.params.surveyId},
+      attributes: ['QuestionId'],
+    }).then((dbQuestion) => {
+      const qidArray = [];
+      for (let i = 0; i < dbQuestion.length; i++) {
+        qidArray.push(dbQuestion[i].QuestionId);
+      }
+      console.log(qidArray);
+      res.json(dbQuestion);
+    });
   });
-});
 
-  //Get all Responses to a question
-app.get('/api/survey/res2aq/:surveyId/:questionId/:option', (req,res) => {
-  db.Response.findAll({
-    where: {
-      SurveySurveyId: req.params.surveyId,
-      QuestionQuestionId: req.params.questionId,
-      answer: req.params.option
-    }
-  }).then((dbResponse) => {
-    res.json(dbResponse.count);
+  // Get all Responses to a question
+  app.get('/api/survey/res2aq/:surveyId/:questionId/:option', (req, res) => {
+    db.Response.findAll({
+      where: {
+        SurveySurveyId: req.params.surveyId,
+        QuestionQuestionId: req.params.questionId,
+        answer: req.params.option,
+      },
+    }).then((dbResponse) => {
+      res.json(dbResponse.count);
+    });
   });
-});
 
-//Get all QuestionIds for a survey and count number of options specified
-app.get('/api/optionCount/:surveyId', (req,res) => {
-  db.Question.findAll({
-    where: {SurveySurveyId: req.params.surveyId},
-    attributes: ['questionId', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
-  }).then((dbQuestion) => {
-    return res.json(dbQuestion);
+  // Get all QuestionIds for a survey and count number of options specified
+  app.get('/api/optionCount/:surveyId', (req, res) => {
+    db.Question.findAll({
+      where: {SurveySurveyId: req.params.surveyId},
+      attributes: ['questionId', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
+    }).then((dbQuestion) => {
+      return res.json(dbQuestion);
+    });
   });
-});
 
-app.get('/api/charts/optionCounts/:surveyId', (req,res)=>{
-  var results = {
-    surveyId: req.params.surveyId,
-    optionType: [],
-    answerCounts: []
-  };
-  db.Question.findAll({
-    where: {SurveySurveyId: req.params.surveyId},
-    attributes: ['optionType','YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
-  }).then((dbQuestion) => {
-    for (var i = 0; i < dbQuestion.length; i++){
-        var arr = Object.values(dbQuestion[i].dataValues).filter((e)=>{
-            return e != null;
+  app.get('/api/charts/optionCounts/:surveyId', (req, res)=>{
+    const results = {
+      surveyId: req.params.surveyId,
+      optionType: [],
+      answerCounts: [],
+    };
+    db.Question.findAll({
+      where: {SurveySurveyId: req.params.surveyId},
+      attributes: ['optionType', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'],
+    }).then((dbQuestion) => {
+      for (let i = 0; i < dbQuestion.length; i++) {
+        const arr = Object.values(dbQuestion[i].dataValues).filter((e)=>{
+          return e != null;
         });
         results.optionType.push(arr.shift());
         results.answerCounts.push(arr);
-    }
-    return res.json(results);
+      }
+      return res.json(results);
+    });
   });
-});
-
 };
 
 
