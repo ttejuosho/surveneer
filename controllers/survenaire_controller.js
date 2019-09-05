@@ -67,7 +67,7 @@ router.post('/newSurvey', (req, res) => {
           hbsObject.SurveySurveyId = dbSurvey.dataValues.surveyId;
           Object.assign(hbsObject, req.session.globalUser);
           // When any connected client emit this event, we will receive it here.
-          io.emit('You have a new response to your survey');
+          //io.emit('You have a new response to your survey');
           return res.render('question/new', hbsObject);
         }).catch((err) => {
           res.render('error', err);
