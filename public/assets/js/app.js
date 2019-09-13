@@ -198,14 +198,14 @@ $(function() {
     $('.surveyEditCheck').attr('disabled', true);
   });
 
-  const socket = io();
+  // const socket = io();
 
   // function sendNodeNotification(title, message, icon) {
-  socket.emit('show_notification', {
-    message: 'message',
-    title: 'title',
-    icon: icon,
-  });
+  // socket.emit('show_notification', {
+  //   message: 'message',
+  //   title: 'title',
+  //   icon: icon,
+  // });
   // }
 
   // Need Grouped Bar Charts https://codepen.io/Shokeen/pen/NpgbKg

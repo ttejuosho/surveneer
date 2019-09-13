@@ -10,6 +10,9 @@ const db = require('./models');
 const app = express();
 const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
+const { check } = require('express-validator');
+const cookieParser = require(`cookie-parser`);
+const flash = require('connect-flash');
 // eslint-disable-next-line new-cap
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -35,6 +38,24 @@ const strategy = new Auth0Strategy(
     }
 );
 
+//express validator
+// app.use(expressValidator({
+//   errorFormatter:function(param, msg, value){
+//     var namespace = param.split('.'),
+//     root = namespace.shift(),
+//     formParam = root;
+
+//     while(namespace.length){
+//       formParam+='[' + namespace.shift() + ']';
+//     }
+//     return{
+//       param:formParam,
+//       msg:msg,
+//       value:value
+//     };
+//     }
+// }));
+
 io.on('connection', function(socket) {
   socket.on('New Response Received', function(data) {
     console.log(data.title, data.message);
@@ -58,6 +79,9 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'));
+
+app.use(flash());
+app.use(cookieParser());
 
 // For Passport
 app.use(session({secret: 'keyboard cat', resave: true, saveUninitialized: false, cookie: {}})); // session secret
@@ -125,6 +149,15 @@ const hbs = exphbs.create({
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 const routes = require('./controllers/survenaire_controller');
+
+//global vars
+app.use(function(req,res,next){
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
+  next();
+});
 
 require('./routes/auth.js')(upload, app, passport);
 

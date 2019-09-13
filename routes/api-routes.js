@@ -317,6 +317,7 @@ module.exports = (app) => {
     }).then((dbQuestion) => {
       const qidArray = [];
       for (let i = 0; i < dbQuestion.length; i++) {
+        console.log(dbQuestion[i].QuestionId);
         qidArray.push(dbQuestion[i].QuestionId);
       }
       console.log(qidArray);

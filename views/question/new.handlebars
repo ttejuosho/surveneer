@@ -5,6 +5,11 @@
         </div>
         <div class="card-body">
         <form id="newQuestionForm" action="/newQuestion/{{SurveySurveyId}}" method="POST">
+        {{#if errors}}
+            {{#each errors}}
+            <div class="alert alert-primary">{{msg}}</div>
+            {{/each}}
+        {{/if}}
         <div class="messages text-danger font-weight-bold">{{error}}</div>
             <div class="row">
                 <div class="col-md-12">
@@ -162,8 +167,8 @@
     </div>
     </div>
 
-    <script type="text/javascript">
+    {{!-- <script type="text/javascript">
         $(function () {
             survenaire.showNotification('top', 'right', 'Question Added');
         });
-    </script>
+    </script> --}}

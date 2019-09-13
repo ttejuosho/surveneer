@@ -7,6 +7,7 @@ const router = express.Router();
 const db = require('../models');
 const passport = require('passport');
 const io = require('socket.io');
+const { check, validationResult } = require('express-validator');
 
 router.get('/login', passport.authenticate('auth0', {
   scope: 'openid email profile',
@@ -234,8 +235,21 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
       });
 });
 
-router.post('/newQuestion/:surveyId', (req, res) => {
-  // TODO:    Validate Received SurveyId HERE
+router.post('/newQuestion/:surveyId', 
+[ check('question').not().isEmpty().withMessage('Question is required') ], (req, res) => {
+  // TODO: Validate Received SurveyId HERE
+  const errors = validationResult(req);
+  console.log(req.body);
+
+  if (!errors.isEmpty()) {
+    errors['SurveySurveyId'] = req.params.surveyId;
+    Object.assign(errors, req.session.globalUser);
+    return res.render('question/new', errors);
+    //return res.status(422).jsonp(errors.array());
+  } else {
+    res.send({});
+  }
+
   // Validate Question
   if (req.body.question == '') {
     const hbsObject = {
@@ -293,6 +307,7 @@ router.post('/newQuestion/:surveyId', (req, res) => {
           if (req.body.action === 'Finish') {
             return res.redirect('/mysurveys/' + req.params.surveyId);
           }
+          req.flash('Question Addedd','Question has been added');
           return res.render('question/new', hbsObject);
         });
       });
