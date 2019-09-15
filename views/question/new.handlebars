@@ -16,7 +16,9 @@
                     <div class="form-group">
                     <label>Question</label>
                     <textarea id="question" name="question" rows="2" cols="8" class="form-control" placeholder=""></textarea>
-                    <div class="messages text-danger font-weight-bold">{{questionError}}</div>
+                    {{#ifEquals param "question"}} 
+                        <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                    {{/ifEquals}}
                     </div>
                 </div>
             </div>
@@ -166,9 +168,10 @@
         </div>
     </div>
     </div>
-
-    {{!-- <script type="text/javascript">
-        $(function () {
-            survenaire.showNotification('top', 'right', 'Question Added');
-        });
-    </script> --}}
+    {{!-- {{#ifEquals param "question"}}
+        <script type="text/javascript">
+            $(function () {
+                survenaire.showNotification('top', 'right', {{msg}});
+            });
+        </script>
+    {{/ifEquals}} --}}
