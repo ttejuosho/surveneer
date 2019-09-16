@@ -289,6 +289,21 @@
 
 </div>
 {{!-- End  --}}
+{{#if deleteAlertMessage}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Question deleted.');
+        });
+    </script>
+{{/if}}
+
+{{#if questionUpdateAlertMessage}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Question Updated');
+        });
+    </script>
+{{/if}}
 
 <script>
 var openModal  = (questionId) => {

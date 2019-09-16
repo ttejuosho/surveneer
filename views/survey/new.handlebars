@@ -13,7 +13,13 @@
                     <div class="form-group">
                     <label>Survey Name</label>
                     <input id="surveyName" name="surveyName" type="text" class="form-control" placeholder="Survey Name">
-                    <div class="messages text-danger font-weight-bold">{{surveyNameError}}</div>
+                    {{#if errors}}
+                        {{#each errors}}
+                            {{#ifEquals param "surveyName"}} 
+                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                            {{/ifEquals}}
+                        {{/each}}
+                    {{/if}}
                     </div>
                 </div>
             </div>

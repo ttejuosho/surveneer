@@ -80,7 +80,6 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'));
 
-app.use(flash());
 app.use(cookieParser());
 
 // For Passport
@@ -150,6 +149,7 @@ app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 const routes = require('./controllers/survenaire_controller');
 
+app.use(flash());
 //global vars
 app.use(function(req,res,next){
   res.locals.success_msg = req.flash('success_msg');

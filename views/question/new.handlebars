@@ -5,20 +5,19 @@
         </div>
         <div class="card-body">
         <form id="newQuestionForm" action="/newQuestion/{{SurveySurveyId}}" method="POST">
-        {{#if errors}}
-            {{#each errors}}
-            <div class="alert alert-primary">{{msg}}</div>
-            {{/each}}
-        {{/if}}
         <div class="messages text-danger font-weight-bold">{{error}}</div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                     <label>Question</label>
                     <textarea id="question" name="question" rows="2" cols="8" class="form-control" placeholder=""></textarea>
-                    {{#ifEquals param "question"}} 
-                        <div class="messages text-danger font-weight-bold">{{msg}}</div>
-                    {{/ifEquals}}
+                    {{#if errors}}
+                        {{#each errors}}
+                            {{#ifEquals param "question"}} 
+                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                            {{/ifEquals}}
+                        {{/each}}
+                    {{/if}}
                     </div>
                 </div>
             </div>
@@ -137,7 +136,6 @@
                         </div>
 </div>
 
-
                         <div class="form-check form-check-radio disabled">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="optionType" id="CustomOptions" value="CustomOption" disabled>
@@ -147,6 +145,13 @@
                             <small class="form-text text-muted ml-3" style="display: unset;">(currently not supported)</small>
                         </div>
                         <div class="messages text-danger font-weight-bold">{{optionsError}}</div>
+                    {{#if errors}}
+                        {{#each errors}}
+                            {{#ifEquals param "optionType"}} 
+                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                            {{/ifEquals}}
+                        {{/each}}
+                    {{/if}}
                 </div>
             </div>
 
@@ -168,10 +173,17 @@
         </div>
     </div>
     </div>
-    {{!-- {{#ifEquals param "question"}}
+    {{#if questionAlertMessage}}
         <script type="text/javascript">
             $(function () {
-                survenaire.showNotification('top', 'right', {{msg}});
+                survenaire.showNotification('success', 'top', 'center', 'Question Saved');
             });
         </script>
-    {{/ifEquals}} --}}
+    {{/if}}
+    {{#if surveyAlertMessage}}
+        <script type="text/javascript">
+            $(function () {
+                survenaire.showNotification('success', 'top', 'center', 'Survey Created');
+            });
+        </script>
+    {{/if}}

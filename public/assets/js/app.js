@@ -115,16 +115,16 @@ $(function() {
 
   type = ['primary', 'info', 'success', 'warning', 'danger'];
   survenaire = {
-    showNotification: function(from, align, msg) {
+    showNotification: function(type, from, align, msg) {
       color = Math.floor((Math.random() * 4) + 1);
-
+      console.log(color);
       $.notify({
         icon: 'tim-icons icon-bell-55',
         message: msg,
 
       }, {
-        type: type[color],
-        timer: 8000,
+        type: type,
+        timer: 5000,
         placement: {
           from: from,
           align: align,
