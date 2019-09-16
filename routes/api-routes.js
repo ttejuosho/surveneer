@@ -320,7 +320,7 @@ module.exports = (app) => {
         console.log(dbQuestion[i].QuestionId);
         qidArray.push(dbQuestion[i].QuestionId);
       }
-      console.log(qidArray);
+      //console.log(qidArray);
       res.json(dbQuestion);
     });
   });
