@@ -16,7 +16,7 @@
             <div class="col-lg-4">
                 <div class="card card-chart">
                     <div class="card-header"> 
-                        <i onclick="openModal({{surveyId}})" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
+                        <i onclick="openModal(`{{surveyId}}`)" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
                         <h3 class="card-title"><i class="tim-icons icon-atom text-primary"></i><a href="/mysurveys/{{surveyId}}">{{surveyName}}</a></h3>
                         <h5 class="card-category">{{numberOfQuestions}} {{#ifEquals numberOfQuestions 1}} Question {{else}} Questions {{/ifEquals}}</h5>
                         <h5 class="card-category">{{numberOfRespondents}} {{#ifEquals numberOfRespondents 1}} Respondent {{else}} Respondents {{/ifEquals}}</h5>
@@ -51,5 +51,5 @@ function openModal (surveyId) {
     $('#deleteSurveyBtn').attr('href', '/deleteSurvey/' + surveyId)
   }
           // Initialize Demo Charts
-    demo.initDashboardPageCharts();
+    //demo.initDashboardPageCharts();
 </script>
