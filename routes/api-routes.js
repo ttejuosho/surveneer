@@ -1,10 +1,9 @@
 /* eslint-disable max-len */
 // Requiring our models
 const db = require('../models');
-
 // Routes
 // =============================================================
-module.exports = (app) => {
+module.exports = (app, io) => {
   // Get a User
   app.get('/api/users/:userId', (req, res) => {
     db.User.findAll({

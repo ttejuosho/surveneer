@@ -199,7 +199,12 @@ $(function() {
   });
 
   // const socket = io();
+  const socket = io.connect( 'http://localhost:8080' );
+  socket.emit('response', {message: 'New Alert'});
 
+  socket.on('response', (data)=>{
+    console.log(data);
+  });
   // function sendNodeNotification(title, message, icon) {
   // socket.emit('show_notification', {
   //   message: 'message',

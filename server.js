@@ -10,14 +10,14 @@ const db = require('./models');
 const app = express();
 const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
-const { check } = require('express-validator');
+const {check} = require('express-validator');
 const cookieParser = require(`cookie-parser`);
 const flash = require('connect-flash');
 // eslint-disable-next-line new-cap
-const http = require('http').Server(app);
+const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 require('dotenv').config();
-
+http.listen(8080, '127.0.0.1');
 const strategy = new Auth0Strategy(
     {
       domain: process.env.AUTH0_DOMAIN,
@@ -38,25 +38,10 @@ const strategy = new Auth0Strategy(
     }
 );
 
-//express validator
-// app.use(expressValidator({
-//   errorFormatter:function(param, msg, value){
-//     var namespace = param.split('.'),
-//     root = namespace.shift(),
-//     formParam = root;
-
-//     while(namespace.length){
-//       formParam+='[' + namespace.shift() + ']';
-//     }
-//     return{
-//       param:formParam,
-//       msg:msg,
-//       value:value
-//     };
-//     }
-// }));
 
 io.on('connection', function(socket) {
+  console.log('A User Connected');
+
   socket.on('New Response Received', function(data) {
     console.log(data.title, data.message);
     io.sockets.emit( 'show_notification', {
@@ -65,7 +50,13 @@ io.on('connection', function(socket) {
       icon: data.icon,
     });
   });
+
+  socket.on('response', (response)=>{
+    console.log(response);
+    io.emit('response', response);
+  });
 });
+
 
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + '/public'));
@@ -150,8 +141,8 @@ app.set('view engine', 'handlebars');
 const routes = require('./controllers/survenaire_controller');
 
 app.use(flash());
-//global vars
-app.use(function(req,res,next){
+// global vars
+app.use(function(req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
@@ -164,7 +155,7 @@ require('./routes/auth.js')(upload, app, passport);
 // load passport strategies
 require('./config/passport/passport.js')(passport, db.User);
 
-require('./routes/api-routes.js')(app);
+require('./routes/api-routes.js')(app, io);
 // require('./routes/auth')(app);
 app.use('/', routes);
 app.use('/update', routes);

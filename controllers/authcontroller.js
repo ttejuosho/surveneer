@@ -3,6 +3,7 @@
 const db = require('../models');
 const util = require('util');
 const querystring = require('querystring');
+const io = require('socket.io');
 
 exports.signup = function(req, res) {
   res.render('auth/signup', {title: 'Sign Up', layout: 'partials/prelogin'});
