@@ -3,7 +3,7 @@
 const db = require('../models');
 // Routes
 // =============================================================
-module.exports = (app, io) => {
+module.exports = (app) => {
   // Get a User
   app.get('/api/users/:userId', (req, res) => {
     db.User.findAll({

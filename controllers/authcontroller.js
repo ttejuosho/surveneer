@@ -25,6 +25,7 @@ exports.surveys = function(req, res) {
     if (req.session.globalUser) {
       Object.assign(surveys, req.session.globalUser);
     }
+    //io.emit('response', {message: 'New Alert'});
     return res.render('surveys', surveys);
   });
 };
@@ -73,6 +74,14 @@ exports.logout = function(req, res) {
     returnTo: returnTo,
   });
   logoutURL.search = searchString;
-
   res.redirect(logoutURL);
 };
+
+exports.respond = (io, socket) => {
+  // socket.on('response', (response)=>{
+  //   console.log(response);
+  //   io.emit('response', response);
+  // });
+  console.log("response");
+  io.emit('response', {message: 'New Alert'});
+}

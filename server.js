@@ -55,7 +55,9 @@ io.on('connection', function(socket) {
     console.log(response);
     io.emit('response', response);
   });
+
 });
+
 
 
 // Serve static content for the app from the "public" directory in the application directory.
