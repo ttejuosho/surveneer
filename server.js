@@ -37,11 +37,10 @@ const strategy = new Auth0Strategy(
       return done(null, profile);
     }
 );
-
-
+let i = 0;
 io.on('connection', function(socket) {
   console.log('A User Connected');
-
+  socket.emit('news', {hello: i++});
   socket.on('New Response Received', function(data) {
     console.log(data.title, data.message);
     io.sockets.emit( 'show_notification', {
@@ -55,9 +54,7 @@ io.on('connection', function(socket) {
     console.log(response);
     io.emit('response', response);
   });
-
 });
-
 
 
 // Serve static content for the app from the "public" directory in the application directory.
@@ -158,12 +155,13 @@ require('./routes/auth.js')(upload, app, passport);
 require('./config/passport/passport.js')(passport, db.User);
 
 require('./routes/api-routes.js')(app, io);
-// require('./routes/auth')(app);
+//require('./routes/auth')(app);
 app.use('/', routes);
 app.use('/update', routes);
 app.use('/new', routes);
 app.use('/delete', routes);
 app.use('/survey', routes);
+app.use('/mysurveys', routes);
 app.use('/question', routes);
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();

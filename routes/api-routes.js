@@ -174,7 +174,7 @@ module.exports = (app) => {
 
   // Get Number of Responses to a Survey
   app.get('/api/rnum/:surveyId', (req, res) => {
-    db.Response.count({distinct: true, col: 'QuestionQuestionId'}).then(function(dbResponse) {
+    db.Response.count({distinct: true, col: 'RespondentRespondentId'}).then(function(dbResponse) {
       res.json(dbResponse);
     });
   });

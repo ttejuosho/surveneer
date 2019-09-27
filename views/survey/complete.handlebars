@@ -33,6 +33,7 @@
                             <h4>{{postSurveyInstructions}}</h4>
                         {{/if}}
                     </blockquote>
+                    <span id="OKAY"></span>
                 </div>
             </div>
         </div>
@@ -45,6 +46,7 @@
   <script src="/assets/js/core/popper.min.js"></script>
   <script src="/assets/js/core/bootstrap.min.js"></script>
   <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
   <!--  Google Maps Plugin    -->
   <!-- Place this tag in your head or just before your close body tag. -->
   {{!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> --}}
@@ -60,8 +62,13 @@
   <script type="text/javascript" src="/assets/js/app.js"></script>
   <!-- Black Dashboard DEMO methods, don't include it in your project! -->
   <script src="/assets/demo/demo.js"></script>
-    <script type="text/javascript">
-        $(function () {
-              socket.emit('response', {message: 'New Alert'});
+<script type="text/javascript">
+    $(function () {
+        const socket = io.connect( 'http://localhost:8080' );
+        socket.on('news', function (data) {
+            console.log(data);
+            $('#OKAY').text(data.hello);
+            socket.emit('response', {message: 'New Alert'});
         });
-    </script>
+    });
+</script>

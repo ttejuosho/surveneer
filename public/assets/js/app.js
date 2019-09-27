@@ -199,18 +199,14 @@ $(function() {
   });
 
   // const socket = io();
-  const socket = io.connect( 'http://localhost:8080' );
+  // const socket = io.connect( 'http://localhost:8080' );
 
-  // socket.on('response', (data)=>{
+
+  // socket.on('news', function(data) {
+  //   console.log('Emitted');
   //   console.log(data);
+  //   socket.emit('response', {message: 'New Alert'});
   // });
-  // function sendNodeNotification(title, message, icon) {
-  // socket.emit('show_notification', {
-  //   message: 'message',
-  //   title: 'title',
-  //   icon: icon,
-  // });
-  // }
 
   // Need Grouped Bar Charts https://codepen.io/Shokeen/pen/NpgbKg
   // Q1 [YesCount,NoCount]

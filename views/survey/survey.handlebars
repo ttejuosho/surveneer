@@ -149,7 +149,7 @@
     <a class="nav-link active" href="#QuestionSection" id="QuestionTab" data-toggle="tab" role="tab" aria-controls="QuestionSection" aria-selected="true">Questions</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#ResponseSection" id="ResponseTab" data-toggle="tab" role="tab" aria-controls="ResponseSection" aria-selected="false">Responses</a>
+    <a class="nav-link" href="#ResponseSection" id="ResponseTab" data-toggle="tab" role="tab" aria-controls="ResponseSection" aria-selected="false">Responses <span class="ml-1 responseCount">{{getLength Respondents}}</span></a>
   </li>
 </ul>
 
@@ -323,3 +323,15 @@ var openSurveyImageModal = (surveyId) => {
         });
     </script>
 {{/if}}
+
+<script type="text/javascript">
+    $(function () {
+            // const socket = io();
+        const socket = io.connect( 'http://localhost:8080' );
+        console.log("Emitted");
+        socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('response', {message: 'New Alert'});
+        });
+    });
+</script>
