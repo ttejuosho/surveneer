@@ -198,19 +198,21 @@ $(function() {
     $('.surveyEditCheck').attr('disabled', true);
   });
 
-  // const socket = io();
-  // const socket = io.connect( 'http://localhost:8080' );
+  const socket = io.connect( 'http://localhost:8080' );
+  socket.on('news', function(data) {
+    $('.responseCount').text(data.message);
+  });
 
+  // eslint-disable-next-line require-jsdoc
+  // function getRandomInt(max) {
+  //   return Math.floor(Math.random() * Math.floor(max));
+  // }
 
-  // socket.on('news', function(data) {
-  //   console.log('Emitted');
-  //   console.log(data);
-  //   socket.emit('response', {message: 'New Alert'});
-  // });
 
   // Need Grouped Bar Charts https://codepen.io/Shokeen/pen/NpgbKg
   // Q1 [YesCount,NoCount]
   fetch('/api/charts/optionCounts/1').then(function(data) {
+    // socket.emit('response', {message: getRandomInt(9)});
     return data.json();
   }).then(function(data) {
     const ctx = $('#chartBig1');

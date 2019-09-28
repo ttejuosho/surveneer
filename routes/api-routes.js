@@ -245,7 +245,7 @@ module.exports = (app) => {
         RespondentRespondentId: req.params.respondentId,
       },
       // include: [{ association: 'Respondent' }]
-      include: [{model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone']}],
+      include: [{model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone']}, {model: db.Question, as: 'Question', attributes: ['question']}],
     }).then((dbRespondent) => {
       // for (var i = 0; i < dbRespondent.length; i++){
 

@@ -358,129 +358,140 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 });
 
 // Save Responses and Respondent (Need Refactoring - Error handling)
-// router.post('/responses', (req, res) => {
-//   db.Respondent.create({
-//     respondentName: req.body.respondentName,
-//     respondentEmail: req.body.respondentEmail,
-//     respondentPhone: req.body.respondentPhone,
-//     SurveySurveyId: req.body.surveyId,
-//   }).then((dbRespondent) => {
-//     const qandaArray = [];
-//     for (let i = 0; i < req.body.questionLength; i++) {
-//       const qanda = {
-//         QuestionQuestionId: req.body['questionId' + i],
-//         answer: req.body['answer' + i],
-//         RespondentRespondentId: dbRespondent.dataValues.respondentId,
-//         SurveySurveyId: req.body.surveyId,
-//       };
-//       qandaArray.push(qanda);
-//     }
+router.post('/responses', (req, res) => {
+  var resId;
+  db.Respondent.create({
+    respondentName: req.body.respondentName,
+    respondentEmail: req.body.respondentEmail,
+    respondentPhone: req.body.respondentPhone,
+    SurveySurveyId: req.body.surveyId,
+  }).then((dbRespondent) => {
+    resId = dbRespondent.id;
+    const qandaArray = [];
+    for (let i = 0; i < req.body.questionLength; i++) {
+      const qanda = {
+        QuestionQuestionId: req.body['questionId' + i],
+        answer: req.body['answer' + i],
+        RespondentRespondentId: dbRespondent.dataValues.respondentId,
+        SurveySurveyId: req.body.surveyId,
+      };
+      qandaArray.push(qanda);
+    }
 
-//     for (let i = 0; i < qandaArray.length; i++) {
-//       db.Response.create(qandaArray[i]);
-//       // Update Response Counts in DB
-//       if (qandaArray[i].answer.toLowerCase() === 'yes') {
-//         db.Question.findOne({
-//           where: {
-//             questionId: qandaArray[i].QuestionQuestionId,
-//           },
-//         }).then((dbQuestion) => {
-//           dbQuestion.dataValues.YesResponseCount += 1;
-//           var updatedQuestion = {YesResponseCount: dbQuestion.dataValues.YesResponseCount};
-//           db.Question.update(updatedQuestion, {
-//             where: {
-//               questionId: dbQuestion.dataValues.questionId,
-//             },
-//           });
-//         });
-//       } else if (qandaArray[i].answer.toLowerCase() === 'no') {
-//         db.Question.findOne({
-//           where: {
-//             questionId: qandaArray[i].QuestionQuestionId,
-//           },
-//         }).then((dbQuestion) => {
-//           dbQuestion.dataValues.NoResponseCount += 1;
-//           var updatedQuestion = {NoResponseCount: dbQuestion.dataValues.NoResponseCount};
-//           db.Question.update(updatedQuestion, {
-//             where: {
-//               questionId: dbQuestion.dataValues.questionId,
-//             },
-//           });
-//         });
-//       } else if (qandaArray[i].answer.toLowerCase() === 'true') {
-//         db.Question.findOne({
-//           where: {
-//             questionId: qandaArray[i].QuestionQuestionId,
-//           },
-//         }).then((dbQuestion) => {
-//           dbQuestion.dataValues.TrueResponseCount += 1;
-//           var updatedQuestion = {TrueResponseCount: dbQuestion.dataValues.TrueResponseCount};
-//           db.Question.update(updatedQuestion, {
-//             where: {
-//               questionId: dbQuestion.dataValues.questionId,
-//             },
-//           });
-//         });
-//       } else if (qandaArray[i].answer.toLowerCase() === 'false') {
-//         db.Question.findOne({
-//           where: {
-//             questionId: qandaArray[i].QuestionQuestionId,
-//           },
-//         }).then((dbQuestion) => {
-//           dbQuestion.dataValues.FalseResponseCount += 1;
-//           var updatedQuestion = {FalseResponseCount: dbQuestion.dataValues.FalseResponseCount};
-//           db.Question.update(updatedQuestion, {
-//             where: {
-//               questionId: dbQuestion.dataValues.questionId,
-//             },
-//           });
-//         });
-//       }
-//     }
+    for (let i = 0; i < qandaArray.length; i++) {
+      // Save response to Database
+      db.Response.create(qandaArray[i]);
+      // Update Response Counts in DB
+      if (qandaArray[i].answer.toLowerCase() === 'yes') {
+        db.Question.findOne({
+          where: {
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
+        }).then((dbQuestion) => {
+          dbQuestion.dataValues.YesResponseCount += 1;
+          var updatedQuestion = {YesResponseCount: dbQuestion.dataValues.YesResponseCount};
+          db.Question.update(updatedQuestion, {
+            where: {
+              questionId: dbQuestion.dataValues.questionId,
+            },
+          });
+        });
+      } else if (qandaArray[i].answer.toLowerCase() === 'no') {
+        db.Question.findOne({
+          where: {
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
+        }).then((dbQuestion) => {
+          dbQuestion.dataValues.NoResponseCount += 1;
+          var updatedQuestion = {NoResponseCount: dbQuestion.dataValues.NoResponseCount};
+          db.Question.update(updatedQuestion, {
+            where: {
+              questionId: dbQuestion.dataValues.questionId,
+            },
+          });
+        });
+      } else if (qandaArray[i].answer.toLowerCase() === 'true') {
+        db.Question.findOne({
+          where: {
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
+        }).then((dbQuestion) => {
+          dbQuestion.dataValues.TrueResponseCount += 1;
+          var updatedQuestion = {TrueResponseCount: dbQuestion.dataValues.TrueResponseCount};
+          db.Question.update(updatedQuestion, {
+            where: {
+              questionId: dbQuestion.dataValues.questionId,
+            },
+          });
+        });
+      } else if (qandaArray[i].answer.toLowerCase() === 'false') {
+        db.Question.findOne({
+          where: {
+            questionId: qandaArray[i].QuestionQuestionId,
+          },
+        }).then((dbQuestion) => {
+          dbQuestion.dataValues.FalseResponseCount += 1;
+          var updatedQuestion = {FalseResponseCount: dbQuestion.dataValues.FalseResponseCount};
+          db.Question.update(updatedQuestion, {
+            where: {
+              questionId: dbQuestion.dataValues.questionId,
+            },
+          });
+        });
+      }
+    }
 
-//     // Now increment Number of respondents
-//     db.Survey.findOne({
-//       where: {
-//         surveyId: req.body.surveyId,
-//       },
-//     }).then((dbSurvey) => {
-//       dbSurvey.dataValues.numberOfRespondents += 1;
-//       const updatedSurvey = {
-//         surveyName: dbSurvey.dataValues.surveyName,
-//         getId: dbSurvey.dataValues.getId,
-//         numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-//         preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
-//         postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
-//         surveyNotes: dbSurvey.dataValues.surveyNotes,
-//       };
-//       const hbsObject = {
-//         respondentName: req.body.respondentName,
-//         respondentEmail: req.body.respondentEmail,
-//         respondentPhone: req.body.respondentPhone,
-//         surveyId: req.body.surveyId,
-//         qanda: qandaArray,
-//         surveyName: dbSurvey.dataValues.surveyName,
-//         getId: dbSurvey.dataValues.getId,
-//         numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-//         preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
-//         postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
-//         surveyNotes: dbSurvey.dataValues.surveyNotes,
-//       };
+    // Now increment Number of respondents
+    db.Survey.findOne({
+      where: {
+        surveyId: req.body.surveyId,
+      },
+    }).then((dbSurvey) => {
+      dbSurvey.dataValues.numberOfRespondents += 1;
+      const updatedSurvey = {
+        surveyName: dbSurvey.dataValues.surveyName,
+        getId: dbSurvey.dataValues.getId,
+        numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+        preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+        postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
+        surveyNotes: dbSurvey.dataValues.surveyNotes,
+      };
+      const hbsObject = {
+        respondentName: req.body.respondentName,
+        respondentEmail: req.body.respondentEmail,
+        respondentPhone: req.body.respondentPhone,
+        surveyId: req.body.surveyId,
+        qanda: qandaArray,
+        surveyName: dbSurvey.dataValues.surveyName,
+        // getId: dbSurvey.dataValues.getId,
+        // numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+        // preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
+        postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
+        // surveyNotes: dbSurvey.dataValues.surveyNotes,
+        layout: false,
+        resId: resId,
+      };
 
-//       db.Survey.update(updatedSurvey, {
-//         where: {
-//           surveyId: dbSurvey.dataValues.surveyId,
-//         },
-//       }).then((dbSurvey) => {
-//         // Returns Survey ID
-//         const hbsObject = {layout: false};
-//         return res.render('survey/complete', hbsObject);
-//       });
-//     });
-//   }).catch((err) => {
-//     res.render('error', err);
-//   });
-// });
+      db.Survey.update(updatedSurvey, {
+        where: {
+          surveyId: dbSurvey.dataValues.surveyId,
+        },
+      }).then((dbSurvey) => {
+        // const hbsObject = {
+        //   surveyId: req.body.surveyId,
+        //   respondentName: req.body.respondentName,
+        //   respondentEmail: req.body.respondentEmail,
+        //   respondentPhone: req.body.respondentPhone,
+        //   qanda: qandaArray,
+        //   layout: false,
+        // };
+      });
+      return res.render('survey/complete', hbsObject);
+    });
+  }).catch((err) => {
+    res.render('error', err);
+  });
+});
 
 router.get('/responses/:SurveySurveyId/view', (req, res) => {
   db.Response.findAll({

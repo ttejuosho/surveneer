@@ -37,22 +37,13 @@ const strategy = new Auth0Strategy(
       return done(null, profile);
     }
 );
-let i = 0;
+
 io.on('connection', function(socket) {
   console.log('A User Connected');
-  socket.emit('news', {hello: i++});
-  socket.on('New Response Received', function(data) {
-    console.log(data.title, data.message);
-    io.sockets.emit( 'show_notification', {
-      title: data.title,
-      message: data.message,
-      icon: data.icon,
-    });
-  });
 
   socket.on('response', (response)=>{
     console.log(response);
-    io.emit('response', response);
+    io.emit('news', response);
   });
 });
 

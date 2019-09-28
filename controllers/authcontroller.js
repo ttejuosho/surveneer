@@ -77,11 +77,11 @@ exports.logout = function(req, res) {
   res.redirect(logoutURL);
 };
 
-exports.respond = (io, socket) => {
-  // socket.on('response', (response)=>{
-  //   console.log(response);
-  //   io.emit('response', response);
-  // });
-  console.log("response");
-  io.emit('response', {message: 'New Alert'});
-}
+// exports.respond = (io, socket) => {
+//   // socket.on('response', (response)=>{
+//   //   console.log(response);
+//   //   io.emit('response', response);
+//   // });
+//   console.log("response");
+//   io.emit('response', {message: 'New Alert'});
+// }
