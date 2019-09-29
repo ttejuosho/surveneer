@@ -367,6 +367,83 @@ module.exports = (app) => {
       return res.json(results);
     });
   });
+
+// GET route for getting all of the Mailing List items
+app.get('/api/contacts', function(req, res) {
+  db.Contact.findAll({})
+  .then(function(dbContact) {
+    res.json(dbContact);
+  });
+});
+
+// GET route for getting one contact in the mailing list
+app.get('/api/contact/:contactId', function(req,res){
+  db.Contact.findOne({
+    where: {
+      contactId: req.params.contactId
+    }
+  }).then(function(dbContact){
+    if (dbContact !== null){
+      res.json(dbContact);
+    } else {
+      res.json({Error: 'Contact doesn\'t exist'});
+    }
+  });
+});
+
+// POST route saving for new Contact
+app.post('/api/newContact', function(req,res){
+  //console.log(req.body);
+  db.Contact.create({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email
+  }).then(function(dbContact){
+    res.json(dbContact);
+  });
+});
+
+// Route to Edit Contact
+app.put('/api/contact/:contactId', (req,res)=>{
+  const updatedContactInfo ={
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email
+  }
+  db.Contact.update(updatedContactInfo, {
+    where: {
+      contactId: req.params.contactId
+    }
+  }).then((dbContact)=>{
+    res.json(dbContact);
+  }).catch(()=>{
+    res.json({Error: 'Error kan ti sele'});
+  });
+});
+
+// Route to Subscribe or Unsubscribe to Contact list (Sets Active to True/False)
+app.get('/api/subscribe/:status/:contactId', (req,res)=>{
+  const newStatus = { active: true };
+  if (req.params.status === 'false'){ newStatus.active = false; }
+  if (req.params.status === 'false' || req.params.status === 'true'){ 
+  db.Contact.findByPk(req.params.contactId).then((dbContact)=>{
+    if (dbContact !== null){
+      db.Contact.update(newStatus,
+       { where: {
+          contactId: req.params.contactId
+        }
+      }).then((dbContact)=>{
+        res.json(dbContact);
+      })
+    } else {
+      res.json({ Error: 'Contact doesn\'t exist'});
+    }
+  }).catch(() => {
+    res.json({Error: 'Error kan ti sele'});
+  });
+  } else { return res.json({ Error: 'Invalid Status'}); }
+});
+
 };
 
 
