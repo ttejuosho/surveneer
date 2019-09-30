@@ -392,7 +392,7 @@ app.get('/api/contact/:contactId', function(req,res){
 });
 
 // POST route saving for new Contact
-app.post('/api/newContact', function(req,res){
+app.post('/api/subscribe', function(req,res){
   //console.log(req.body);
   db.Contact.create({
     firstName: req.body.firstName,

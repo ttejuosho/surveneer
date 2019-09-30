@@ -10,7 +10,8 @@ exports.signup = function(req, res) {
 };
 
 exports.signin = function(req, res) {
-  res.render('auth/signin', {title: 'Sign In', layout: 'partials/prelogin'});
+  var title = {title: 'Sign In', layout: 'partials/prelogin'};
+  res.render('auth/signin', title);
 };
 
 exports.surveys = function(req, res) {

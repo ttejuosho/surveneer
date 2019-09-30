@@ -225,6 +225,52 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
       });
 });
 
+router.post('/subscribe', 
+[
+  check('firstName').not().isEmpty().escape().withMessage('Please enter your first name'),
+  check('lastName').not().isEmpty().escape().withMessage('Please enter your last name'),
+  check('email').not().isEmpty().escape().withMessage('Please enter your email address'),
+]
+, (req,res)=>{
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    errors.layout = 'partials/prelogin';
+    errors.firstName = req.body.firstName;
+    errors.lastName = req.body.lastName;
+    errors.email = req.body.email;
+    return res.render('auth/signin', errors);
+  } else {
+    db.Contact.findOne({
+      where: {
+        email: req.body.email
+      },
+    }).then((dbContact)=>{
+      console.log(dbContact.email, " found in Database");
+      if (dbContact === null){
+        db.Contact.create({
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email
+        }).then(function(dbContact){
+          console.log(dbContact.dataValues, "==> NEW CONTACT Info");
+        }).catch((err) => {
+          res.render('error', err);
+        });
+      } else {
+        const duplicate = {
+          layout: 'partials/prelogin',
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          duplicateMessage: 'This email already exists in our system',
+        }
+        return res.render('auth/signin', duplicate);
+      }
+    });
+
+  }
+});
+
 router.post('/newQuestion/:surveyId',
     [
       check('question').not().isEmpty().withMessage('Please enter a question'),
@@ -543,5 +589,6 @@ router.get('/chart/:surveyId', (req, res) => {
     return res.json(results);
   });
 });
+
 
 module.exports = router;

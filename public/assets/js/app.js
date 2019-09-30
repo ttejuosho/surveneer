@@ -117,7 +117,6 @@ $(function() {
   survenaire = {
     showNotification: function(type, from, align, msg) {
       color = Math.floor((Math.random() * 4) + 1);
-      console.log(color);
       $.notify({
         icon: 'tim-icons icon-bell-55',
         message: msg,
@@ -207,7 +206,6 @@ $(function() {
   // function getRandomInt(max) {
   //   return Math.floor(Math.random() * Math.floor(max));
   // }
-
 
   // Need Grouped Bar Charts https://codepen.io/Shokeen/pen/NpgbKg
   // Q1 [YesCount,NoCount]

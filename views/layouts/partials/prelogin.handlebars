@@ -58,6 +58,9 @@
               <div class="btn-wrapper">
                 <a href="/signup" class="btn btn-info">Learn More</a>
               </div>
+              <div class="btn-wrapper">
+                <a href="#" data-toggle="modal" data-target="#subscribeModal" class="btn btn-info">Subscribe</a>
+              </div>
             </div>
               {{{ body }}}
           </div>
@@ -74,6 +77,79 @@
           </div>
         </div>
       </footer>
+
+
+
+      <div id="subscribeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="subscribeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="col-md-10">
+            <div class="modal-content">
+            <div class="card mb-0">
+                <div class="card-header"><h2 class="title mb-1">Subscribe</h2></div>
+            <div class="card-body">
+            <form action="/subscribe" id="subscribeForm" method="POST" novalidate>
+              <fieldset>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="messages text-danger font-weight-bold">{{duplicateMessage}}</div>
+                    <div class="form-group">
+                      <label for="firstName">First Name</label>
+                      <input type="text" class="form-control mb-1" id="firstName" name="firstName" placeholder="First Name" value="{{firstName}}" required>
+                      {{#if errors}}
+                          {{#each errors}}
+                              {{#ifEquals param "firstName"}}
+                                  <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                              {{/ifEquals}}
+                          {{/each}}
+                      {{/if}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="lastName">Last Name</label>
+                      <input type="text" class="form-control mb-1" id="lastName" name="lastName" placeholder="Last Name" value="{{lastName}}" required>
+                    {{#if errors}}
+                        {{#each errors}}
+                            {{#ifEquals param "lastName"}} 
+                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                            {{/ifEquals}}
+                        {{/each}}
+                    {{/if}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="email">Email Address</label>
+                      <input type="email" class="form-control mb-1" id="email" name="email" placeholder="ty@surveneer.com" value="{{email}}" required>
+                    {{#if errors}}
+                        {{#each errors}}
+                            {{#ifEquals param "email"}} 
+                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                            {{/ifEquals}}
+                        {{/each}}
+                    {{/if}}
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Subscribe</button>
+                <button type="button" class="btn btn-sm btn-fill btn-primary float-right mr-2" onclick="resetModal()">Cancel</button>
+              </fieldset>
+            </form>
+
+          </div>
+        </div>
+      </div>
+</div>
+      </div>
+      </div>
+
     </div>
   </div>
 
@@ -96,6 +172,50 @@
   {{!-- <script type="text/javascript" src="/assets/js/black-dashboard.min.js?v=1.0.0"></script> --}}
   <script type="text/javascript" src="/assets/js/app.js"></script>
 
+  <script type="text/javascript">
+    function resetModal(){
+      $("#subscribeModal").modal('hide');
+      $('.messages').text('');
+      $('#subscribeForm')[0].reset();
+    }
+
+    $('#subscribeForm').on('submit', ()=>{
+      $("#subscribeModal").modal('hide');
+      survenaire.showNotification('success', 'top', 'right', 'You\'re subcribed');
+    });
+  </script>
+  {{#if errors}}
+    <script type="text/javascript">
+      $(function () {
+          $("#subscribeModal").modal({
+              backdrop: false,
+              show: true
+          });
+      });
+    </script>
+  {{/if}}
+  {{#if title}}
+    <script type="text/javascript">
+      $(function () {
+        console.log('OPEN Fudlkj')
+          $("#subscribeModal").modal({
+              backdrop: false,
+              show: false
+          });
+      });
+    </script>
+  {{/if}}
+  {{#if duplicate}}
+    <script type="text/javascript">
+      $(function () {
+        console.log('Duplicate Email');
+          $("#subscribeModal").modal({
+              backdrop: false,
+              show: true
+          });
+      });
+    </script>
+  {{/if}}
 </body>
 
 </html>
