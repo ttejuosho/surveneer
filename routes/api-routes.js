@@ -376,7 +376,7 @@ app.get('/api/contacts', function(req, res) {
   });
 });
 
-// GET route for getting one contact in the mailing list
+// GET route for getting a contact by ID in the mailing list
 app.get('/api/contact/:contactId', function(req,res){
   db.Contact.findOne({
     where: {
@@ -391,9 +391,24 @@ app.get('/api/contact/:contactId', function(req,res){
   });
 });
 
+// GET route for getting a contact by email in the mailing list
+app.get('/api/contact/email/:email', function(req,res){
+  db.Contact.findOne({
+    where: {
+      email: req.params.email
+    }
+  }).then(function(dbContact){
+    if (dbContact !== null){
+      res.json(dbContact);
+    } else {
+      res.json({Error: 'Contact doesn\'t exist'});
+    }
+  });
+});
+
 // POST route saving for new Contact
 app.post('/api/subscribe', function(req,res){
-  //console.log(req.body);
+  console.log(req.body);
   db.Contact.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,

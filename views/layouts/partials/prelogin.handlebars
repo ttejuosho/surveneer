@@ -11,6 +11,7 @@
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
   <!-- Nucleo Icons -->
   <link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="/assets/css/Chart.min.css" rel="stylesheet" />
@@ -55,11 +56,13 @@
               </h3>
               <h5 class="display-3 text-white mb-3">Surveys, Quizzes, Questionnaires, Polls ....</h5>
               <h3 class="text-white">Get opinions, Get feedback, Get answers</h3>
-              <div class="btn-wrapper">
-                <a href="/signup" class="btn btn-info">Learn More</a>
-              </div>
-              <div class="btn-wrapper">
-                <a href="#" data-toggle="modal" data-target="#subscribeModal" class="btn btn-info">Subscribe</a>
+              <div class="btn-group" role="group">
+                <div class="btn-wrapper mr-2">
+                  <a href="/signup" class="btn btn-primary">Learn More</a>
+                </div>
+                <div class="btn-wrapper">
+                  <a href="#" data-toggle="modal" data-target="#subscribeModal" class="btn btn-primary">Subscribe</a>
+                </div>
               </div>
             </div>
               {{{ body }}}
@@ -80,7 +83,7 @@
 
 
 
-      <div id="subscribeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="subscribeModalLabel" aria-hidden="true">
+      <div id="subscribeModal" class="modal animated fadeIn" tabindex="-1" role="dialog" aria-labelledby="subscribeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="col-md-10">
             <div class="modal-content">
@@ -91,7 +94,7 @@
               <fieldset>
                 <div class="row">
                   <div class="col-md-12">
-                    <div class="messages text-danger font-weight-bold">{{duplicateMessage}}</div>
+                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
                     <div class="form-group">
                       <label for="firstName">First Name</label>
                       <input type="text" class="form-control mb-1" id="firstName" name="firstName" placeholder="First Name" value="{{firstName}}" required>
@@ -176,15 +179,18 @@
     function resetModal(){
       $("#subscribeModal").modal('hide');
       $('.messages').text('');
-      $('#subscribeForm')[0].reset();
+      $('#firstName').val('');
+      $('#lastName').val('');
+      $('#email').val('')
     }
 
     $('#subscribeForm').on('submit', ()=>{
       $("#subscribeModal").modal('hide');
-      survenaire.showNotification('success', 'top', 'right', 'You\'re subcribed');
+      survenaire.showNotification('info', 'top', 'right', 'Thanks! We\'ll keep in touch !!');
     });
   </script>
-  {{#if errors}}
+
+  {{#if showModal}}
     <script type="text/javascript">
       $(function () {
           $("#subscribeModal").modal({
@@ -194,28 +200,7 @@
       });
     </script>
   {{/if}}
-  {{#if title}}
-    <script type="text/javascript">
-      $(function () {
-        console.log('OPEN Fudlkj')
-          $("#subscribeModal").modal({
-              backdrop: false,
-              show: false
-          });
-      });
-    </script>
-  {{/if}}
-  {{#if duplicate}}
-    <script type="text/javascript">
-      $(function () {
-        console.log('Duplicate Email');
-          $("#subscribeModal").modal({
-              backdrop: false,
-              show: true
-          });
-      });
-    </script>
-  {{/if}}
+  
 </body>
 
 </html>

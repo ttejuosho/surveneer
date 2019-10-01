@@ -39,10 +39,7 @@ const strategy = new Auth0Strategy(
 );
 
 io.on('connection', function(socket) {
-  console.log('A User Connected');
-
   socket.on('response', (response)=>{
-    console.log(response);
     io.emit('news', response);
   });
 });

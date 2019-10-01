@@ -238,6 +238,7 @@ router.post('/subscribe',
     errors.firstName = req.body.firstName;
     errors.lastName = req.body.lastName;
     errors.email = req.body.email;
+    errors.showModal = true;
     return res.render('auth/signin', errors);
   } else {
     db.Contact.findOne({
@@ -245,30 +246,26 @@ router.post('/subscribe',
         email: req.body.email
       },
     }).then((dbContact)=>{
-      console.log(dbContact.email, " found in Database");
-      if (dbContact === null){
-        db.Contact.create({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email
-        }).then(function(dbContact){
-          console.log(dbContact.dataValues, "==> NEW CONTACT Info");
-        }).catch((err) => {
-          res.render('error', err);
-        });
-      } else {
-        const duplicate = {
-          layout: 'partials/prelogin',
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          duplicateMessage: 'This email already exists in our system',
-        }
-        return res.render('auth/signin', duplicate);
-      }
-    });
-
+      if (dbContact !== null){     
+        var duplicateMessage = {};
+        duplicateMessage.layout = 'partials/prelogin';
+        duplicateMessage.firstName = req.body.firstName;
+        duplicateMessage.lastName = req.body.lastName;
+        duplicateMessage.email = req.body.email;
+        duplicateMessage.msg = 'This email already exists in our system'; 
+        duplicateMessage.showModal = true;     
+        return res.render('auth/signin', duplicateMessage);
+    }
+  });
   }
+
+  db.Contact.create({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+  }).catch((err) => {
+    res.render('error', err);
+  });
 });
 
 router.post('/newQuestion/:surveyId',
@@ -405,14 +402,15 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 
 // Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-  var resId;
+  var resId = "";
   db.Respondent.create({
     respondentName: req.body.respondentName,
     respondentEmail: req.body.respondentEmail,
     respondentPhone: req.body.respondentPhone,
     SurveySurveyId: req.body.surveyId,
   }).then((dbRespondent) => {
-    resId = dbRespondent.id;
+    resId = dbRespondent.dataValues.respondentId;
+    console.log(resId);
     const qandaArray = [];
     for (let i = 0; i < req.body.questionLength; i++) {
       const qanda = {
@@ -532,6 +530,7 @@ router.post('/responses', (req, res) => {
         //   layout: false,
         // };
       });
+      console.log(hbsObject);
       return res.render('survey/complete', hbsObject);
     });
   }).catch((err) => {

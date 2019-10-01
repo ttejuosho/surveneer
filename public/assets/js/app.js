@@ -200,6 +200,7 @@ $(function() {
   const socket = io.connect( 'http://localhost:8080' );
   socket.on('news', function(data) {
     $('.responseCount').text(data.message);
+    $('#ResponseSection').prepend(data.domData);
   });
 
   // eslint-disable-next-line require-jsdoc

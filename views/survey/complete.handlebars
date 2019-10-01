@@ -9,6 +9,7 @@
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
   <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
   <!-- Nucleo Icons -->
   <link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="/assets/css/Chart.min.css" rel="stylesheet" />
@@ -65,11 +66,38 @@ $(document).ready(function(){
     const socket = io.connect( 'http://localhost:8080' );
     const surveyId = $('#surveyId').val();
     const resId = $('#resId').val();
-    console.log("Survey Id: ", surveyId , "Respondent Id: ", resId);
+    //console.log("Survey Id: ", surveyId , "Respondent Id: ", resId);
     fetch('/api/getResponse/' + surveyId + '/' + resId).then((res)=>{
         return res.json();
     }).then((data) => {
-        socket.emit('response', {message: data});
+        console.log(data);
+        var html = '<div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">' +   
+                        '<div class="card card-plain">' +
+                            '<div class="card-header" role="tab" id="headingOne0">' +
+                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne0" aria-expanded="false" aria-controls="collapseOne0" class="collapsed">' +
+                                    data[0].Respondent.respondentName +
+                                    '<i class="tim-icons icon-minimal-down"></i>' +
+                                '</a>' +
+                            '</div>' +
+                            '<div id="collapseOne0" class="collapse" role="tabpanel" aria-labelledby="headingOne0" style="">' +
+                                '<div id="Respondent0" class="card-body">' +
+                                    '<div class="row">' +
+                                        '<div class="col-md-6 pr-md-1">';
+                                            data.forEach((q)=>{
+                                                html += '<h5>' + q.Question.question + '</h5>';
+                                            });       
+                                        html += '</div>' + 
+                                        '<div class="col-md-6 pr-md-1">'; 
+                                            data.forEach((a)=>{
+                                                html += '<h5>' + a.answer + '</h5>';
+                                            });
+                                        html += '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+        socket.emit('response', {message: 9, domData: html});
     });
 });
 </script>
