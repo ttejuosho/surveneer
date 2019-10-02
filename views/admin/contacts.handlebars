@@ -1,0 +1,100 @@
+<div class="col-md-10">
+    <div class="card card-user">
+        <div class="card-header">
+            SurvEnEEr Mailing List
+        </div>
+        <div class="card-body">
+
+            <table id="contactsTable" class="table">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email Address</th>
+                        <th>Active</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="contactsTableBody"></tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmDeleteContactModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteContactModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header"><h4 class="text-primary"><i class="mr-2 tim-icons icon-alert-circle-exc"></i>Confirm Delete</h4></div>
+            <div class="modal-body pt-0 pr-0"><p><span class="text-danger font-weight-bold">Delete</span> ?? Okay...I hope you know what you're doing.</p></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <a id="modalDeleteBtn"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
+            </div>
+          </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+var contactsTable;
+    function renderContactsTable(data){
+        contactsTable = $('#contactsTable').DataTable({
+            dom: "<'row justify-content-between'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-4'f>>" +
+                 "<'row'<'col-sm-12'tr>>" +
+                 "<'row'<'col-sm-12 col-md-4'i><'col-sm-12 col-md-8'p>>",
+            data: data,
+            rowId: 'contactId',
+            responsive: true,
+            columns:[
+                {
+                    data: null,
+                    className: 'Names text-center',
+                    render: function(data, type, row, meta){
+                        return row.firstName +' '+ row.lastName ;
+                    }
+                },
+                {
+                    data: 'email',
+                    className: 'email text-center'
+                },
+                {
+                    data: 'active',
+                    className: 'active text-center'
+                },
+                {
+                    data: 'contactId',
+                    className: 'text-center',
+                    render: function(data, type, row){
+                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2" data-toggle="modal" data-target="#confirmDeleteContactModal" onclick="openEditContactModal(`'+ row.email +'`, `'+ row.firstName +'`, `'+ row.lastName +'`, `'+ row.active +'`)"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon" data-toggle="modal" data-target="#confirmDeleteContactModal" onclick="openConfirmDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
+                    }
+                }
+            ]
+        });
+    }
+
+    $.ajax({
+        url: '/api/contacts',
+        type: 'GET',
+        error: function() {
+            callback();
+        },
+        success: function(res) {           
+            renderContactsTable(res);
+        }
+    });
+    
+    function openEditContactModal(email, firstName, lastName, active){
+        console.log(email, firstName, lastName, active);
+    }
+var openConfirmDeleteContactModal  = (contactId) => {
+    $('#confirmDeleteContactModal').modal({
+        backdrop: false
+    });
+    $('#confirmDeleteQuestionModal').modal('show');
+    console.log(contactId);
+    $('#modalDeleteBtn').attr('href', '/api/deleteContact/' + contactId );
+}
+});
+</script>

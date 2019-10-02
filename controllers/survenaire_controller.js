@@ -25,6 +25,12 @@ router.get('/newSurvey', (req, res) => {
   return res.render('survey/new', hbsObject);
 });
 
+router.get('/contacts', (req,res)=>{
+  const hbsObject = {};
+  Object.assign(hbsObject, req.session.globalUser);
+  return res.render('admin/contacts', hbsObject);
+});
+
 // New Survey POST Route
 router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Please enter a name for your survey')],(req, res) => {
   const errors = validationResult(req);
@@ -588,6 +594,5 @@ router.get('/chart/:surveyId', (req, res) => {
     return res.json(results);
   });
 });
-
 
 module.exports = router;
