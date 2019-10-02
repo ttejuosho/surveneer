@@ -84,17 +84,26 @@ var contactsTable;
             renderContactsTable(res);
         }
     });
-    
+});
+</script>
+
+{{#ifEquals loadJs 'true'}}
+<script type="text/javascript">
+
+    $(function(){
+        console.log("Gizeeee");
     function openEditContactModal(email, firstName, lastName, active){
         console.log(email, firstName, lastName, active);
     }
-var openConfirmDeleteContactModal  = (contactId) => {
-    $('#confirmDeleteContactModal').modal({
-        backdrop: false
-    });
-    $('#confirmDeleteQuestionModal').modal('show');
-    console.log(contactId);
-    $('#modalDeleteBtn').attr('href', '/api/deleteContact/' + contactId );
-}
+    var openConfirmDeleteContactModal  = (contactId) => {
+        $('#confirmDeleteContactModal').modal({
+            backdrop: false
+        });
+        $('#confirmDeleteQuestionModal').modal('show');
+        console.log(contactId);
+        $('#modalDeleteBtn').attr('href', '/api/deleteContact/' + contactId );
+    }
+    openEditContactModal('email', 'firstName', 'lastName', true);
 });
 </script>
+{{/ifEquals}}

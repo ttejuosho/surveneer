@@ -26,7 +26,7 @@ router.get('/newSurvey', (req, res) => {
 });
 
 router.get('/contacts', (req,res)=>{
-  const hbsObject = {};
+  const hbsObject = {loadJs: 'true'};
   Object.assign(hbsObject, req.session.globalUser);
   return res.render('admin/contacts', hbsObject);
 });
