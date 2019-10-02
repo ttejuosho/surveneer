@@ -254,7 +254,7 @@ module.exports = (app) => {
 
     // Get all responses to a survey from a respondent and total Number of responses
     app.get('/api/getResponse/:surveyId/:respondentId', (req, res) => {
-        var d = 0;
+        var data = [];
         db.Response.count({ distinct: true, col: 'RespondentRespondentId' }).then(function(dbResponse) {
             d = dbResponse;
         }).then(() => {
@@ -265,9 +265,9 @@ module.exports = (app) => {
                 },
                 include: [{ model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone'] }, { model: db.Question, as: 'Question', attributes: ['question'] }],
             }).then((dbRespondent) => {
-                console.log(d);
-                dbRespondent.push({ numberOfRespondents: d });
-                res.json(dbRespondent);
+                data.push([{ numberOfRespondents: d }]);
+                data.push(dbRespondent);
+                res.json(data);
             });
         });
     });

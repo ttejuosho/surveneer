@@ -28,3 +28,11 @@ Where id = 1;
 USE Survenaire;
 DELETE FROM survenaire.Responses
 WHERE responseId = 1;
+
+References
+Auth0
+https://auth0.com/blog/create-a-simple-and-secure-node-express-app/
+
+ExpressValidator
+https://auth0.com/blog/express-validator-tutorial/#Server-Side-Validation-With-Express-Validator
+

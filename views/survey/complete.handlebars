@@ -76,31 +76,29 @@ $(document).ready(function(){
     const socket = io.connect( 'http://localhost:8080' );
     const surveyId = $('#surveyId').val();
     const resId = $('#resId').val();
-    //console.log("Survey Id: ", surveyId , "Respondent Id: ", resId);
     fetch('/api/getResponse/' + surveyId + '/' + resId).then((res)=>{
         return res.json();
     }).then((data) => {
-        console.log(data);
         var randomString = '8xDq4A';
         var responseClass = randomStr(6, randomString);
         var html = '<div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">' +   
                         '<div class="card card-plain">' +
                             '<div class="card-header" role="tab" id="headingOne"'+ responseClass +'>' +
                                 '<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne'+ responseClass +'" aria-expanded="false" aria-controls="collapseOne'+ responseClass +'" class="collapsed">' +
-                                    data[0].Respondent.respondentName +
-                                    '<i class="tim-icons icon-minimal-down"></i>' +
+                                    data[1][0].Respondent.respondentName +
+                                    '<i class="tim-icons icon-minimal-up"></i>' +
                                 '</a>' +
                             '</div>' +
                             '<div id="collapseOne'+ responseClass +'" class="collapse" role="tabpanel" aria-labelledby="headingOne'+ responseClass +'" style="">' +
                                 '<div id="Respondent0" class="card-body">' +
                                     '<div class="row">' +
                                         '<div class="col-md-6 pr-md-1">';
-                                            data.forEach((q)=>{
+                                            data[1].forEach((q)=>{
                                                 html += '<h5>' + q.Question.question + '</h5>';
                                             });       
                                         html += '</div>' + 
                                         '<div class="col-md-6 pr-md-1">'; 
-                                            data.forEach((a)=>{
+                                            data[1].forEach((a)=>{
                                                 html += '<h5>' + a.answer + '</h5>';
                                             });
                                         html += '</div>' +
@@ -109,7 +107,7 @@ $(document).ready(function(){
                             '</div>' +
                         '</div>' +
                     '</div>';
-        socket.emit('response', {message: 9, domData: html});
+        socket.emit('response', {message: data[0][0].numberOfRespondents, domData: html});
     });
 });
 </script>
