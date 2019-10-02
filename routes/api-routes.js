@@ -477,6 +477,15 @@ module.exports = (app) => {
         } else { return res.json({ Error: 'Invalid Status' }); }
     });
 
+    app.delete('/api/deletecontact/:contactId', (req,res) => {
+      db.Contact.destroy({
+          where: {
+            contactId: req.params.contactId
+          }
+      }).then( (dbContact) => {
+          res.json(dbContact);
+      });
+  });
 };
 
 
