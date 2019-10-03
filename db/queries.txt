@@ -35,4 +35,4 @@ https://auth0.com/blog/create-a-simple-and-secure-node-express-app/
 
 ExpressValidator
 https://auth0.com/blog/express-validator-tutorial/#Server-Side-Validation-With-Express-Validator
-
+https://flaviocopes.com/express-sanitize-input/
