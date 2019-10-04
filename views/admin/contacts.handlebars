@@ -33,8 +33,140 @@
         </div>
     </div>
 
+      <div id="updateContactModal" class="modal animated fadeIn" tabindex="-1" role="dialog" aria-labelledby="updateContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="col-md-10">
+            <div class="modal-content">
+            <div class="card mb-0">
+                <div class="card-header"><h2 class="title mb-1">Update Contact</h2></div>
+            <div class="card-body">
+            <form action="/updateContact" id="updateContactForm" method="POST" novalidate>
+              <fieldset>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                    <div class="form-group">
+                      <label for="firstName">First Name</label>
+                      <input type="text" class="form-control mb-1" id="firstName" name="firstName" value="" required>
+                      {{#if errors}}
+                          {{#each errors}}
+                              {{#ifEquals param "firstName"}}
+                                  <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                              {{/ifEquals}}
+                          {{/each}}
+                      {{/if}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="lastName">Last Name</label>
+                      <input type="text" class="form-control mb-1" id="lastName" name="lastName" value="" required>
+                        {{#if errors}}
+                            {{#each errors}}
+                                {{#ifEquals param "lastName"}} 
+                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                {{/ifEquals}}
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="email">Email Address</label>
+                      <input type="email" class="form-control mb-1" id="email" name="email" value="" required>
+                        {{#if errors}}
+                            {{#each errors}}
+                                {{#ifEquals param "email"}} 
+                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                {{/ifEquals}}
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row"><div class="col-md-12 ml-1 mb-3">
+                    <div class="form-check form-check-radio form-check-inline">
+                        <label class="form-check-label">
+                            <input class="form-check-input activeTrue" type="radio" name="active" id="activeTrue" value="true"> Active
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                    <div class="form-check form-check-radio form-check-inline">
+                        <label class="form-check-label">
+                            <input class="form-check-input activeFalse" type="radio" name="active" id="activeFalse" value="false"> Inactive
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                </div></div>
+
+                <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Update</button>
+                <button type="button" class="btn btn-sm btn-fill btn-primary float-right mr-2" onclick="resetModal()">Cancel</button>
+              </fieldset>
+            </form>
+
+          </div>
+        </div>
+      </div>
+</div>
+      </div>
+      </div>
+
 </div>
 
+<script type="text/javascript">
+    function openEditContactModal(email, firstName, lastName, active){
+        console.log(email, firstName, lastName, active);
+    }
+
+    function openDeleteContactModal(contactId){
+        $('#confirmDeleteContactModal').modal({
+            backdrop: false,
+            show: true
+        });
+        $('#modalDeleteBtn').attr('href', '/deleteContact/' + contactId );
+    }
+
+    function resetModal(){
+      $("#updateContactModal").modal('hide');
+      $('.messages').text('');
+      $('#firstName').val('');
+      $('#lastName').val('');
+      $('#email').val('')
+    }
+
+    $('#updateContactForm').on('submit', ()=>{
+      $("#updateContactModal").modal('hide');
+      survenaire.showNotification('info', 'top', 'right', 'Contact Info Updated !!');
+    });
+
+    $('#modalDeleteBtn').click(function(){
+        $('#confirmDeleteContactModal').modal('hide');
+        survenaire.showNotification('info', 'top', 'right', 'Contact Deleted !!');
+    });
+
+    $('#contactsTable tbody').on('click', '.editContact', function (){
+        var $row = $(this).closest('tr');
+        var data =  $('#contactsTable').DataTable().row($row).data();
+        $('#firstName').val(data.firstName);
+        $('#lastName').val(data.lastName);
+        $('#email').val(data.email);
+        if(data.active){ $('input.activeTrue').prop('checked', true); } 
+        else { $('input.activeFalse').prop('checked', true); }
+        $('#updateContactModal').modal({
+            backdrop: false,
+            show: true
+        });
+    });
+</script>
+
+{{#ifEquals loadJs 'true'}}
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -67,7 +199,7 @@ var contactsTable;
                     data: 'contactId',
                     className: 'text-center',
                     render: function(data, type, row){
-                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2" data-toggle="modal" data-target="#confirmDeleteContactModal" onclick="openEditContactModal(`'+ row.email +'`, `'+ row.firstName +'`, `'+ row.lastName +'`, `'+ row.active +'`)"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon" data-toggle="modal" data-target="#confirmDeleteContactModal" onclick="openConfirmDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
+                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editContact"><i class="tim-icons icon-pencil"></i></button><button id="deleteContact" type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
                     }
                 }
             ]
@@ -84,26 +216,12 @@ var contactsTable;
             renderContactsTable(res);
         }
     });
-});
-</script>
 
-{{#ifEquals loadJs 'true'}}
-<script type="text/javascript">
 
-    $(function(){
-        console.log("Gizeeee");
-    function openEditContactModal(email, firstName, lastName, active){
-        console.log(email, firstName, lastName, active);
-    }
-    var openConfirmDeleteContactModal  = (contactId) => {
-        $('#confirmDeleteContactModal').modal({
-            backdrop: false
-        });
-        $('#confirmDeleteQuestionModal').modal('show');
-        console.log(contactId);
-        $('#modalDeleteBtn').attr('href', '/api/deleteContact/' + contactId );
-    }
-    openEditContactModal('email', 'firstName', 'lastName', true);
+
+
+
+
 });
 </script>
 {{/ifEquals}}

@@ -25,14 +25,14 @@ router.get('/newSurvey', (req, res) => {
   return res.render('survey/new', hbsObject);
 });
 
-router.get('/contacts', (req,res)=>{
+router.get('/contacts', (req, res)=>{
   const hbsObject = {loadJs: 'true'};
   Object.assign(hbsObject, req.session.globalUser);
   return res.render('admin/contacts', hbsObject);
 });
 
 // New Survey POST Route
-router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Please enter a name for your survey')],(req, res) => {
+router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Please enter a name for your survey')], (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -231,49 +231,6 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
       });
 });
 
-router.post('/subscribe', 
-[
-  check('firstName').not().isEmpty().escape().withMessage('Please enter your first name'),
-  check('lastName').not().isEmpty().escape().withMessage('Please enter your last name'),
-  check('email').not().isEmpty().escape().withMessage('Please enter your email address'),
-]
-, (req,res)=>{
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    errors.layout = 'partials/prelogin';
-    errors.firstName = req.body.firstName;
-    errors.lastName = req.body.lastName;
-    errors.email = req.body.email;
-    errors.showModal = true;
-    return res.render('auth/signin', errors);
-  } else {
-    db.Contact.findOne({
-      where: {
-        email: req.body.email
-      },
-    }).then((dbContact)=>{
-      if (dbContact !== null){     
-        var duplicateMessage = {};
-        duplicateMessage.layout = 'partials/prelogin';
-        duplicateMessage.firstName = req.body.firstName;
-        duplicateMessage.lastName = req.body.lastName;
-        duplicateMessage.email = req.body.email;
-        duplicateMessage.msg = 'This email already exists in our system'; 
-        duplicateMessage.showModal = true;     
-        return res.render('auth/signin', duplicateMessage);
-    }
-  });
-  }
-
-  db.Contact.create({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-  }).catch((err) => {
-    res.render('error', err);
-  });
-});
-
 router.post('/newQuestion/:surveyId',
     [
       check('question').not().isEmpty().withMessage('Please enter a question'),
@@ -408,7 +365,7 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 
 // Save Responses and Respondent (Need Refactoring - Error handling)
 router.post('/responses', (req, res) => {
-  var resId = "";
+  var resId = '';
   db.Respondent.create({
     respondentName: req.body.respondentName,
     respondentEmail: req.body.respondentEmail,
@@ -593,6 +550,83 @@ router.get('/chart/:surveyId', (req, res) => {
     console.log(results);
     return res.json(results);
   });
+});
+
+// Save New Contact Subscribe
+router.post('/subscribe',
+    [
+      check('firstName').not().isEmpty().escape().withMessage('Please enter your first name'),
+      check('lastName').not().isEmpty().escape().withMessage('Please enter your last name'),
+      check('email').not().isEmpty().escape().withMessage('Please enter your email address'),
+    ]
+    , (req, res)=>{
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        errors.layout = 'partials/prelogin';
+        errors.firstName = req.body.firstName;
+        errors.lastName = req.body.lastName;
+        errors.email = req.body.email;
+        errors.showModal = true;
+        return res.render('auth/signin', errors);
+      } else {
+        db.Contact.findOne({
+          where: {
+            email: req.body.email,
+          },
+        }).then((dbContact)=>{
+          if (dbContact !== null) {
+            var duplicateMessage = {};
+            duplicateMessage.layout = 'partials/prelogin';
+            duplicateMessage.firstName = req.body.firstName;
+            duplicateMessage.lastName = req.body.lastName;
+            duplicateMessage.email = req.body.email;
+            duplicateMessage.msg = 'This email already exists in our system';
+            duplicateMessage.showModal = true;
+            return res.render('auth/signin', duplicateMessage);
+          } else {
+            db.Contact.create({
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              email: req.body.email,
+            }).catch((err) => {
+              res.render('error', err);
+            });
+          }
+        });
+      }
+    });
+
+// Update contact
+router.post('/updateContact', (req, res)=>{
+  var updatedContact ={
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    active: (req.body.active === 'true' ? true : false),
+  };
+  db.Contact.update(updatedContact, {
+    where: {
+      email: req.body.email,
+    },
+  }).catch((err)=>{
+    res.render('error', err);
+  });
+});
+
+// Delete Contact
+router.get('/deleteContact/:contactId', (req, res)=>{
+  db.Contact.findByPk(req.params.contactId)
+      .then((dbContact)=>{
+        if (dbContact !== null) {
+          db.Contact.destroy({
+            where: {
+              contactId: req.params.contactId,
+            },
+          }).catch((err) => {
+            res.render('error', err);
+          });
+        }
+      });
 });
 
 module.exports = router;
