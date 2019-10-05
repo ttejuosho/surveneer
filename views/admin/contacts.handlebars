@@ -24,7 +24,11 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header"><h4 class="text-primary"><i class="mr-2 tim-icons icon-alert-circle-exc"></i>Confirm Delete</h4></div>
-            <div class="modal-body pt-0 pr-0"><p><span class="text-danger font-weight-bold">Delete</span> ?? Okay...I hope you know what you're doing.</p></div>
+            <div class="modal-body pt-0 pr-0">
+                <p><span class="text-danger font-weight-bold deleteName"></span> and all related information will be deleted. </p>
+                <p>This operation can not be rolled back.</p>
+                <p>Click <span class="text-danger font-weight-bold">Delete</span> to proceed.</p>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">Cancel</button>
                 <a id="modalDeleteBtn"><button type="button" class="btn btn-sm btn-danger">Delete</button></a>
@@ -58,7 +62,7 @@
                     </div>
                   </div>
                 </div>
-
+                    <input type="hidden" class="form-control" id="contactId" name="contactId" value="{{contactId}}" required>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
@@ -121,24 +125,14 @@
 </div>
 
 <script type="text/javascript">
-    function openEditContactModal(email, firstName, lastName, active){
-        console.log(email, firstName, lastName, active);
-    }
-
-    function openDeleteContactModal(contactId){
-        $('#confirmDeleteContactModal').modal({
-            backdrop: false,
-            show: true
-        });
-        $('#modalDeleteBtn').attr('href', '/deleteContact/' + contactId );
-    }
 
     function resetModal(){
       $("#updateContactModal").modal('hide');
       $('.messages').text('');
       $('#firstName').val('');
       $('#lastName').val('');
-      $('#email').val('')
+      $('#email').val('');
+      $('#contactId').val('');
     }
 
     $('#updateContactForm').on('submit', ()=>{
@@ -149,6 +143,7 @@
     $('#modalDeleteBtn').click(function(){
         $('#confirmDeleteContactModal').modal('hide');
         survenaire.showNotification('info', 'top', 'right', 'Contact Deleted !!');
+        event.stopImmediatePropagation();
     });
 
     $('#contactsTable tbody').on('click', '.editContact', function (){
@@ -157,12 +152,24 @@
         $('#firstName').val(data.firstName);
         $('#lastName').val(data.lastName);
         $('#email').val(data.email);
+        $('#contactId').val(data.contactId);
         if(data.active){ $('input.activeTrue').prop('checked', true); } 
         else { $('input.activeFalse').prop('checked', true); }
         $('#updateContactModal').modal({
             backdrop: false,
+            show: true 
+        });
+    });
+    
+    $('#contactsTable tbody').on('click', '.deleteContact', function (){
+        $('#confirmDeleteContactModal').modal({
+            backdrop: false,
             show: true
         });
+        var drow = $(this).closest('tr');
+        var data = $('#contactsTable').DataTable().row(drow).data();
+        $('.deleteName').text(data.firstName.toUpperCase() + ' ' + data.lastName.toUpperCase());
+        $('#modalDeleteBtn').attr('href', '/deleteContact/' + data.contactId );
     });
 </script>
 
@@ -199,7 +206,7 @@ var contactsTable;
                     data: 'contactId',
                     className: 'text-center',
                     render: function(data, type, row){
-                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editContact"><i class="tim-icons icon-pencil"></i></button><button id="deleteContact" type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
+                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editContact"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteContact" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
                     }
                 }
             ]

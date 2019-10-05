@@ -588,6 +588,13 @@ router.post('/subscribe',
               firstName: req.body.firstName,
               lastName: req.body.lastName,
               email: req.body.email,
+            }).then((dbContact)=>{
+              console.log(dbContact.dataValues);
+              var message = {
+                showConfirmation: true,
+                layout: 'partials/prelogin',
+              };
+              return res.render('auth/signin', message);
             }).catch((err) => {
               res.render('error', err);
             });
@@ -604,10 +611,17 @@ router.post('/updateContact', (req, res)=>{
     email: req.body.email,
     active: (req.body.active === 'true' ? true : false),
   };
-  db.Contact.update(updatedContact, {
-    where: {
-      email: req.body.email,
-    },
+  db.Contact.findByPk(req.body.contactId).then((dbContact)=>{
+    if (dbContact !== null && dbContact.dataValues.email.toLowerCase() === updatedContact.email.toLowerCase()) {
+      console.log('Match Found');
+      db.Contact.update(updatedContact, {
+        where: {
+          contactId: req.body.contactId,
+        },
+      }).catch((err)=>{
+        res.render('error', err);
+      });
+    }
   }).catch((err)=>{
     res.render('error', err);
   });

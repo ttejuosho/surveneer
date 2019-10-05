@@ -181,12 +181,12 @@
       $('.messages').text('');
       $('#firstName').val('');
       $('#lastName').val('');
-      $('#email').val('')
+      $('#email').val('');
     }
 
-    $('#subscribeForm').on('submit', ()=>{
-      $("#subscribeModal").modal('hide');
-      survenaire.showNotification('info', 'top', 'right', 'Thanks! We\'ll keep in touch !!');
+    $("#subscribeModal").modal({
+        backdrop: false,
+        show: false
     });
   </script>
 
@@ -201,6 +201,13 @@
     </script>
   {{/if}}
   
+  {{#if showConfirmation}}
+      <script type="text/javascript">
+        $(function () {
+          survenaire.showNotification('info', 'top', 'right', 'Thanks! We\'ll keep in touch !!');
+        });
+      </script>
+  {{/if}}
 </body>
 
 </html>
