@@ -40,7 +40,7 @@ module.exports = function(upload, app, passport) {
   // route for signup page
   app.get('/signup', authController.signup);
 
-  // route for sigin page
+  // route for signin page
   app.get('/signin', authController.signin);
 
   // Post Route to Update User Info

@@ -24,6 +24,7 @@
                     <a class="dropdown-item" href="/newQuestion/{{surveyId}}">Add Question to Survey</a>
                     <a class="dropdown-item" href="/viewSurvey/{{surveyId}}">View Survey</a>
                     <a class="dropdown-item" href="/surveys/{{surveyId}}/view2">Respondent View</a>
+                    <a class="dropdown-item" href="/sendSurvey/{{surveyId}}">Send Survey</a>
                 </div>
             </div>
         </div>
@@ -239,7 +240,7 @@
 <div id="ResponseSection" class="tab-pane fade" role="tabpanel" aria-labelledby="Response-tab">
     {{#each Respondents}}
     <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
-    <div class="card card-plain">
+    <div class="card card-plain mb-0">
         <div class="card-header" role="tab" id="headingOne{{@index}}">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne{{@index}}" aria-expanded="true" aria-controls="collapseOne{{@index}}">
             {{#if respondentName}} {{respondentName}} {{else}} Respondent {{counter @index}} {{/if}}

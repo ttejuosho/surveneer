@@ -8,6 +8,7 @@ const db = require('../models');
 const passport = require('passport');
 const io = require('socket.io');
 const {check, validationResult} = require('express-validator');
+const nodemailer = require('nodemailer');
 
 router.get('/login', passport.authenticate('auth0', {
   scope: 'openid email profile',
@@ -641,6 +642,71 @@ router.get('/deleteContact/:contactId', (req, res)=>{
           });
         }
       });
+});
+
+router.get('/sendSurvey/:surveyId', (req,res)=>{
+  const hbsObject = {surveyId: req.params.surveyId};
+  Object.assign(hbsObject, req.session.globalUser);
+  res.render('survey/send', hbsObject);
+});
+
+router.post('/emailSurvey/:surveyId', 
+[
+  check('email').not().isEmpty().escape().withMessage('Please enter an email address'),
+  check('subject').not().isEmpty().escape().withMessage('Please enter a subject for your email'),
+  check('message').not().isEmpty().escape().withMessage('Please enter a message'),
+  check('surveyId').not().isEmpty().escape().withMessage('Survey Id is missing, Please refresh this page annd try again'),
+],
+(req,res)=>{
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    errors.email = req.body.email;
+    errors.subject = req.body.subject;
+    errors.message = req.body.message;
+    Object.assign(errors, req.session.globalUser);
+    return res.render('survey/send', errors);
+  } else {
+  const emailArray = req.body.email.split(',');
+  const output = `
+  <span style="text-transform: uppercase; font-size: 1rem;color: #ffffff;margin-top: 3px;padding: 1em 3em;"><i class="tim-icons icon-chart-bar-32 mr-2" style="vertical-align: unset;"></i>Surveneer</span>
+  <h3 style="color: red;">Please fill out this survey</h3>
+  <a class="btn btn-sm btn-primary" href="http://localhost:3000/surveys/${req.params.surveyId}/view2">Open Survey</a>
+  `;
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+      host: 'smtp.aol.com',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+          user: "ttejuosho@aol.com", // user
+          pass: process.env.EMAIL_PASSWORD // password
+      },
+      tls: {
+          rejectUnauthorized: false
+      }
+  });
+
+for(var i = 0; i < emailArray.length; i++){
+  // setup email data with unicode symbols
+  let mailOptions = {
+      from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
+      to: emailArray[i], // list of receivers
+      subject: req.body.subject, // Subject line
+      text: 'Hello world?', // plain text body
+      html: output // html body
+  };
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          return console.log("error : " + JSON.stringify(error));
+      }
+      console.log('Message ID: %s', info.messageId);
+  });
+}
+res.redirect('/surveys');
+}
 });
 
 module.exports = router;

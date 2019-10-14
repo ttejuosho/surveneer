@@ -2,6 +2,8 @@
 /* eslint-disable max-len */
 const express = require('express');
 const path = require('path');
+const winston = require('./config/winston/winston');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const passport = require('passport');
@@ -13,11 +15,15 @@ const Auth0Strategy = require('passport-auth0');
 const {check} = require('express-validator');
 const cookieParser = require(`cookie-parser`);
 const flash = require('connect-flash');
+const nodemailer = require('nodemailer');
+
 // eslint-disable-next-line new-cap
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+
 require('dotenv').config();
 http.listen(8080, '127.0.0.1');
+
 const strategy = new Auth0Strategy(
     {
       domain: process.env.AUTH0_DOMAIN,
@@ -44,6 +50,8 @@ io.on('connection', function(socket) {
   });
 });
 
+// Logger
+app.use(morgan('combined', { stream: winston.stream }));
 
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + '/public'));
@@ -151,8 +159,22 @@ app.use('/delete', routes);
 app.use('/survey', routes);
 app.use('/mysurveys', routes);
 app.use('/question', routes);
-app.use((req, res, next) => {
+app.use('/sendSurvey', routes);
+app.use('/emailSurvey', routes);
+
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // add this line to include winston logging
+  winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
   res.locals.isAuthenticated = req.isAuthenticated();
+  
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+  
   next();
 });
 
