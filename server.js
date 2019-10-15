@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 const express = require('express');
 const path = require('path');
-const winston = require('./config/winston/winston');
+//const winston = require('./config/winston/winston');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
@@ -50,12 +50,14 @@ io.on('connection', function(socket) {
   });
 });
 
-// Logger
-app.use(morgan('combined', { stream: winston.stream }));
-
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/uploads'));
+
+// Loggeruncomment next line to enable winston
+//app.use(morgan('combined', { stream: winston.stream }));
+
+app.use(morgan('dev'));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.json());
@@ -166,8 +168,8 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // add this line to include winston logging
-  winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+  // add this line to include winston logging uncomment next line to enable winston
+  //winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
   res.locals.isAuthenticated = req.isAuthenticated();
   

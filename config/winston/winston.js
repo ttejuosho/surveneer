@@ -1,4 +1,4 @@
-var appRoot = require('app-root-path');
+const appRoot = require('app-root-path');
 const winston = require('winston');
 
 const options = {
@@ -45,4 +45,4 @@ const options = {
     },
   };
 
-  module.exports = logger;
+module.exports = logger;

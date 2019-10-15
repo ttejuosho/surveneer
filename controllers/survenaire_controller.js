@@ -645,9 +645,20 @@ router.get('/deleteContact/:contactId', (req, res)=>{
 });
 
 router.get('/sendSurvey/:surveyId', (req,res)=>{
-  const hbsObject = {surveyId: req.params.surveyId};
-  Object.assign(hbsObject, req.session.globalUser);
-  res.render('survey/send', hbsObject);
+  db.Survey.findByPk(req.params.surveyId).then((dbSurvey)=>{
+    if(dbSurvey != null){
+    const hbsObject = {
+      surveyId: dbSurvey.dataValues.surveyId,
+      subject: dbSurvey.dataValues.surveyName,
+    };
+    Object.assign(hbsObject, req.session.globalUser);
+    res.render('survey/send', hbsObject);
+    }
+
+  }).catch((err) => {
+    res.render('error', err);
+  });
+  
 });
 
 router.post('/emailSurvey/:surveyId', 
