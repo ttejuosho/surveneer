@@ -173,6 +173,9 @@ app.use((err, req, res, next) => {
 
     res.locals.isAuthenticated = req.isAuthenticated();
 
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
     // render the error page
     res.status(err.status || 500);
     res.render('error');
