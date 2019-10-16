@@ -74,7 +74,7 @@ $(document).ready(function(){
         }
 
     //const socket = io.connect( 'http://localhost:8080' );
-    const socket = io.connect( 'https://surveneer.herokuapp.com' );
+    const socket = io.connect( 'surveneer.herokuapp.com' );
     const surveyId = $('#surveyId').val();
     const resId = $('#resId').val();
     fetch('/api/getResponse/' + surveyId + '/' + resId).then((res)=>{
