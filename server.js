@@ -144,6 +144,11 @@ app.use(function(req, res, next) {
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
+    // Website you wish to allow to connect
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
     next();
 });
 
@@ -172,10 +177,6 @@ app.use((err, req, res, next) => {
     //winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
     res.locals.isAuthenticated = req.isAuthenticated();
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
     // render the error page
     res.status(err.status || 500);
     res.render('error');
