@@ -130,7 +130,7 @@ function socialWindow(url) {
 }
 
 function setShareLinks() {
-  var surveyUrl = "http://surveneer.herokuapp.com/surveys" + $('#surveyId').val() + "/view2";
+  var surveyUrl = "https://surveneer.herokuapp.com/surveys/" + $('#surveyId').val() + "/view2";
   var pageUrl = encodeURIComponent(surveyUrl);
   //var tweet = encodeURIComponent($('meta[name="description"]').attr("content"));
   var tweet = encodeURIComponent($('#socialMessage').val());
