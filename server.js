@@ -3,6 +3,8 @@
 const express = require('express');
 //const cors = require('cors');
 const path = require('path');
+const app = express();
+const http = require('http').createServer(app);
 //const winston = require('./config/winston/winston');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -10,7 +12,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const session = require('express-session');
 const db = require('./models');
-const app = express();
+
 const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
 const { check } = require('express-validator');
@@ -19,7 +21,7 @@ const flash = require('connect-flash');
 const nodemailer = require('nodemailer');
 
 // eslint-disable-next-line new-cap
-const http = require('http').createServer(app);
+
 const io = require('socket.io')(http, {
     handlePreflightRequest: (req, res) => {
         const headers = {
@@ -33,7 +35,7 @@ const io = require('socket.io')(http, {
 });
 
 require('dotenv').config();
-http.listen(8080, '127.0.0.1');
+//http.listen(8080, '127.0.0.1');
 
 //app.use(cors());
 
