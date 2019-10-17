@@ -1,6 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 //const winston = require('./config/winston/winston');
 const morgan = require('morgan');
@@ -23,6 +24,8 @@ const io = require('socket.io')(http);
 
 require('dotenv').config();
 http.listen(8080, '127.0.0.1');
+
+app.use(cors());
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
@@ -145,10 +148,10 @@ app.use(function(req, res, next) {
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
     // Website you wish to allow to connect
-    res.header('Access-Control-Allow-Origin', 'http://surveneer.herokuapp.com');
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    // res.header('Access-Control-Allow-Origin', 'http://surveneer.herokuapp.com');
+    // res.header("Access-Control-Allow-Credentials", true);
+    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    // res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
     next();
 });
 
