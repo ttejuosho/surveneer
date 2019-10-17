@@ -138,6 +138,23 @@ const hbs = exphbs.create({
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+
+
+app.use((err, req, res, next) => {
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // add this line to include winston logging uncomment next line to enable winston
+    //winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+    res.locals.isAuthenticated = req.isAuthenticated();
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+
+    next();
+});
+
 const routes = require('./controllers/survenaire_controller');
 
 app.use(flash());
@@ -171,21 +188,6 @@ app.use('/mysurveys', routes);
 app.use('/question', routes);
 app.use('/sendSurvey', routes);
 app.use('/emailSurvey', routes);
-
-app.use((err, req, res, next) => {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // add this line to include winston logging uncomment next line to enable winston
-    //winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-
-    res.locals.isAuthenticated = req.isAuthenticated();
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-
-    next();
-});
 
 // listen on port 3000
 const port = process.env.PORT || 3000;
