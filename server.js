@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 const express = require('express');
-const cors = require('cors');
+//const cors = require('cors');
 const path = require('path');
 //const winston = require('./config/winston/winston');
 const morgan = require('morgan');
@@ -20,12 +20,22 @@ const nodemailer = require('nodemailer');
 
 // eslint-disable-next-line new-cap
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    handlePreflightRequest: (req, res) => {
+        const headers = {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Allow-Origin": req.headers.origin,
+            "Access-Control-Allow-Credentials": true
+        };
+        res.writeHead(200, headers);
+        res.end();
+    }
+});
 
 require('dotenv').config();
 http.listen(8080, '127.0.0.1');
 
-app.use(cors());
+//app.use(cors());
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
