@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 const express = require('express');
-//const cors = require('cors');
+const cors = require('cors');
 const path = require('path');
 const app = express();
 const http = require('http').createServer(app);
@@ -37,7 +37,8 @@ const io = require('socket.io')(http, {
 require('dotenv').config();
 //http.listen(8080, '127.0.0.1');
 
-//app.use(cors());
+app.use(cors());
+app.options('*', cors());
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
