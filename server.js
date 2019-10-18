@@ -19,7 +19,7 @@ const { check } = require('express-validator');
 const cookieParser = require(`cookie-parser`);
 const flash = require('connect-flash');
 const nodemailer = require('nodemailer');
-
+const port = process.env.PORT || 3000;
 // eslint-disable-next-line new-cap
 
 const io = require('socket.io')(http, {
@@ -36,6 +36,7 @@ const io = require('socket.io')(http, {
 
 require('dotenv').config();
 //http.listen(8080, '127.0.0.1');
+http.listen(port);
 
 app.use(cors());
 app.options('*', cors());
@@ -203,7 +204,7 @@ app.use('/sendSurvey', routes);
 app.use('/emailSurvey', routes);
 
 // listen on port 3000
-const port = process.env.PORT || 3000;
+
 db.sequelize.sync().then(function() {
     app.listen(port);
 }).catch(function(err) {
