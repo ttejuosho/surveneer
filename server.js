@@ -36,7 +36,7 @@ const io = require('socket.io')(http, {
 
 require('dotenv').config();
 //http.listen(8080, '127.0.0.1');
-http.listen(port);
+http.listen(port, '127.0.0.1');
 
 app.use(cors());
 app.options('*', cors());
