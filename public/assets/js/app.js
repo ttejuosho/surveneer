@@ -197,8 +197,8 @@ $(function() {
         $('.surveyEditCheck').attr('disabled', true);
     });
 
-    //const socket = io.connect( 'http://localhost:8080' );
-    const socket = io.connect('http://surveneer.herokuapp.com');
+    //const socket = io.connect('http://localhost:8080');
+    const socket = io.connect('surveneer.herokuapp.com');
     socket.on('news', function(data) {
         $('.responseCount').text(data.message);
         $('#numberOfRespondents').val(data.message);

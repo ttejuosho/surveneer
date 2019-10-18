@@ -675,10 +675,10 @@ router.post('/emailSurvey/:surveyId', [
         } else {
             const emailArray = req.body.email.split(',');
             const output = `
-  <span style="text-transform: uppercase; font-size: 1rem;color: #ffffff;margin-top: 3px;padding: 1em 3em;"><i class="tim-icons icon-chart-bar-32 mr-2" style="vertical-align: unset;"></i>Surveneer</span>
-  <h3 style="color: red;">Please fill out this survey</h3>
-  <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
-  `;
+            <span style="text-transform: uppercase; font-size: 1rem;color: #ffffff;margin-top: 3px;padding: 1em 3em;"><i class="tim-icons icon-chart-bar-32 mr-2" style="vertical-align: unset;"></i>Surveneer</span>
+            <h3 style="color: red;">Please fill out this survey</h3>
+            <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
+            `;
 
             // create reusable transporter object using the default SMTP transport
             let transporter = nodemailer.createTransport({

@@ -22,18 +22,20 @@ const nodemailer = require('nodemailer');
 
 // eslint-disable-next-line new-cap
 
-const io = require('socket.io')(http, {
-    handlePreflightRequest: (req, res) => {
-        const headers = {
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            "Access-Control-Allow-Origin": "http://surveneer.herokuapp.com",
-            "Access-Control-Allow-Credentials": true
-        };
-        res.writeHead(200, headers);
-        res.end();
-    }
-});
+// const io = require('socket.io')(http, {
+//     handlePreflightRequest: (req, res) => {
+//         const headers = {
+//             "Access-Control-Allow-Headers": "Content-Type, Authorization",
+//             "Access-Control-Allow-Origin": "http://localhost:3000",
+//             //"Access-Control-Allow-Origin": "http://surveneer.herokuapp.com",
+//             "Access-Control-Allow-Credentials": true
+//         };
+//         res.writeHead(200, headers);
+//         res.end();
+//     }
+// });
 
+const io = require('socket.io')(http);
 require('dotenv').config();
 http.listen(8080, '127.0.0.1');
 
@@ -59,7 +61,7 @@ const strategy = new Auth0Strategy({
     }
 );
 
-io.set('origins', '*:*');
+//io.set('origins', '*:*');
 io.on('connection', function(socket) {
     socket.on('response', (response) => {
         io.emit('news', response);
@@ -177,11 +179,6 @@ app.use(function(req, res, next) {
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
-    // Website you wish to allow to connect
-    // res.header('Access-Control-Allow-Origin', 'http://surveneer.herokuapp.com');
-    // res.header("Access-Control-Allow-Credentials", true);
-    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    // res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
     next();
 });
 
