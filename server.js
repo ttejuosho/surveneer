@@ -35,7 +35,7 @@ const io = require('socket.io')(http, {
 });
 
 require('dotenv').config();
-http.listen('http://surveneer.herokuapp.com', '127.0.0.1');
+//http.listen(8080, '127.0.0.1');
 
 app.use(cors());
 app.options('*', cors());
