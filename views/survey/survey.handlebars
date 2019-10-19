@@ -309,7 +309,7 @@ var openSurveyImageModal = (surveyId) => {
 }
 
     //const socket = io('http://localhost:8080');
-    const socket = io('http://surveneer.herokuapp.com');
+    const socket = io();
     socket.on('news', function(data) {
         $('.responseCount').text(data.message);
         $('#numberOfRespondents').val(data.message);

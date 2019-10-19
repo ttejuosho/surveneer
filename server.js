@@ -4,7 +4,10 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const app = express();
-const http = require('http').createServer(app);
+const fs = require('fs');
+const options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem'), passphrase: 'Satifik8' };
+const https = require('https').createServer(options, app);
+//https.createServer(options, app);
 //const winston = require('./config/winston/winston');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -22,22 +25,22 @@ const nodemailer = require('nodemailer');
 
 // eslint-disable-next-line new-cap
 
-const io = require('socket.io')(http, {
-    handlePreflightRequest: (req, res) => {
-        const headers = {
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            //"Access-Control-Allow-Origin": "http://localhost:3000",
-            "Access-Control-Allow-Origin": "http://surveneer.herokuapp.com",
-            "Access-Control-Allow-Credentials": true
-        };
-        res.writeHead(200, headers);
-        res.end();
-    }
-});
+// const io = require('socket.io')(https, {
+//     handlePreflightRequest: (req, res) => {
+//         const headers = {
+//             "Access-Control-Allow-Headers": "Content-Type, Authorization",
+//             "Access-Control-Allow-Origin": "https://localhost:3000",
+//             //"Access-Control-Allow-Origin": "http://surveneer.herokuapp.com",
+//             "Access-Control-Allow-Credentials": true
+//         };
+//         res.writeHead(200, headers);
+//         res.end();
+//     }
+// });
 
-//const io = require('socket.io')(http);
+var io = require('socket.io')(https);
 require('dotenv').config();
-http.listen(8080, '127.0.0.1');
+//https.listen(8080, '127.0.0.1');
 
 app.use(cors());
 app.options('*', cors());
@@ -46,7 +49,7 @@ const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
         clientID: process.env.AUTH0_CLIENT_ID,
         clientSecret: process.env.AUTH0_CLIENT_SECRET,
-        callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
+        callbackURL: process.env.AUTH0_CALLBACK_URL || 'https://localhost:3000/callback',
     },
     function(accessToken, refreshToken, extraParams, profile, done) {
         /**
@@ -92,7 +95,6 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'));
-
 app.use(cookieParser());
 
 // For Passport
@@ -209,7 +211,7 @@ app.use('/emailSurvey', routes);
 // listen on port 3000
 const port = process.env.PORT || 3000;
 db.sequelize.sync().then(function() {
-    app.listen(port);
+    https.listen(port);
 }).catch(function(err) {
     console.log(err, 'Oh no !! Something went wrong with the Database!');
 });
