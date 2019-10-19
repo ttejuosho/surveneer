@@ -197,14 +197,6 @@ $(function() {
         $('.surveyEditCheck').attr('disabled', true);
     });
 
-    //const socket = io.connect('http://localhost:8080');
-    const socket = io.connect('surveneer.herokuapp.com');
-    socket.on('news', function(data) {
-        $('.responseCount').text(data.message);
-        $('#numberOfRespondents').val(data.message);
-        $('#ResponseSection').prepend(data.domData);
-    });
-
     // eslint-disable-next-line require-jsdoc
     // function getRandomInt(max) {
     //   return Math.floor(Math.random() * Math.floor(max));
