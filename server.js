@@ -68,6 +68,13 @@ io.on('connection', function(socket) {
     });
 });
 
+io.origins((origin, callback) => {
+    if (origin !== 'http://surveneer.herokuapp.com') {
+        return callback('origin not allowed', false)
+    }
+    callback(null, true);
+});
+
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/uploads'));

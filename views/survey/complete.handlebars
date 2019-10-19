@@ -19,6 +19,25 @@
   <link href="/assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="/assets/demo/demo.css" rel="stylesheet" />
+  <!--   Core JS Files   -->
+  <script src="/assets/js/core/jquery.min.js"></script>
+  <script src="/assets/js/core/popper.min.js"></script>
+  <script src="/assets/js/core/bootstrap.min.js"></script>
+  <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="/assets/js/socket.io.js"></script>
+  {{!-- <script src="http://localhost:8080/assets/js/socket.io.js"></script> --}}
+  <!-- Chart JS -->
+  <script src="/assets/js/plugins/chartjs.min.js"></script>
+  <!--  Notifications Plugin    -->
+  <script src="/assets/js/plugins/bootstrap-notify.js"></script>
+  <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="/assets/js/black-dashboard.min.js?v=1.0.0"></script>
+  <script type="text/javascript" src="/assets/js/selectize.js"></script>
+  {{!-- <script type="text/javascript" src="/assets/js/Chart.min.js"></script> --}}
+  <script type="text/javascript" src="/assets/js/DataTables/datatables.min.js"></script>
+  <script type="text/javascript" src="/assets/js/app.js"></script>
+  <!-- Black Dashboard DEMO methods, don't include it in your project! -->
+  <script src="/assets/demo/demo.js"></script>
 </head>
 <body>
     <center>
@@ -42,24 +61,6 @@
     </center>
 </body>
 </html>
-<!--   Core JS Files   -->
-  <script src="/assets/js/core/jquery.min.js"></script>
-  <script src="/assets/js/core/popper.min.js"></script>
-  <script src="/assets/js/core/bootstrap.min.js"></script>
-  <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
-  <script src="/assets/js/socket.io.js"></script>
-  <!-- Chart JS -->
-  <script src="/assets/js/plugins/chartjs.min.js"></script>
-  <!--  Notifications Plugin    -->
-  <script src="/assets/js/plugins/bootstrap-notify.js"></script>
-  <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="/assets/js/black-dashboard.min.js?v=1.0.0"></script>
-  <script type="text/javascript" src="/assets/js/selectize.js"></script>
-  {{!-- <script type="text/javascript" src="/assets/js/Chart.min.js"></script> --}}
-  <script type="text/javascript" src="/assets/js/DataTables/datatables.min.js"></script>
-  <script type="text/javascript" src="/assets/js/app.js"></script>
-  <!-- Black Dashboard DEMO methods, don't include it in your project! -->
-  <script src="/assets/demo/demo.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -73,8 +74,8 @@ $(document).ready(function(){
             return ans; 
         }
 
-    const socket = io.connect( 'http://localhost' );
-    //const socket = io.connect('surveneer.herokuapp.com');
+    //const socket = io( 'http://localhost:8080' );
+    const socket = io('http://surveneer.herokuapp.com');
     const surveyId = $('#surveyId').val();
     const resId = $('#resId').val();
     fetch('/api/getResponse/' + surveyId + '/' + resId).then((res)=>{
