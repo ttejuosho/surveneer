@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 const fs = require('fs');
 const options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem'), passphrase: 'Satifik8' };
-const https = require('https').createServer(options, app);
+const http = require('http').createServer(app);
 //https.createServer(options, app);
 //const winston = require('./config/winston/winston');
 const morgan = require('morgan');
@@ -37,24 +37,24 @@ const nodemailer = require('nodemailer');
 //     }
 // });
 
-var io = require('socket.io')(https);
+var io = require('socket.io')(http);
 require('dotenv').config();
 //https.listen(8080, '127.0.0.1');
 
 app.use(cors());
 app.options('*', cors());
 
-app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true
-}))
+// app.use(session({
+//     secret: 'keyboard cat',
+//     resave: false,
+//     saveUninitialized: true
+// }))
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
         clientID: process.env.AUTH0_CLIENT_ID,
         clientSecret: process.env.AUTH0_CLIENT_SECRET,
-        callbackURL: process.env.AUTH0_CALLBACK_URL || 'https://localhost:3000/callback',
+        callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
     },
     function(accessToken, refreshToken, extraParams, profile, done) {
         /**
@@ -216,7 +216,7 @@ app.use('/emailSurvey', routes);
 // listen on port 3000
 const port = process.env.PORT || 3000;
 db.sequelize.sync().then(function() {
-    https.listen(port);
+    http.listen(port);
 }).catch(function(err) {
     console.log(err, 'Oh no !! Something went wrong with the Database!');
 });
