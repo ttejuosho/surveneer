@@ -15,7 +15,6 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const session = require('express-session');
 const db = require('./models');
-
 const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
 const { check } = require('express-validator');
@@ -44,6 +43,12 @@ require('dotenv').config();
 
 app.use(cors());
 app.options('*', cors());
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}))
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
