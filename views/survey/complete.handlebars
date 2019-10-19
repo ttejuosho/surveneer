@@ -47,7 +47,7 @@
   <script src="/assets/js/core/popper.min.js"></script>
   <script src="/assets/js/core/bootstrap.min.js"></script>
   <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+  <script src="/assets/js/socket.io.js"></script>
   <!-- Chart JS -->
   <script src="/assets/js/plugins/chartjs.min.js"></script>
   <!--  Notifications Plugin    -->
@@ -73,8 +73,8 @@ $(document).ready(function(){
             return ans; 
         }
 
-    //const socket = io.connect( 'http://localhost:8080' );
-    const socket = io.connect('surveneer.herokuapp.com');
+    const socket = io.connect( 'http://localhost:8080' );
+    //const socket = io.connect('surveneer.herokuapp.com');
     const surveyId = $('#surveyId').val();
     const resId = $('#resId').val();
     fetch('/api/getResponse/' + surveyId + '/' + resId).then((res)=>{
