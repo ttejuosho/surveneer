@@ -7,7 +7,7 @@ const app = express();
 const fs = require('fs');
 const options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem'), passphrase: 'Satifik8' };
 const http = require('http').createServer(app);
-//https.createServer(options, app);
+
 //const winston = require('./config/winston/winston');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -24,31 +24,11 @@ const nodemailer = require('nodemailer');
 
 // eslint-disable-next-line new-cap
 
-// const io = require('socket.io')(https, {
-//     handlePreflightRequest: (req, res) => {
-//         const headers = {
-//             "Access-Control-Allow-Headers": "Content-Type, Authorization",
-//             "Access-Control-Allow-Origin": "https://localhost:3000",
-//             //"Access-Control-Allow-Origin": "http://surveneer.herokuapp.com",
-//             "Access-Control-Allow-Credentials": true
-//         };
-//         res.writeHead(200, headers);
-//         res.end();
-//     }
-// });
-
 var io = require('socket.io')(http);
 require('dotenv').config();
-//https.listen(8080, '127.0.0.1');
 
 app.use(cors());
 app.options('*', cors());
-
-// app.use(session({
-//     secret: 'keyboard cat',
-//     resave: false,
-//     saveUninitialized: true
-// }))
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
@@ -69,19 +49,11 @@ const strategy = new Auth0Strategy({
     }
 );
 
-//io.set('origins', '*:*');
 io.on('connection', function(socket) {
     socket.on('response', (response) => {
         io.emit('news', response);
     });
 });
-
-// io.origins((origin, callback) => {
-//     if (origin !== 'http://surveneer.herokuapp.com') {
-//         return callback('origin not allowed', false)
-//     }
-//     callback(null, true);
-// });
 
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + '/public'));
