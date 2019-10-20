@@ -2,6 +2,7 @@
 // const session = require('express-session');
 // load bcrypt
 const bCrypt = require('bcrypt-nodejs');
+const db = require('../../models');
 
 module.exports = function(passport, user) {
   const User = user;
@@ -63,14 +64,23 @@ module.exports = function(passport, user) {
         };
 
         User.create(data).then(function(newUser, created) {
-          if (!newUser) {
-            return done(null, false);
-          }
-
-          if (newUser) {
-            return done(null, newUser);
+          if (!newUser) { return done(null, false); }
+          if (newUser) { return done(null, newUser);}
+        }).then(()=>{
+        db.Contact.findOne({
+          where: { email: email, },
+        }).then((dbContact) => {
+          if (dbContact == null) {
+            db.Contact.create({
+              firstName: req.body.name.split(' ')[0],
+              lastName: req.body.name.split(' ')[1],
+              email: email,
+          }).catch((err) => {
+              res.render('error', err);
+          });
           }
         });
+      });
       }
     });
   }

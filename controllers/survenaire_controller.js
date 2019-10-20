@@ -680,6 +680,7 @@ router.post('/emailSurvey/:surveyId', [
             <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
             `;
 
+            return new Promise((resolve,reject)=>{
             // create reusable transporter object using the default SMTP transport
             let transporter = nodemailer.createTransport({
                 host: 'smtp.aol.com',
@@ -707,12 +708,19 @@ router.post('/emailSurvey/:surveyId', [
                 // send mail with defined transport object
                 transporter.sendMail(mailOptions, (error, info) => {
                     if (error) {
+                        resolve(false);
                         return console.log("error : " + JSON.stringify(error));
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                        resolve(true);
+                        console.log('Message ID: %s', info.messageId);
+                        res.redirect('/surveys');
                     }
-                    console.log('Message ID: %s', info.messageId);
+
                 });
-            }
-            res.redirect('/surveys');
+            }//===4 loop end
+
+        });//======
         }
     });
 

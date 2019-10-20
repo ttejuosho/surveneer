@@ -2,6 +2,7 @@
 /* eslint-disable max-len */
 const authController = require('../controllers/authcontroller.js');
 const db = require('../models');
+const appRoot = require('app-root-path');
 // eslint-disable-next-line new-cap
 require('dotenv').config();
 
@@ -134,12 +135,13 @@ module.exports = function(upload, app, passport) {
               };
               return res.render('auth/signup', msg);
             }
+
             req.session.globalUser = {};
             req.session.globalUser['userId'] = user.userId;
             req.session.globalUser['name'] = user.name;
             req.session.globalUser['emailAddress'] = user.emailAddress;
             req.session.globalUser['phoneNumber'] = user.phoneNumber;
-            req.session.globalUser['profileImage'] = user.profileImage;
+            req.session.globalUser['profileImage'] = `${appRoot}/` + user.profileImage;
             req.session.globalUser['initials'] = req.session.globalUser.name.split(' ')[0][0] + req.session.globalUser.name.split(' ')[1][0];
             res.redirect('/surveys');
           });
@@ -191,7 +193,7 @@ module.exports = function(upload, app, passport) {
   app.get('/profile', isLoggedIn);
   app.get('/index', isLoggedIn);
   app.get('/newQuestion', isLoggedIn);
- // app.get('/contacts', isLoggedIn);
+  app.get('/contacts', isLoggedIn);
 
   // route for logging out
   app.get('/logout', authController.logout);
