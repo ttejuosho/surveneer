@@ -141,7 +141,7 @@ module.exports = function(upload, app, passport) {
             req.session.globalUser['name'] = user.name;
             req.session.globalUser['emailAddress'] = user.emailAddress;
             req.session.globalUser['phoneNumber'] = user.phoneNumber;
-            req.session.globalUser['profileImage'] = `${appRoot}/` + user.profileImage;
+            req.session.globalUser['profileImage'] = user.profileImage;
             req.session.globalUser['initials'] = req.session.globalUser.name.split(' ')[0][0] + req.session.globalUser.name.split(' ')[1][0];
             res.redirect('/surveys');
           });

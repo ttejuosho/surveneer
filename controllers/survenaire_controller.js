@@ -522,7 +522,9 @@ router.get('/profile', (req, res) => {
         .findByPk(req.session.passport.user)
         .then((dbUser) => {
             const hbsObject = dbUser.dataValues;
+            delete hbsObject.password;  
             hbsObject['initials'] = hbsObject.name.split(' ')[0][0] + hbsObject.name.split(' ')[1][0];
+            console.log(hbsObject);
             res.render('user/profile', hbsObject);
         });
 });
