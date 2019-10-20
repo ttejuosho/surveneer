@@ -1,116 +1,117 @@
 <div class="col-md-8">
-{{!-- Tab Headers --}}
-<ul class="nav nav-tabs justify-content-center" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" href="#EmailSection" id="EmailSectionTab" data-toggle="tab" role="tab" aria-controls="EmailSection" aria-selected="true">Email</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#SocialMediaSection" id="SocialMediaSectionTab" data-toggle="tab" role="tab" aria-controls="SocialMediaSection" aria-selected="false">Social Media</a>
-  </li>
-</ul>
+    {{!-- Tab Headers --}}
+    <ul class="nav nav-tabs justify-content-center" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="#EmailSection" id="EmailSectionTab" data-toggle="tab" role="tab" aria-controls="EmailSection" aria-selected="true">Email</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#SocialMediaSection" id="SocialMediaSectionTab" data-toggle="tab" role="tab" aria-controls="SocialMediaSection" aria-selected="false">Social Media</a>
+    </li>
+    </ul>
 
-{{!-- Tab Content --}}
-<div class="tab-content">
+    {{!-- Tab Content --}}
+    <div class="tab-content">
 
-    <div id="EmailSection" class="tab-pane fade show active" role="tabpanel" aria-labelledby="Email-tab">
-        <div class="card">
-            <div class="card-header pt-3">
-                <h2><i class="tim-icons icon-email-85 mr-2 mb-1"></i>Send Survey</h2>
-            </div>
-            <div class="card-body">
-                <form id="sendSurveyForm" class="form" action="/emailSurvey/{{surveyId}}" method="POST">
-                <input type="hidden" id="surveyId" value="{{surveyId}}"/>
-                    <fieldset>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                <label>Email</label>
-                                <input id="email" name="email" type="text" class="form-control form-control-sm mb-1" placeholder="To" value="{{email}}">
-                                <small id="emailHelp" class="form-text text-muted">Multiple email addresses should be seperated by comma</small>
-                                    {{#if errors}}
-                                        {{#each errors}}
-                                            {{#ifEquals param "email"}}
-                                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
-                                            {{/ifEquals}}
-                                        {{/each}}
-                                    {{/if}}
+        <div id="EmailSection" class="tab-pane fade show active" role="tabpanel" aria-labelledby="Email-tab">
+            <div class="card">
+                <div class="card-header pt-3">
+                    <h2><i class="tim-icons icon-email-85 mr-2 mb-1"></i>Send Survey</h2>
+                </div>
+                <div class="card-body">
+                    <form id="sendSurveyForm" class="form" action="/emailSurvey/{{surveyId}}" method="POST">
+                    <input type="hidden" id="surveyId" value="{{surveyId}}"/>
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <label>Email</label>
+                                    <input id="email" name="email" type="text" class="form-control form-control-sm mb-1" placeholder="To" value="{{email}}">
+                                    <small id="emailHelp" class="form-text text-muted">Multiple email addresses should be seperated by comma</small>
+                                        {{#if errors}}
+                                            {{#each errors}}
+                                                {{#ifEquals param "email"}}
+                                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                                {{/ifEquals}}
+                                            {{/each}}
+                                        {{/if}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                <label>Subject</label>
-                                <input id="subject" name="subject" type="text" class="form-control form-control-sm mb-1" value="{{subject}}">
-                                    {{#if errors}}
-                                        {{#each errors}}
-                                            {{#ifEquals param "subject"}}
-                                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
-                                            {{/ifEquals}}
-                                        {{/each}}
-                                    {{/if}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <label>Subject</label>
+                                    <input id="subject" name="subject" type="text" class="form-control form-control-sm mb-1" value="{{subject}}">
+                                        {{#if errors}}
+                                            {{#each errors}}
+                                                {{#ifEquals param "subject"}}
+                                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                                {{/ifEquals}}
+                                            {{/each}}
+                                        {{/if}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                <label>Message</label>
-                                <textarea id="message" name="message" type="text" class="form-control form-control-sm mb-1" onkeyup="SetNewSize(this);" style="overflow-y: hidden; height: 59px; min-height: 5em; max-height: 50vh; width: 100%;">Hello, Please take a moment to fill out this survey.</textarea>
-                                    {{#if errors}}
-                                        {{#each errors}}
-                                            {{#ifEquals param "message"}}
-                                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
-                                            {{/ifEquals}}
-                                        {{/each}}
-                                    {{/if}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <label>Message</label>
+                                    <textarea id="message" name="message" type="text" class="form-control form-control-sm mb-1" onkeyup="SetNewSize(this);" style="overflow-y: hidden; height: 59px; min-height: 5em; max-height: 50vh; width: 100%;">Hello, Please take a moment to fill out this survey.</textarea>
+                                        {{#if errors}}
+                                            {{#each errors}}
+                                                {{#ifEquals param "message"}}
+                                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                                {{/ifEquals}}
+                                            {{/each}}
+                                        {{/if}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Send Survey</button>
-                    </fieldset>
-                </form>
-            </div>
-    </div>
-    </div>
+                            <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Send Survey</button>
+                        </fieldset>
+                    </form>
+                </div>
+        </div>
+        </div>
 
-    {{!-- End of Email Section --}}
-    <div id="SocialMediaSection" class="tab-pane fade" role="tabpanel" aria-labelledby="SocialMedia-tab">
-        <div class="card">
-            <div class="card-header pt-3">
-                <h2><i class="tim-icons icon-attach-87 mr-2 mb-1"></i>Share via Social Media</h2>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                        <label>Message</label>
-                        <textarea id="socialMessage" name="socialMessage" type="text" class="form-control form-control-sm mb-1" onkeyup="SetNewSize(this);" style="overflow-y: hidden; height: 59px; min-height: 5em; max-height: 50vh; width: 100%;">Hello, Please take a moment to fill out my survey on SurvEnEEr</textarea>
+        {{!-- End of Email Section --}}
+        <div id="SocialMediaSection" class="tab-pane fade" role="tabpanel" aria-labelledby="SocialMedia-tab">
+            <div class="card">
+                <div class="card-header pt-3">
+                    <h2><i class="tim-icons icon-attach-87 mr-2 mb-1"></i>Share via Social Media</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                            <label>Message</label>
+                            <textarea id="socialMessage" name="socialMessage" type="text" class="form-control form-control-sm mb-1" onkeyup="SetNewSize(this);" style="overflow-y: hidden; height: 59px; min-height: 5em; max-height: 50vh; width: 100%;">Hello, Please take a moment to fill out my survey on SurvEnEEr</textarea>
+                            </div>
                         </div>
                     </div>
+                    {{!-- <ul>
+                        <li class="social-share facebook"><img src="facebook-icon.png" alt="Share Page on Facebook" />Facebook</li>
+                        <li class="social-share twitter"><img src="twitter-icon.png" alt="Share Page on Twitter" />Twitter</li>
+                        <li class="social-share linkedin"><img src="linkedin-icon.png" alt="Share Page on LinkedIn" />LinkedIn</li>
+                    </ul> --}}
+                <div class="button-container">
+                <button class="btn btn-icon btn-round btn-facebook social-share facebook" style="height: 3rem;width: 3rem;">
+                <i class="fab fa-facebook"></i>
+                </button>
+                <button class="btn btn-icon btn-round btn-twitter social-share twitter" style="height: 3rem;width: 3rem;">
+                <i class="fab fa-twitter"></i>
+                </button>
+                <button class="btn btn-icon btn-round btn-linkedin social-share linkedin" style="height: 3rem;width: 3rem;">
+                <i class="fab fa-linkedin"></i>
+                </button>
+            </div>
                 </div>
-                {{!-- <ul>
-                    <li class="social-share facebook"><img src="facebook-icon.png" alt="Share Page on Facebook" />Facebook</li>
-                    <li class="social-share twitter"><img src="twitter-icon.png" alt="Share Page on Twitter" />Twitter</li>
-                    <li class="social-share linkedin"><img src="linkedin-icon.png" alt="Share Page on LinkedIn" />LinkedIn</li>
-                </ul> --}}
-            <div class="button-container">
-            <button class="btn btn-icon btn-round btn-facebook social-share facebook" style="height: 3rem;width: 3rem;">
-            <i class="fab fa-facebook"></i>
-            </button>
-            <button class="btn btn-icon btn-round btn-twitter social-share twitter" style="height: 3rem;width: 3rem;">
-            <i class="fab fa-twitter"></i>
-            </button>
-            <button class="btn btn-icon btn-round btn-linkedin social-share linkedin" style="height: 3rem;width: 3rem;">
-            <i class="fab fa-linkedin"></i>
-            </button>
-        </div>
             </div>
         </div>
-    </div>
 
-</div>
     </div>
+</div>
+
 <script type="text/javascript">
     function SetNewSize(textarea) {
         textarea.style.height = "0px";
@@ -129,7 +130,7 @@ function socialWindow(url) {
 }
 
 function setShareLinks() {
-  var surveyUrl = "http://localhost:3000/surveys" + $('#surveyId').val() + "/view2";
+  var surveyUrl = "http://surveneer.herokuapp.com/surveys/" + $('#surveyId').val() + "/view2";
   var pageUrl = encodeURIComponent(surveyUrl);
   //var tweet = encodeURIComponent($('meta[name="description"]').attr("content"));
   var tweet = encodeURIComponent($('#socialMessage').val());

@@ -307,6 +307,14 @@ var openSurveyImageModal = (surveyId) => {
         });
     $('#addSurveyImageModal').modal('show');
 }
+
+    //const socket = io('http://localhost:8080');
+    const socket = io();
+    socket.on('news', function(data) {
+        $('.responseCount').text(data.message);
+        $('#numberOfRespondents').val(data.message);
+        $('#ResponseSection').prepend(data.domData);
+    });
 </script>
 
 {{#if deleteAlertMessage}}
@@ -324,15 +332,3 @@ var openSurveyImageModal = (surveyId) => {
         });
     </script>
 {{/if}}
-
-{{!-- <script type="text/javascript">
-    $(function () {
-            // const socket = io();
-        const socket = io.connect( 'http://localhost:8080' );
-        console.log("Emitted");
-        socket.on('news', function (data) {
-            console.log(data);
-            socket.emit('response', {message: 'New Alert'});
-        });
-    });
-</script> --}}
