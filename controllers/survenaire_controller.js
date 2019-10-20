@@ -5,10 +5,12 @@ const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const db = require('../models');
+const appRoot = require('app-root-path');
 const passport = require('passport');
 const io = require('socket.io');
 const { check, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
+//const eht = require('nodemailer-express-handlebars');
 
 router.get('/login', passport.authenticate('auth0', {
     scope: 'openid email profile',
@@ -675,8 +677,9 @@ router.post('/emailSurvey/:surveyId', [
         } else {
             const emailArray = req.body.email.split(',');
             const output = `
-            <span style="text-transform: uppercase; font-size: 1rem;color: #ffffff;margin-top: 3px;padding: 1em 3em;"><i class="tim-icons icon-chart-bar-32 mr-2" style="vertical-align: unset;"></i>Surveneer</span>
-            <h3 style="color: red;">Please fill out this survey</h3>
+            <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
+            <p>Hello,</p>
+            <p style="color: black;">${req.body.message}</p>
             <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
             `;
 
@@ -695,6 +698,11 @@ router.post('/emailSurvey/:surveyId', [
                 }
             });
 
+            // transporter.use('compile', eht({
+            //     viewEngine: 'express-handlebars',
+            //     viewPath: `${appRoot}/views`,
+            // }));
+
             for (var i = 0; i < emailArray.length; i++) {
                 // setup email data with unicode symbols
                 let mailOptions = {
@@ -702,7 +710,8 @@ router.post('/emailSurvey/:surveyId', [
                     to: emailArray[i], // list of receivers
                     subject: req.body.subject, // Subject line
                     text: 'Hello world?', // plain text body
-                    html: output // html body
+                    html: output, // html body
+                    //template: 'templates/surveynotification'
                 };
 
                 // send mail with defined transport object
@@ -716,10 +725,8 @@ router.post('/emailSurvey/:surveyId', [
                         console.log('Message ID: %s', info.messageId);
                         res.redirect('/surveys');
                     }
-
                 });
             }//===4 loop end
-
         });//======
         }
     });
