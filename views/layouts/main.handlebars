@@ -142,7 +142,7 @@
               <li class="dropdown nav-item">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                   <div class="photo">
-                    <img {{#if profileImage}} {{#ifIncludes profileImage 'http'}} src="./{{profileImage}}" {{else}} src="../{{{profileImage}}}" {{/ifIncludes}} {{else}} src="./public/assets/img/default-avatar.png" {{/if}} alt="Profile Photo">
+                    <img src="./uploads/{{profileImage}}" alt="Profile Photo">
                   </div>
                   <b class="caret d-none d-lg-block d-xl-block"></b>
                   <p class="d-lg-none">
