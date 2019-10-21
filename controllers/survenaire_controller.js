@@ -319,16 +319,19 @@ router.get('/mysurveys/:surveyId', function(req, res) {
             surveyId: req.params.surveyId,
         },
         include: [
-            { model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] },
-            { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
-            { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
-        ],
+            {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
+            {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
+            {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount']},
+          ],
     }).then(function(survey) {
         const hbsObject = survey.dataValues;
         Object.assign(hbsObject, req.session.globalUser);
+        //console.log(survey.dataValues);
+        console.log(hbsObject);
         res.render('survey/survey', hbsObject);
         delete req.session.globalUser.deleteAlertMessage;
         delete req.session.globalUser.questionUpdateAlertMessage;
+
     }).catch(function(err) {
         res.render('error', err);
     });

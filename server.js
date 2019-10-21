@@ -1,34 +1,39 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const app = express();
-const fs = require('fs');
-const options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem'), passphrase: 'Satifik8' };
-const http = require('http').createServer(app);
-
-//const winston = require('./config/winston/winston');
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
+const express        = require('express');
+const cors           = require('cors');
+const path           = require('path');
+const app            = express();
+const fs             = require('fs');
+const options        = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem'), passphrase: 'Satifik8' };
+const http           = require('http').createServer(app);
+const morgan         = require('morgan');
+const bodyParser     = require('body-parser');
 const methodOverride = require('method-override');
-const passport = require('passport');
-const session = require('express-session');
-const db = require('./models');
-const multer = require('multer');
-const Auth0Strategy = require('passport-auth0');
-const { check } = require('express-validator');
-const cookieParser = require(`cookie-parser`);
-const flash = require('connect-flash');
-const nodemailer = require('nodemailer');
+const passport       = require('passport');
+const session        = require('express-session');
+const db             = require('./models');
+const multer         = require('multer');
+const Auth0Strategy  = require('passport-auth0');
+const { check }      = require('express-validator');
+const cookieParser   = require(`cookie-parser`);
+const flash          = require('connect-flash');
+const nodemailer     = require('nodemailer');
+var io               = require('socket.io')(http);
+const exphbs = require('express-handlebars');
+//const winston = require('./config/winston/winston');
+
 
 // eslint-disable-next-line new-cap
 
-var io = require('socket.io')(http);
+
 require('dotenv').config();
 
+// cors setup
 app.use(cors());
 app.options('*', cors());
+
+
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
@@ -59,7 +64,7 @@ io.on('connection', function(socket) {
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/uploads'));
 
-// Loggeruncomment next line to enable winston
+// Logger uncomment next line to enable winston
 //app.use(morgan('combined', { stream: winston.stream }));
 
 app.use(morgan('dev'));
@@ -113,7 +118,7 @@ function checkFileType(file, cb) {
     }
 }
 
-const exphbs = require('express-handlebars');
+
 
 const hbs = exphbs.create({
     helpers: {

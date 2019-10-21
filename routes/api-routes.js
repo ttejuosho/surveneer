@@ -295,6 +295,7 @@ module.exports = (app) => {
     });
   });
 
+  
   // Get all responses for a survey and see respondents
   app.get('/api/survey/response/:surveyId', (req, res) => {
     db.Response.findAll({
@@ -319,7 +320,7 @@ module.exports = (app) => {
       include: [
         {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
         {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
-        {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
+        {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount']},
       ],
     }).then((dbResponse) => {
       res.json(dbResponse);

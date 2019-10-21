@@ -168,7 +168,15 @@
                 <div class="col-md-12">
                     <div class="form-group">
                     <label>Question</label>
-                    <input id="question{{questionId}}" name="question" type="text" class="form-control form-control-sm" value="{{question}}" readonly>
+                    <input id="question{{questionId}}" data-optionType={{optionType}} name="question" type="text" class="form-control form-control-sm optionCounts" value="{{question}}" readonly>
+                    {{#ifEquals optionType "YesNo"}}
+                        <input type="hidden" name="YesResponseCount" id="q{{counter @index}}YesResponseCount" value="{{YesResponseCount}}">
+                        <input type="hidden" name="NoResponseCount" id="q{{counter @index}}NoResponseCount" value="{{NoResponseCount}}">
+                    {{/ifEquals}}
+                    {{#ifEquals optionType "TrueFalse"}}
+                        <input type="hidden" name="TrueResponseCount" id="q{{counter @index}}TrueResponseCount" value="{{TrueResponseCount}}">
+                        <input type="hidden" name="FalseResponseCount" id="q{{counter @index}}FalseResponseCount" value="{{FalseResponseCount}}">
+                    {{/ifEquals}}
                     </div>
                 </div>
             </div>
@@ -314,6 +322,15 @@ var openSurveyImageModal = (surveyId) => {
         $('#numberOfRespondents').val(data.message);
         $('#ResponseSection').prepend(data.domData);
     });
+    //var q1Values = [parseInt($('#q1YesResponseCount').val()), parseInt($('#q1NoResponseCount').val())];
+    var countValues = [];
+    for (var i = 0; i < $('.optionCounts').length; i++){
+        var q1Values = [];
+        q1Values.push(parseInt($('#q'+[i+1]+'YesResponseCount').val()));
+        q1Values.push(parseInt($('#q'+[i+1]+'NoResponseCount').val()));
+        countValues.push(q1Values);
+    }
+    console.log(countValues);
 </script>
 
 {{#if deleteAlertMessage}}
