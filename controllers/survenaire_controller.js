@@ -327,7 +327,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
         const hbsObject = survey.dataValues;
         Object.assign(hbsObject, req.session.globalUser);
         //console.log(survey.dataValues);
-        console.log(hbsObject);
+        //console.log(hbsObject);
         res.render('survey/survey', hbsObject);
         delete req.session.globalUser.deleteAlertMessage;
         delete req.session.globalUser.questionUpdateAlertMessage;
