@@ -1,39 +1,35 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
-const express        = require('express');
-const cors           = require('cors');
-const path           = require('path');
-const app            = express();
-const fs             = require('fs');
-const options        = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem'), passphrase: 'Satifik8' };
-const http           = require('http').createServer(app);
-const morgan         = require('morgan');
-const bodyParser     = require('body-parser');
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const app = express();
+const fs = require('fs');
+const options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem'), passphrase: 'Satifik8' };
+const http = require('http').createServer(app);
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
-const passport       = require('passport');
-const session        = require('express-session');
-const db             = require('./models');
-const multer         = require('multer');
-const Auth0Strategy  = require('passport-auth0');
-const { check }      = require('express-validator');
-const cookieParser   = require(`cookie-parser`);
-const flash          = require('connect-flash');
-const nodemailer     = require('nodemailer');
-var io               = require('socket.io')(http);
+const passport = require('passport');
+const session = require('express-session');
+const db = require('./models');
+const multer = require('multer');
+const Auth0Strategy = require('passport-auth0');
+const { check } = require('express-validator');
+const cookieParser = require(`cookie-parser`);
+const flash = require('connect-flash');
+const nodemailer = require('nodemailer');
+var io = require('socket.io')(http);
 const exphbs = require('express-handlebars');
 //const winston = require('./config/winston/winston');
 
-
 // eslint-disable-next-line new-cap
-
 
 require('dotenv').config();
 
 // cors setup
 app.use(cors());
 app.options('*', cors());
-
-
 
 const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
@@ -118,8 +114,6 @@ function checkFileType(file, cb) {
     }
 }
 
-
-
 const hbs = exphbs.create({
     helpers: {
         ifEquals: function(arg1, arg2, options) {
@@ -144,7 +138,6 @@ const hbs = exphbs.create({
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-
 
 app.use((err, req, res, next) => {
     res.locals.message = err.message;

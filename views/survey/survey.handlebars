@@ -324,13 +324,20 @@ var openSurveyImageModal = (surveyId) => {
     });
     //var q1Values = [parseInt($('#q1YesResponseCount').val()), parseInt($('#q1NoResponseCount').val())];
     var countValues = [];
-    for (var i = 0; i < $('.optionCounts').length; i++){
-        var q1Values = [];
+    $('.optionCounts').each((i)=>{
+        if ($('#question'+ (i+1)).attr("data-optiontype") == "TrueFalse"){
+            var q1Values = [];
+        q1Values.push(parseInt($('#q'+[i+1]+'TrueResponseCount').val()));
+        q1Values.push(parseInt($('#q'+[i+1]+'FalseResponseCount').val()));
+        countValues.push(q1Values);
+        } else if ($('#question'+ (i+1)).attr("data-optiontype") == "YesNo"){
+            var q1Values = [];
         q1Values.push(parseInt($('#q'+[i+1]+'YesResponseCount').val()));
         q1Values.push(parseInt($('#q'+[i+1]+'NoResponseCount').val()));
         countValues.push(q1Values);
-    }
-    console.log(countValues);
+        }
+    });
+        console.log(countValues);
 </script>
 
 {{#if deleteAlertMessage}}
