@@ -53,6 +53,7 @@ const strategy = new Auth0Strategy({
 io.on('connection', function(socket) {
     socket.on('response', (response) => {
         io.emit('news', response);
+        //io.to(socket.id).emit('news', response);
     });
 });
 

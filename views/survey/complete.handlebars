@@ -75,7 +75,6 @@ $(document).ready(function(){
         }
 
     const socket = io();
-    //const socket = io('http://surveneer.herokuapp.com');
     const surveyId = $('#surveyId').val();
     const resId = $('#resId').val();
     fetch('/api/getResponse/' + surveyId + '/' + resId).then((res)=>{
@@ -109,7 +108,7 @@ $(document).ready(function(){
                             '</div>' +
                         '</div>' +
                     '</div>';
-        socket.emit('response', {message: data[0][0].numberOfRespondents, domData: html});
+        socket.emit('response', { message: data[0][0].numberOfRespondents, domData: html });
     });
 });
 </script>
