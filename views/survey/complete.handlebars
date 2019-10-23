@@ -55,6 +55,7 @@
                     </blockquote>
                     <input type="hidden" id="surveyId" value="{{surveyId}}">
                     <input type="hidden" id="resId" value="{{resId}}">
+                    <input type="hidden" id="userId" value="{{userId}}">
                 </div>
             </div>
         </div>
@@ -77,6 +78,7 @@ $(document).ready(function(){
     const socket = io();
     const surveyId = $('#surveyId').val();
     const resId = $('#resId').val();
+    const userId = $('#userId').val();
     fetch('/api/getResponse/' + surveyId + '/' + resId).then((res)=>{
         return res.json();
     }).then((data) => {
@@ -108,6 +110,7 @@ $(document).ready(function(){
                             '</div>' +
                         '</div>' +
                     '</div>';
+                    // Emit User Id along with message
         socket.emit('response', { message: data[0][0].numberOfRespondents, domData: html });
     });
 });

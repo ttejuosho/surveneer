@@ -369,7 +369,7 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 });
 
 // Save Responses and Respondent (Need Refactoring - Error handling)
-router.post('/responses', (req, res) => {
+router.post('/responses/:userId', (req, res) => {
     var resId = '';
     db.Respondent.create({
         respondentName: req.body.respondentName,
@@ -482,6 +482,7 @@ router.post('/responses', (req, res) => {
                 // surveyNotes: dbSurvey.dataValues.surveyNotes,
                 layout: false,
                 resId: resId,
+                userId: req.params.userId,
             };
 
             db.Survey.update(updatedSurvey, {
@@ -498,7 +499,7 @@ router.post('/responses', (req, res) => {
                 //   layout: false,
                 // };
             });
-            console.log(hbsObject);
+            //console.log(hbsObject);
             return res.render('survey/complete', hbsObject);
         });
     }).catch((err) => {
