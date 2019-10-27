@@ -618,12 +618,13 @@ router.post('/updateContact', (req, res) => {
         active: (req.body.active === 'true' ? true : false),
     };
     db.Contact.findByPk(req.body.contactId).then((dbContact) => {
-        if (dbContact !== null && dbContact.dataValues.email.toLowerCase() === updatedContact.email.toLowerCase()) {
-            console.log('Match Found');
+        if (dbContact !== null) {
             db.Contact.update(updatedContact, {
                 where: {
                     contactId: req.body.contactId,
                 },
+            }).then(()=>{
+                res.redirect('/contacts');
             }).catch((err) => {
                 res.render('error', err);
             });
@@ -642,6 +643,8 @@ router.get('/deleteContact/:contactId', (req, res) => {
                     where: {
                         contactId: req.params.contactId,
                     },
+                }).then(()=>{
+                    res.redirect('/contacts');
                 }).catch((err) => {
                     res.render('error', err);
                 });
