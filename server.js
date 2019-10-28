@@ -19,12 +19,10 @@ const { check } = require('express-validator');
 const cookieParser = require(`cookie-parser`);
 const flash = require('connect-flash');
 const nodemailer = require('nodemailer');
-var io = require('socket.io')(http);
+const io = require('socket.io')(http);
 const exphbs = require('express-handlebars');
 //const winston = require('./config/winston/winston');
-
 // eslint-disable-next-line new-cap
-
 require('dotenv').config();
 
 // cors setup
@@ -35,7 +33,7 @@ const strategy = new Auth0Strategy({
         domain: process.env.AUTH0_DOMAIN,
         clientID: process.env.AUTH0_CLIENT_ID,
         clientSecret: process.env.AUTH0_CLIENT_SECRET,
-        callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
+        callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://surveneer.herokuapp.com/callback',
     },
     function(accessToken, refreshToken, extraParams, profile, done) {
         /**
@@ -52,8 +50,11 @@ const strategy = new Auth0Strategy({
 
 io.on('connection', function(socket) {
     socket.on('response', (response) => {
-        io.emit('news', response);
-        //io.to(socket.id).emit('news', response);
+        io.in(response.room).emit('news', response);
+    });
+
+    socket.on('join room', (user)=>{
+        socket.join(user.solitary);
     });
 });
 
@@ -172,7 +173,7 @@ require('./routes/auth.js')(upload, app, passport);
 // load passport strategies
 require('./config/passport/passport.js')(passport, db.User);
 
-require('./routes/api-routes.js')(app, io);
+require('./routes/api-routes.js')(app);
 //require('./routes/auth')(app);
 app.use('/', routes);
 app.use('/update', routes);

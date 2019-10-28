@@ -169,14 +169,6 @@
                     <div class="form-group">
                     <label>Question</label>
                     <input id="question{{questionId}}" data-optionType={{optionType}} name="question" type="text" class="form-control form-control-sm optionCounts" value="{{question}}" readonly>
-                    {{#ifEquals optionType "YesNo"}}
-                        <input type="hidden" name="YesResponseCount" id="q{{counter @index}}YesResponseCount" value="{{YesResponseCount}}">
-                        <input type="hidden" name="NoResponseCount" id="q{{counter @index}}NoResponseCount" value="{{NoResponseCount}}">
-                    {{/ifEquals}}
-                    {{#ifEquals optionType "TrueFalse"}}
-                        <input type="hidden" name="TrueResponseCount" id="q{{counter @index}}TrueResponseCount" value="{{TrueResponseCount}}">
-                        <input type="hidden" name="FalseResponseCount" id="q{{counter @index}}FalseResponseCount" value="{{FalseResponseCount}}">
-                    {{/ifEquals}}
                     </div>
                 </div>
             </div>
@@ -186,6 +178,24 @@
                     <label>Option Type</label>
                     <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{optionType}}" readonly>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{#ifEquals optionType "YesNo"}}
+                        <input type="hidden" name="YesResponseCount" id="q{{counter @index}}YesResponseCount" value="{{YesResponseCount}}">
+                        <input type="hidden" name="NoResponseCount" id="q{{counter @index}}NoResponseCount" value="{{NoResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}YesNoResponseChart"></canvas>
+                        </div>
+                    {{/ifEquals}}
+                    {{#ifEquals optionType "TrueFalse"}}
+                        <input type="hidden" name="TrueResponseCount" id="q{{counter @index}}TrueResponseCount" value="{{TrueResponseCount}}">
+                        <input type="hidden" name="FalseResponseCount" id="q{{counter @index}}FalseResponseCount" value="{{FalseResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}TrueFalseResponseChart"></canvas>
+                        </div>
+                    {{/ifEquals}}
                 </div>
             </div>
             {{#ifEquals optionType "MultipleChoice"}}
@@ -309,6 +319,10 @@ var openModal  = (questionId) => {
     $('#modalDeleteBtn').attr('href', '/deleteQuestion/' + questionId )
   }
 
+    getUserId =()=>{
+        return $('#userId').val();
+    }
+
 var openSurveyImageModal = (surveyId) => {
     $('#addSurveyImageModal').modal({
             backdrop: false
@@ -316,7 +330,12 @@ var openSurveyImageModal = (surveyId) => {
     $('#addSurveyImageModal').modal('show');
 }
 
+    const userRoom = getUserId();
     const socket = io();
+    socket.on('connect', function() {
+        socket.emit('join room', { solitary: userRoom });
+    });
+
     socket.on('news', function(data) {
         $('.responseCount').text(data.message);
         $('#numberOfRespondents').val(data.message);
@@ -326,19 +345,70 @@ var openSurveyImageModal = (surveyId) => {
     var countValues = [];
     var q1Values = [];
     $('.optionCounts').each((i)=>{
-        if ($('#question'+ (i+1)).attr("data-optiontype") == "TrueFalse"){
+        var elementId = $('.optionCounts')[0].id;
+        //console.log(elementId);
+        if ($('#' + elementId).attr("data-optiontype") == "TrueFalse"){
         q1Values = [];
         q1Values.push(parseInt($('#q'+[i+1]+'TrueResponseCount').val()));
         q1Values.push(parseInt($('#q'+[i+1]+'FalseResponseCount').val()));
         countValues.push(q1Values);
-        } else if ($('#question'+ (i+1)).attr("data-optiontype") == "YesNo"){
+        new Chart($('#q'+[i+1]+'TrueFalseResponseChart'), 
+        {
+        type: 'horizontalBar', 
+        data: 
+            { 
+                labels: ['Red', 'Green'], 
+                datasets: [{ 
+                    label: 'Responses Chart', 
+                    data: q1Values,
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'], 
+                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'], 
+                    borderWidth: 1 
+                }],
+            },
+            options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+        }
+            )
+        } else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
         q1Values = [];
         q1Values.push(parseInt($('#q'+[i+1]+'YesResponseCount').val()));
         q1Values.push(parseInt($('#q'+[i+1]+'NoResponseCount').val()));
         countValues.push(q1Values);
-        }
+        new Chart($('#q'+[i+1]+'YesNoResponseChart'), 
+        {
+            type: 'horizontalBar',
+            data: 
+                { 
+                    labels: ['Yes', 'No'], 
+                    datasets: [{ 
+                        label: 'Responses Chart', 
+                        data: q1Values,
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                    }],
+                },
+                    options: {
+                        responsive: true,
+                        scales: {
+                        xAxes: [{
+                            ticks: {
+                            beginAtZero: true
+                            }
+                        }]
+                        }
+                    }
+        })
+}
     });
-        console.log(countValues);
+
+    console.log(countValues);
 </script>
 
 {{#if deleteAlertMessage}}

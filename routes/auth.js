@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 const authController = require('../controllers/authcontroller.js');
 const db = require('../models');
-const appRoot = require('app-root-path');
+
 // eslint-disable-next-line new-cap
 require('dotenv').config();
 

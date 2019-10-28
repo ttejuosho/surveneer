@@ -47,7 +47,6 @@ module.exports = (app) => {
   // Get All User Surveys With Questions
   app.get('/api/mysurveys', function(req, res) {
     where = (req.query.where && JSON.parse(req.query.where) || null);
-    console.log(where, 'My Survey');
     db.Survey.findAll({
       where: where,
       order: req.query.order || [],
@@ -71,7 +70,6 @@ module.exports = (app) => {
         {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
       ],
     }).then(function(survey) {
-      // console.log(survey);
       res.json(survey);
     }).catch(function(err) {
       res.json('error', err);
@@ -255,8 +253,12 @@ module.exports = (app) => {
   // Get all responses to a survey from a respondent and total Number of responses
   app.get('/api/getResponse/:surveyId/:respondentId', (req, res) => {
     const data = [];
-    db.Response.count({distinct: true, col: 'RespondentRespondentId'}).then(function(dbResponse) {
-      d = dbResponse;
+    db.Survey.findOne({
+      where: {
+        SurveyId: req.params.surveyId
+      }
+    }).then((dbSurvey)=>{
+      d = dbSurvey.numberOfRespondents;
     }).then(() => {
       db.Response.findAll({
         where: {
@@ -294,7 +296,6 @@ module.exports = (app) => {
       res.json(dbQuestion);
     });
   });
-
   
   // Get all responses for a survey and see respondents
   app.get('/api/survey/response/:surveyId', (req, res) => {
@@ -335,10 +336,8 @@ module.exports = (app) => {
     }).then((dbQuestion) => {
       const qidArray = [];
       for (let i = 0; i < dbQuestion.length; i++) {
-        console.log(dbQuestion[i].QuestionId);
         qidArray.push(dbQuestion[i].QuestionId);
       }
-      // console.log(qidArray);
       res.json(dbQuestion);
     });
   });
@@ -427,7 +426,6 @@ module.exports = (app) => {
 
   // POST route saving for new Contact
   app.post('/api/subscribe', function(req, res) {
-    console.log(req.body);
     db.Contact.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,

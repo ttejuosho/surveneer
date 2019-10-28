@@ -197,6 +197,9 @@ $(function() {
         $('.surveyEditCheck').attr('disabled', true);
     });
 
+    getUserId =()=>{
+        return $('#userId').val();
+    }
     // eslint-disable-next-line require-jsdoc
     // function getRandomInt(max) {
     //   return Math.floor(Math.random() * Math.floor(max));

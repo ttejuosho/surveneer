@@ -2,12 +2,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 const express = require('express');
+const app = express();
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const db = require('../models');
 const appRoot = require('app-root-path');
 const passport = require('passport');
-const io = require('socket.io');
+//const io = require('socket.io');
 const { check, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 //const eht = require('nodemailer-express-handlebars');
@@ -72,7 +73,6 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Plea
                     hbsObject.surveyAlertMessage = true;
                     Object.assign(hbsObject, req.session.globalUser);
                     // When any connected client emit this event, we will receive it here.
-                    // io.emit('You have a new response to your survey');
                     return res.render('question/new', hbsObject);
                 }).catch((err) => {
                     res.render('error', err);
@@ -312,7 +312,7 @@ router.post('/newQuestion/:surveyId', [
 //     });
 // });
 
-// =================Get One User Survey With Questions==========
+// =================Get One User Survey With Questions & Responses (Survey Panel)==========
 router.get('/mysurveys/:surveyId', function(req, res) {
     db.Survey.findOne({
         where: {
@@ -326,12 +326,9 @@ router.get('/mysurveys/:surveyId', function(req, res) {
     }).then(function(survey) {
         const hbsObject = survey.dataValues;
         Object.assign(hbsObject, req.session.globalUser);
-        //console.log(survey.dataValues);
-        //console.log(hbsObject);
         res.render('survey/survey', hbsObject);
         delete req.session.globalUser.deleteAlertMessage;
         delete req.session.globalUser.questionUpdateAlertMessage;
-
     }).catch(function(err) {
         res.render('error', err);
     });
@@ -378,7 +375,6 @@ router.post('/responses/:userId', (req, res) => {
         SurveySurveyId: req.body.surveyId,
     }).then((dbRespondent) => {
         resId = dbRespondent.dataValues.respondentId;
-        console.log(resId);
         const qandaArray = [];
         for (let i = 0; i < req.body.questionLength; i++) {
             const qanda = {
@@ -514,7 +510,6 @@ router.get('/responses/:SurveySurveyId/view', (req, res) => {
         },
     }).then(function(responses) {
         res.json(responses);
-        // res.render('response/view', responses.dataValues);
     }).catch(function(err) {
         res.render('error', err);
     });
@@ -528,7 +523,6 @@ router.get('/profile', (req, res) => {
             const hbsObject = dbUser.dataValues;
             delete hbsObject.password;  
             hbsObject['initials'] = hbsObject.name.split(' ')[0][0] + hbsObject.name.split(' ')[1][0];
-            console.log(hbsObject);
             res.render('user/profile', hbsObject);
         });
 });
@@ -595,7 +589,6 @@ router.post('/subscribe', [
                     lastName: req.body.lastName,
                     email: req.body.email,
                 }).then((dbContact) => {
-                    console.log(dbContact.dataValues);
                     var message = {
                         showConfirmation: true,
                         layout: 'partials/prelogin',
