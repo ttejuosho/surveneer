@@ -720,12 +720,22 @@ router.post('/emailSurvey/:surveyId', [
                 transporter.sendMail(mailOptions, (error, info) => {
                     if (error) {
                         resolve(false);
-                        return console.log("error : " + JSON.stringify(error));
+                        const hbsObject = {
+                            emailFailedAlertMessage: true,
+                        };
+                        Object.assign(hbsObject, req.session.globalUser);
+                        res.render('survey/send', hbsObject);
+                        //return console.log("error : " + JSON.stringify(error));
                     } else {
-                        console.log('Email sent: ' + info.response);
+                        //console.log('Email sent: ' + info.response);
                         resolve(true);
                         console.log('Message ID: %s', info.messageId);
-                        res.redirect('/surveys');
+                        const hbsObject = {
+                            emailSentAlertMessage: true,
+                        };
+                        Object.assign(hbsObject, req.session.globalUser);
+                        res.render('survey/send', hbsObject);
+                        //res.redirect('/mysurveys/' + req.params.surveyId);
                     }
                 });
             }//===4 loop end
