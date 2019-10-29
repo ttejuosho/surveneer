@@ -329,30 +329,21 @@ var openSurveyImageModal = (surveyId) => {
         });
     $('#addSurveyImageModal').modal('show');
 }
-
-    const userRoom = getUserId();
-    const socket = io();
-    socket.on('connect', function() {
-        socket.emit('join room', { solitary: userRoom });
-    });
-
-    socket.on('news', function(data) {
-        $('.responseCount').text(data.message);
-        $('#numberOfRespondents').val(data.message);
-        $('#ResponseSection').prepend(data.domData);
-    });
-    //var q1Values = [parseInt($('#q1YesResponseCount').val()), parseInt($('#q1NoResponseCount').val())];
     var countValues = [];
     var q1Values = [];
+    var charts = [];
+    const userRoom = getUserId();
+    const socket = io();
+
     $('.optionCounts').each((i)=>{
         var elementId = $('.optionCounts')[0].id;
-        //console.log(elementId);
         if ($('#' + elementId).attr("data-optiontype") == "TrueFalse"){
         q1Values = [];
         q1Values.push(parseInt($('#q'+[i+1]+'TrueResponseCount').val()));
         q1Values.push(parseInt($('#q'+[i+1]+'FalseResponseCount').val()));
         countValues.push(q1Values);
-        new Chart($('#q'+[i+1]+'TrueFalseResponseChart'), 
+
+        charts[i] = new Chart($('#q'+[i+1]+'TrueFalseResponseChart'), 
         {
         type: 'horizontalBar', 
         data: 
@@ -377,12 +368,14 @@ var openSurveyImageModal = (surveyId) => {
                     }
         }
             )
-        } else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
+        } 
+        else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
         q1Values = [];
         q1Values.push(parseInt($('#q'+[i+1]+'YesResponseCount').val()));
         q1Values.push(parseInt($('#q'+[i+1]+'NoResponseCount').val()));
         countValues.push(q1Values);
-        new Chart($('#q'+[i+1]+'YesNoResponseChart'), 
+
+        charts[i] = new Chart($('#q'+[i+1]+'YesNoResponseChart'), 
         {
             type: 'horizontalBar',
             data: 
@@ -391,11 +384,20 @@ var openSurveyImageModal = (surveyId) => {
                     datasets: [{ 
                         label: 'Responses Chart', 
                         data: q1Values,
-                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)']
+                        backgroundColor: ['#1f8ef1', '#2dce89']
                     }],
                 },
                     options: {
                         responsive: true,
+                        tooltips: {
+                            bodySpacing: 4,
+                            mode: "nearest",
+                            intersect: 0,
+                            position: "nearest",
+                            xPadding: 10,
+                            yPadding: 10,
+                            caretPadding: 10
+                        },
                         scales: {
                         xAxes: [{
                             ticks: {
@@ -408,7 +410,22 @@ var openSurveyImageModal = (surveyId) => {
 }
     });
 
-    console.log(countValues);
+    socket.on('connect', function() {
+        socket.emit('join room', { solitary: userRoom });
+    });
+
+    socket.on('news', function(data) {
+        $('.responseCount').text(data.message);
+        $('#numberOfRespondents').val(data.message);
+        $('#ResponseSection').prepend(data.domData);
+        for (var i = 0; i < charts.length; i++){
+            console.log(data.chartData[i]);
+            charts[i].data.datasets[0].data = data.chartData[i];
+            charts[i].update();
+        }
+    });
+
+//console.log(countValues);
 </script>
 
 {{#if deleteAlertMessage}}

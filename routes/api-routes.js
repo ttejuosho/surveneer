@@ -65,7 +65,7 @@ module.exports = (app) => {
         surveyId: req.params.surveyId,
       },
       include: [
-        {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
+        {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount']},
         {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
         {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
       ],
@@ -235,7 +235,7 @@ module.exports = (app) => {
     });
   });
 
-  // Get all responses to a survey from a respondent
+  // Get all responses to a survey from 1 respondent
   app.get('/api/getResponses/:surveyId/:respondentId', (req, res) => {
     db.Response.findAll({
       where: {
@@ -265,7 +265,10 @@ module.exports = (app) => {
           SurveySurveyId: req.params.surveyId,
           RespondentRespondentId: req.params.respondentId,
         },
-        include: [{model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone']}, {model: db.Question, as: 'Question', attributes: ['question']}],
+        include: [
+          {model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone']}, 
+          {model: db.Question, as: 'Question', attributes: ['questionId','question','optionType','YesResponseCount','NoResponseCount','TrueResponseCount','FalseResponseCount']}
+      ],
       }).then((dbRespondent) => {
         data.push([{numberOfRespondents: d}]);
         data.push(dbRespondent);

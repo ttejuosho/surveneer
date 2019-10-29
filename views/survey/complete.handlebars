@@ -111,7 +111,15 @@ $(document).ready(function(){
                         '</div>' +
                     '</div>';
                     // Emit User Id along with message
-        socket.emit('response', { message: data[0][0].numberOfRespondents, domData: html, room: userId });
+        var socketData = { message: data[0][0].numberOfRespondents, domData: html, room: userId, chartData: [] };
+        data[1].forEach((d, i)=>{
+            if(d.Question.optionType === 'YesNo'){
+                socketData.chartData.push([parseInt(d.Question.YesResponseCount), parseInt(d.Question.NoResponseCount)]);
+            } else if (d.Question.optionType === 'TrueFalse'){
+                socketData.chartData.push([parseInt(d.Question.TrueResponseCount), parseInt(d.Question.FalseResponseCount)])
+            }
+        });
+        socket.emit('response', socketData);
     });
 });
 </script>
