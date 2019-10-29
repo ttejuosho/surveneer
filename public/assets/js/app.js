@@ -200,51 +200,5 @@ $(function() {
     getUserId =()=>{
         return $('#userId').val();
     }
-    // eslint-disable-next-line require-jsdoc
-    // function getRandomInt(max) {
-    //   return Math.floor(Math.random() * Math.floor(max));
-    // }
-
-    // Need Grouped Bar Charts https://codepen.io/Shokeen/pen/NpgbKg
-    // Q1 [YesCount,NoCount]
-    // fetch('/api/charts/optionCounts/1').then(function(data) {
-    //   // socket.emit('response', {message: getRandomInt(9)});
-    //   return data.json();
-    // }).then(function(data) {
-    //   const ctx = $('#chartBig1');
-    //   new Chart(ctx, {
-    //     type: 'bar',
-    //     data: {
-    //       labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    //       datasets: [{
-    //         label: 'Response Chart',
-    //         data: data.answerCounts[0],
-    //         backgroundColor: [
-    //           '#008080',
-    //           '#800000',
-    //           '#FF00FF',
-    //           '#00FF00',
-    //           '#000080',
-    //           '#FF0000',
-    //           '#008080',
-    //           '#800000',
-    //           '#FF00FF',
-    //           '#00FF00',
-    //           '#000080',
-    //           '#00FF00',
-    //           '#000080',
-    //         ],
-    //       }],
-    //     },
-    //     options: {
-    //       scales: {
-    //         yAxes: [{
-    //           ticks: {
-    //             beginAtZero: true,
-    //           },
-    //         }],
-    //       },
-    //     },
-    //   });
-    // });
+   
 });
