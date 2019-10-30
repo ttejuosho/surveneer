@@ -3,4 +3,3 @@ cert.pem
 key.pem
 logs
 .env
-controllers
