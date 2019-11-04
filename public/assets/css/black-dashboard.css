@@ -17562,7 +17562,7 @@ Copyright (c) 2015 Daniel Eden
 }
 
 .card-chart .chart-area {
-  height: 220px;
+  /* height: 185px; */
   width: 100%;
 }
 

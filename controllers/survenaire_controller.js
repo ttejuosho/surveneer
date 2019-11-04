@@ -11,6 +11,7 @@ const passport = require('passport');
 //const io = require('socket.io');
 const { check, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
+const transporter = require('../config/email/email');
 //const eht = require('nodemailer-express-handlebars');
 
 router.get('/login', passport.authenticate('auth0', {
@@ -245,7 +246,6 @@ router.post('/newQuestion/:surveyId', [
         errors['SurveySurveyId'] = req.params.surveyId;
         Object.assign(errors, req.session.globalUser);
         return res.render('question/new', errors);
-        // return res.status(422).jsonp(errors.array());
     } else {
         db.Question.create({
             question: req.body.question,
@@ -365,14 +365,34 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
     });
 });
 
-// Save Responses and Respondent (Need Refactoring - Error handling)
+// Save Responses and Respondent (Needs Refactoring - Error handling)
 router.post('/responses/:userId', (req, res) => {
     var resId = '';
+
+    // if respondent exists in Recipients table, update their information
+    db.Recipient.findOne({
+        where: {
+            recipientEmail: req.body.respondentEmail,
+        }
+    }).then((dbRecipient)=>{
+        if (dbRecipient !== null){
+            db.Recipient.update({ 
+                recipientName: req.body.respondentName,
+                recipientPhone: req.body.respondentPhone,
+            }, {
+                where: {
+                    recipientEmail: req.body.respondentEmail,
+                }
+            });
+        }
+    });
+
     db.Respondent.create({
         respondentName: req.body.respondentName,
         respondentEmail: req.body.respondentEmail,
         respondentPhone: req.body.respondentPhone,
         SurveySurveyId: req.body.surveyId,
+        UserUserId: req.params.userId
     }).then((dbRespondent) => {
         resId = dbRespondent.dataValues.respondentId;
         const qandaArray = [];
@@ -678,6 +698,23 @@ router.post('/emailSurvey/:surveyId', [
             return res.render('survey/send', errors);
         } else {
             const emailArray = req.body.email.split(',');
+            // Verify SurveyId
+            db.Survey.findOne({
+                where: {
+                    surveyId: req.params.surveyId
+                }
+            }).then((dbSurvey)=>{
+                if(dbSurvey == null){
+                    const errors = {};
+                    errors.email = req.body.email;
+                    errors.subject = req.body.subject;
+                    errors.message = req.body.message;
+                    errors.noSurveyError = 'Invalid Survey Id, Please reload the page';
+                    Object.assign(errors, req.session.globalUser);
+                    return res.render('survey/send', errors);
+                } else {
+
+            
             const output = `
             <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
             <p>Hello,</p>
@@ -686,19 +723,6 @@ router.post('/emailSurvey/:surveyId', [
             `;
 
             return new Promise((resolve,reject)=>{
-            // create reusable transporter object using the default SMTP transport
-            let transporter = nodemailer.createTransport({
-                host: 'smtp.aol.com',
-                port: 587,
-                secure: false, // true for 465, false for other ports
-                auth: {
-                    user: "ttejuosho@aol.com", // user
-                    pass: process.env.EMAIL_PASSWORD // password
-                },
-                tls: {
-                    rejectUnauthorized: false
-                }
-            });
 
             // transporter.use('compile', eht({
             //     viewEngine: 'express-handlebars',
@@ -725,21 +749,51 @@ router.post('/emailSurvey/:surveyId', [
                         };
                         Object.assign(hbsObject, req.session.globalUser);
                         res.render('survey/send', hbsObject);
-                        //return console.log("error : " + JSON.stringify(error));
                     } else {
-                        //console.log('Email sent: ' + info.response);
                         resolve(true);
-                        console.log('Message ID: %s', info.messageId);
-                        const hbsObject = {
-                            emailSentAlertMessage: true,
+                        console.log('Message ID: %s', info.messageId);                     
+                        console.log(info.envelope.to.toString());
+
+                        // Add email to recipient table if it doesnt exist
+                        db.Recipient.findOne({
+                            where: {
+                                recipientEmail: info.envelope.to.toString(),
+                                SurveySurveyId: req.params.surveyId,
+                            }
+                        }).then((dbRecipient)=>{
+                            if (dbRecipient == null){
+                                db.Recipient.create({
+                                recipientEmail: info.envelope.to.toString(), 
+                                UserUserId: req.session.globalUser.userId,
+                                SurveySurveyId: req.params.surveyId,
+                                });
+                            }
+                        });
+
+                        // Increase Number of recipients by 1
+                        dbSurvey.dataValues.numberOfRecipients += 1;
+                        const updatedSurvey = {
+                            numberOfRecipients: dbSurvey.dataValues.numberOfRecipients,
                         };
-                        Object.assign(hbsObject, req.session.globalUser);
-                        res.render('survey/send', hbsObject);
-                        //res.redirect('/mysurveys/' + req.params.surveyId);
+                        db.Survey.update(updatedSurvey, {
+                            where: {
+                                surveyId: dbSurvey.dataValues.surveyId,
+                            },
+                        });
                     }
                 });
-            }//===4 loop end
+
+            }//===For loop end
+            const hbsObject = {
+                emailSentAlertMessage: true,
+            };
+            Object.assign(hbsObject, req.session.globalUser);
+            res.render('survey/send', hbsObject);
         });//======
+    }
+    }).catch((err)=>{
+        res.render('error', err);
+    });
         }
     });
 

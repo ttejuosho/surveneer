@@ -18,6 +18,7 @@
                     <h2><i class="tim-icons icon-email-85 mr-2 mb-1"></i>Send Survey</h2>
                 </div>
                 <div class="card-body">
+                    <div class="messages text-danger font-weight-bold">{{noSurveyError}}</div>
                     <form id="sendSurveyForm" class="form" action="/emailSurvey/{{surveyId}}" method="POST">
                     <input type="hidden" id="surveyId" value="{{surveyId}}"/>
                         <fieldset>
@@ -25,8 +26,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                     <label>Email</label>
-                                    <input id="email" name="email" type="text" class="form-control form-control-sm mb-1" placeholder="To" value="{{email}}">
-                                    <small id="emailHelp" class="form-text text-muted">Multiple email addresses should be seperated by comma</small>
+                                    <input id="email" name="email" type="text" class="" placeholder="Select" autocomplete="off" value="{{email}}">
+                                    <small id="emailHelp" class="form-text text-muted">Enter new email then click Add if email doesn't exist in contacts list</small>
                                         {{#if errors}}
                                             {{#each errors}}
                                                 {{#ifEquals param "email"}}
@@ -69,7 +70,7 @@
                             </div>
                         <div class="card-footer">
                             <a href="/mysurveys/{{surveyId}}"><button type="button" class="btn btn-fill btn-sm btn-primary">Go to survey</button></a>
-                            <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Send Survey</button>
+                            <button id="sendSurveyBtn" type="submit" class="btn btn-sm btn-fill btn-primary float-right">Send Survey</button>
                         </div>
                         </fieldset>
                     </form>
@@ -154,6 +155,37 @@ function setShareLinks() {
     socialWindow(url);
   });
 }
+
+function InitRecipientsSelectize(){
+    $.ajax({
+        url: '/api/getRecipients/' + $('#userId').val(),
+        type: 'GET',
+        dataType: 'json'
+    }).done(function(data) {
+        $('#email').selectize({
+            labelField: 'recipientEmail',
+            valueField: 'recipientEmail',
+            searchField: ['recipientEmail', 'recipientName'],
+            create: true,
+            options: data,
+            render: function (item, escape){
+                return '<div data-value='+ escape(item.recipientEmail) +'>'+ escape(item.recipientEmail) +'</div>';
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+                callback(data);
+            }
+        });
+    }).fail(function(res) {
+        survenaire.showNotification('success', 'top', 'right', 'Failed to load recent contacts');
+    });
+}
+
+$('#sendSurveyForm').on('submit',()=>{
+    $('#sendSurveyBtn').html('<i class="tim-icons icon-spaceship mr-1" style="vertical-align: baseline;"></i> Sending...');
+});
+
+InitRecipientsSelectize();
 </script>
 
 {{#if emailSentAlertMessage}}

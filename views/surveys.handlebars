@@ -18,16 +18,16 @@
                     <div class="card-header"> 
                         <i onclick="openModal(`{{surveyId}}`)" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
                         <h3 class="card-title"><i class="tim-icons icon-atom text-primary"></i><a href="/mysurveys/{{surveyId}}">{{surveyName}}</a></h3>
-                        <h5 class="card-category">{{numberOfQuestions}} {{#ifEquals numberOfQuestions 1}} Question {{else}} Questions {{/ifEquals}}</h5>
-                        <h5 class="card-category">{{numberOfRespondents}} {{#ifEquals numberOfRespondents 1}} Respondent {{else}} Respondents {{/ifEquals}}</h5>
+                        <h5 class="card-category"><span id="numberOfQuestions{{counter @index}}">{{numberOfQuestions}}</span> {{#ifEquals numberOfQuestions 1}} Question {{else}} Questions {{/ifEquals}}</h5>
+                        <h5 class="card-category"><span id="numberOfRespondents{{counter @index}}">{{numberOfRespondents}}</span> {{#ifEquals numberOfRespondents 1}} Respondent {{else}} Respondents {{/ifEquals}}</h5>
+                        <h5 class="card-category"><span id="numberOfRecipients{{counter @index}}">{{numberOfRecipients}}</span> {{#ifEquals numberOfRecipients 1}} Recipient {{else}} Recipients {{/ifEquals}}</h5>
                         <h5>{{mess}}</h5>
                     </div>
-                    <div class="card-body">
-                        <a href="/mysurveys/{{surveyId}}">
-                            <div class="chart-area">
-                            <canvas id="chartLinePurple"></canvas>
-                            </div>
-                        </a>
+                    <div id="surveyData{{counter @index}}" class="card-body pt-0 d-none">
+                        <h5 class="card-category text-center" id="responseRatePercentage{{counter @index}}"></h5>
+                        <div id="chart{{counter @index}}" class="chart-area">
+                            <canvas id="chartLinePurple{{counter @index}}"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,6 +51,43 @@ function openModal (surveyId) {
     $('#confirmDeleteSurveyModal').modal('show');
     $('#deleteSurveyBtn').attr('href', '/deleteSurvey/' + surveyId)
   }
-          // Initialize Demo Charts
-    //demo.initDashboardPageCharts();
+    var responseRatecharts = [];
+    var numberOfSurveys = $('.chart-area').length;
+    for (var i = 0; i < numberOfSurveys; i++){
+        console.log(i)
+        var numberOfRespondents = parseInt($('#numberOfRespondents' + [i+1]).text());
+        var numberOfRecipients = parseInt($('#numberOfRecipients' + [i+1]).text());
+        var awaitingResponse = numberOfRecipients - numberOfRespondents;
+        console.log(numberOfRespondents, numberOfRecipients, awaitingResponse);
+    if (numberOfRespondents > 0){
+        var data = [numberOfRespondents, awaitingResponse]
+        var responseRatePercentage = ((numberOfRespondents/numberOfRecipients)*100).toFixed();
+        var ctx = $('#chartLinePurple' + [i+1]);
+        $('#responseRatePercentage' + [i+1]).text(responseRatePercentage + '% Response Rate')
+        responseRatecharts[i] = new Chart(ctx,
+        {
+            type: "pie",
+            data: {
+                labels: ['Received', 'Awaiting'],
+                datasets: [{
+                    label: responseRatePercentage + "% Response Rate",
+                    data: data,
+                    backgroundColor: ['#2dce89', '#007bff']
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: []
+                }
+            }
+        });
+        $('#surveyData' + [i+1]).removeClass('d-none');
+    }
+    }
+
 </script>

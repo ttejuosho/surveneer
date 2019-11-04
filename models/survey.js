@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
       allowNull: true,
     },
+    numberOfRecipients: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
     numberOfQuestions: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -52,6 +57,9 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Survey.associate = (models) => {
+    Survey.belongsTo(models.User,{
+      onDelete: 'cascade',
+    });
     Survey.hasMany(models.Question, {
       onDelete: 'cascade',
     });
@@ -59,6 +67,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
     });
     Survey.hasMany(models.Respondent, {
+      onDelete: 'cascade',
+    });
+    Survey.hasMany(models.Recipient, {
       onDelete: 'cascade',
     });
   };

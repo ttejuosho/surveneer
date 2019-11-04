@@ -19,5 +19,13 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
+    Respondent.associate = (models) =>{
+        Respondent.belongsTo(models.User, {
+            foreignKey: {
+              allowNull: false,
+              onDelete: 'cascade',
+            },
+          });
+    }
     return Respondent;
 }

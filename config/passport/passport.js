@@ -3,6 +3,8 @@
 // load bcrypt
 const bCrypt = require('bcrypt-nodejs');
 const db = require('../../models');
+const nodemailer = require('nodemailer');
+const transporter = require('../email/email');
 
 module.exports = function(passport, user) {
   const User = user;
@@ -75,8 +77,39 @@ module.exports = function(passport, user) {
               firstName: req.body.name.split(' ')[0],
               lastName: req.body.name.split(' ')[1],
               email: email,
+          }).then(()=>{
+
+          const emailBody = `
+          <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
+          <p>Hello ${req.body.name.split(' ')[0]},</p>
+          <p style="color: black;">Your account is set annd you're all good to go. Click <a href="https://surveneer.herokuapp.com/">here</a> to sign in to create your first survey.</p>
+          <p> The SurvEnEEr Team</p>
+          `;
+
+          let mailOptions = {
+            from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
+            to: email, // list of receivers
+            subject: 'New account created', // Subject line
+            text: 'Hello world?', // plain text body
+            html: emailBody, // html body
+            //template: 'templates/surveynotification'
+        };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              resolve(false);
+              const hbsObject = {
+                  error: 'An error occurred while sending a welcome email',
+              };
+              res.render('error', hbsObject);
+          } else {
+            resolve(true);
+            console.log('Message ID: %s', info.messageId); 
+          }
+          });
+
           }).catch((err) => {
-              res.render('error', err);
+              return res.render('error', err);
           });
           }
         });

@@ -27,7 +27,10 @@
 <body>
 <div class="col-md-10 container mt-2">
     <div class="card">
-    <div class="card-header"><div><img class="survey-banner" src="../../{{surveyImage}}" ></div> <h2><p>Thank you for taking the {{surveyName}} survey.</p></h2></div>
+    <div class="card-header">
+        {{#if surveyImage}} <div><img class="survey-banner" src="../../{{surveyImage}}" ></div> {{/if}}
+        <h2><p>Thank you for taking the {{surveyName}} survey.</p></h2>
+    </div>
     
     <div class="card-body">
     <form id="surveyForm" action="/responses/{{UserUserId}}" method="POST">

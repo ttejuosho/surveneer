@@ -492,6 +492,17 @@ module.exports = (app) => {
       res.json(dbContact);
     });
   });
+
+  // Get Recipients for a User
+  app.get('/api/getRecipients/:userId', (req,res)=>{
+    db.Recipient.findAll({
+      where: {
+        UserUserId: req.params.userId
+      }
+    }).then((dbContacts)=>{
+      res.json(dbContacts);
+    });
+  });
 };
 
 

@@ -55,6 +55,15 @@
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
+        <label>Number of Recipients</label>
+        <input id="numberOfRecipients" type="text" class="form-control form-control-sm" value="{{numberOfRecipients}}" readonly>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
         <label>Number of Respondents</label>
         <input id="numberOfRespondents" type="text" class="form-control form-control-sm" value="{{numberOfRespondents}}" readonly>
         </div>
@@ -100,41 +109,85 @@
     </div>
 </div>
 
-<div class="row">
+{{#if preSurveyInstructions}}
+<div id="preSurveyInstructionsRow" class="row">
     <div class="col-md-12">
         <div class="form-group">
         <label>Pre Survey Instructions</label>
-        <input id="preSurveyInstructions" name="preSurveyInstructions" type="text" class="form-control form-control-sm surveyEditInput" value="{{preSurveyInstructions}}" readonly>
+        <input id="preSurveyInstructions" name="preSurveyInstructions" type="text" class="form-control form-control-sm" value="{{preSurveyInstructions}}" readonly>
         </div>
     </div>
 </div>
+{{else}}
+<div id="preSurveyInstructionsRow" class="row d-none">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Pre Survey Instructions</label>
+        <input id="preSurveyInstructions" name="preSurveyInstructions" type="text" class="form-control form-control-sm" value="{{preSurveyInstructions}}">
+        </div>
+    </div>
+</div>
+{{/if}}
 
-<div class="row">
+{{#if postSurveyInstructions}}
+<div id="postSurveyInstructionsRow" class="row">
     <div class="col-md-12">
         <div class="form-group">
         <label>Post Survey Instructions</label>
-        <input id="postSurveyInstructions" name="postSurveyInstructions" type="text" class="form-control form-control-sm surveyEditInput" value="{{postSurveyInstructions}}" readonly>
+        <input id="postSurveyInstructions" name="postSurveyInstructions" type="text" class="form-control form-control-sm" value="{{postSurveyInstructions}}" readonly>
         </div>
     </div>
 </div>
+{{else}}
+<div id="postSurveyInstructionsRow" class="row d-none">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Post Survey Instructions</label>
+        <input id="postSurveyInstructions" name="postSurveyInstructions" type="text" class="form-control form-control-sm" value="{{postSurveyInstructions}}">
+        </div>
+    </div>
+</div>
+{{/if}}
 
-<div class="row">
+{{#if surveyNotes}}
+<div id="surveyNotesRow" class="row">
     <div class="col-md-12">
         <div class="form-group">
         <label>Survey Notes</label>
-        <textarea id="surveyNotes" name="surveyNotes" type="text" class="form-control form-control-sm surveyEditInput" readonly>{{surveyNotes}}</textarea>
+        <textarea id="surveyNotes" name="surveyNotes" type="text" class="form-control form-control-sm" readonly>{{surveyNotes}}</textarea>
         </div>
     </div>
 </div>
+{{else}}
+<div id="surveyNotesRow" class="row d-none">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Survey Notes</label>
+        <textarea id="surveyNotes" name="surveyNotes" type="text" class="form-control form-control-sm">{{surveyNotes}}</textarea>
+        </div>
+    </div>
+</div>
+{{/if}}
 
-<div class="row">
+{{#if surveyTOU}}
+<div id="surveyTOURow" class="row">
     <div class="col-md-12">
         <div class="form-group">
         <label>Survey Terms of Use</label>
-        <textarea id="surveyTOU" name="surveyTOU" type="text" class="form-control form-control-sm surveyEditInput" readonly>{{surveyTOU}}</textarea>
+        <textarea id="surveyTOU" name="surveyTOU" type="text" class="form-control form-control-sm" readonly>{{surveyTOU}}</textarea>
         </div>
     </div>
 </div>
+{{else}}
+<div id="surveyTOURow" class="row d-none">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Survey Terms of Use</label>
+        <textarea id="surveyTOU" name="surveyTOU" type="text" class="form-control form-control-sm">{{surveyTOU}}</textarea>
+        </div>
+    </div>
+</div>
+{{/if}}
 
 </div>
 <div class="card-footer">
@@ -180,7 +233,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row chartDiv d-none">
                 <div class="col-md-12">
                     {{#ifEquals optionType "YesNo"}}
                         <input type="hidden" name="YesResponseCount" id="q{{counter @index}}YesResponseCount" value="{{YesResponseCount}}">
@@ -292,7 +345,7 @@
     </div>
     </div>
     {{else}}
-        <div class="row">
+        <div id="noResponse" class="row">
             <div class="col-md-12">
                 <div class="form-group">
                 <label>No responses yet.</label>
@@ -338,6 +391,7 @@ var openSurveyImageModal = (surveyId) => {
     $('.optionCounts').each((i)=>{
         var elementId = $('.optionCounts')[0].id;
         if ($('#' + elementId).attr("data-optiontype") == "TrueFalse"){
+            if ($('#q'+[i+1]+'TrueResponseCount').val() == "" && $('#q'+[i+1]+'FalseResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
         q1Values = [];
         q1Values.push(parseInt($('#q'+[i+1]+'TrueResponseCount').val()));
         q1Values.push(parseInt($('#q'+[i+1]+'FalseResponseCount').val()));
@@ -348,7 +402,7 @@ var openSurveyImageModal = (surveyId) => {
         type: 'horizontalBar', 
         data: 
             { 
-                labels: ['Red', 'Green'], 
+                labels: ['True', 'False'], 
                 datasets: [{ 
                     label: 'Responses Chart', 
                     data: q1Values,
@@ -370,6 +424,7 @@ var openSurveyImageModal = (surveyId) => {
             )
         } 
         else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
+        if ($('#q'+[i+1]+'YesResponseCount').val() == "" && $('#q'+[i+1]+'NoResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
         q1Values = [];
         q1Values.push(parseInt($('#q'+[i+1]+'YesResponseCount').val()));
         q1Values.push(parseInt($('#q'+[i+1]+'NoResponseCount').val()));
@@ -415,6 +470,7 @@ var openSurveyImageModal = (surveyId) => {
     });
 
     socket.on('news', function(data) {
+        if($('#accordion').length == 0){ $('#noResponse').empty(); }
         $('.responseCount').text(data.message);
         $('#numberOfRespondents').val(data.message);
         $('#ResponseSection').prepend(data.domData);
