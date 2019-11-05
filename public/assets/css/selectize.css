@@ -210,6 +210,7 @@
   -webkit-user-select: auto !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
+  color: #d0d0d0;
 }
 .selectize-input > input::-ms-clear {
   display: none;

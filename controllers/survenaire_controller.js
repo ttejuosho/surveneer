@@ -713,7 +713,7 @@ router.post('/emailSurvey/:surveyId', [
                     Object.assign(errors, req.session.globalUser);
                     return res.render('survey/send', errors);
                 } else {
-
+                    const hbsObject = { surveyId: dbSurvey.dataValues.surveyId }
             
             const output = `
             <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
@@ -763,9 +763,9 @@ router.post('/emailSurvey/:surveyId', [
                         }).then((dbRecipient)=>{
                             if (dbRecipient == null){
                                 db.Recipient.create({
-                                recipientEmail: info.envelope.to.toString(), 
-                                UserUserId: req.session.globalUser.userId,
-                                SurveySurveyId: req.params.surveyId,
+                                    recipientEmail: info.envelope.to.toString(), 
+                                    UserUserId: req.session.globalUser.userId,
+                                    SurveySurveyId: req.params.surveyId,
                                 });
                             }
                         });
@@ -784,9 +784,7 @@ router.post('/emailSurvey/:surveyId', [
                 });
 
             }//===For loop end
-            const hbsObject = {
-                emailSentAlertMessage: true,
-            };
+            hbsObject["emailSentAlertMessage"] = true;
             Object.assign(hbsObject, req.session.globalUser);
             res.render('survey/send', hbsObject);
         });//======
