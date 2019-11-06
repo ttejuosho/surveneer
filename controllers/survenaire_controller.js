@@ -30,6 +30,12 @@ router.get('/newSurvey', (req, res) => {
     return res.render('survey/new', hbsObject);
 });
 
+router.get('/mycontacts', (req,res)=>{
+    const hbsObject = { loadJs: 'true' };
+    Object.assign(hbsObject, req.session.globalUser);
+    return res.render('user/contacts', hbsObject);
+});
+
 router.get('/contacts', (req, res) => {
     const hbsObject = { loadJs: 'true' };
     Object.assign(hbsObject, req.session.globalUser);

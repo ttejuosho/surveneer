@@ -1,0 +1,148 @@
+<div class="col-md-12">
+    <div class="card card-user">
+        <div class="card-header"><h3 class="title" style="display: contents;">My Contacts</h3> <button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon float-right addRecipient"><i class="tim-icons icon-simple-add"></i></button></div>
+        <div class="card-body">
+            <table id="recipientsTable" class="table">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>Email Address</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="recipientsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="recipientModal" class="modal animated fadeIn" tabindex="-1" role="dialog" aria-labelledby="recipientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="col-md-10">
+            <div class="modal-content">
+            <div class="card mb-0">
+            <div class="card-header"><h2 class="title mb-1">New Recipient</h2></div>
+            <div class="card-body">
+            <form action="/newRecipient" id="recipientForm" method="POST" novalidate>
+              <fieldset>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                    <div class="form-group">
+                      <label for="recipientName">First Name</label>
+                      <input type="text" class="form-control mb-1" id="recipientName" name="recipientName" value="" required>
+                      {{#if errors}}
+                          {{#each errors}}
+                              {{#ifEquals param "recipientName"}}
+                                  <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                              {{/ifEquals}}
+                          {{/each}}
+                      {{/if}}
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" class="form-control" id="recipientId" name="recipientId" value="{{recipientId}}" required>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="recipientEmail">Email Address</label>
+                      <input type="email" class="form-control mb-1" id="recipientEmail" name="recipientEmail" value="" required>
+                        {{#if errors}}
+                            {{#each errors}}
+                                {{#ifEquals param "recipientEmail"}} 
+                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                {{/ifEquals}}
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="recipientPhone">Phone Number</label>
+                      <input type="text" class="form-control mb-1" id="recipientPhone" name="recipientPhone" value="" required>
+                        {{#if errors}}
+                            {{#each errors}}
+                                {{#ifEquals param "recipientPhone"}} 
+                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                {{/ifEquals}}
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Save</button>
+                <button type="button" class="btn btn-sm btn-fill btn-primary float-right mr-2" onclick="resetModal()">Cancel</button>
+              </fieldset>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+      </div>
+</div>
+
+{{#ifEquals loadJs 'true'}}
+<script type="text/javascript">
+
+$('#addRecipient').on('click', ()=>{
+    console.log("Figure")
+    $('#recipientModal').modal({
+        backdrop: false,
+        show: true 
+    });
+});
+
+$(document).ready(function(){
+var recipientsTable;
+
+function renderRecipientsTable(data){
+        recipientsTable = $('#recipientsTable').DataTable({
+            dom: "<'row justify-content-between'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-4'f>>" +
+                 "<'row'<'col-sm-12'tr>>" +
+                 "<'row'<'col-sm-12 col-md-4'i><'col-sm-12 col-md-8'p>>",
+            data: data,
+            rowId: 'recipientId',
+            responsive: true,
+            columns:[
+                {
+                    data: 'recipientEmail',
+                    className: 'recipientEmail text-center'
+                },
+                {
+                    data: 'recipientName',
+                    className: 'recipientName text-center'
+                },
+                {
+                    data: 'recipientPhone',
+                    className: 'recipientPhone text-center'
+                },
+                {
+                    data: 'recipientId',
+                    className: 'text-center',
+                    render: function(data, type, row){
+                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editRecipient"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteRecipient" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
+                    }
+                }
+            ]
+        });
+    }
+
+    $.ajax({
+    url: '/api/getRecipients/'+ $('#userId').val(),
+    type: 'GET',
+    error: function() {
+        callback();
+    },
+    success: function(res) {         
+        renderRecipientsTable(res);
+        }
+    });
+
+});
+</script>
+{{/ifEquals}}
