@@ -17,21 +17,21 @@
     </div>
 </div>
 
-<div id="recipientModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="recipientModalLabel" aria-hidden="true">
+<div id="recipientModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="recipientModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="col-md-10">
             <div class="modal-content">
             <div class="card mb-0">
-            <div class="card-header"><h2 class="title mb-1">New Recipient</h2></div>
+            <div class="card-header"><h2 class="title mb-1">Add Recipient</h2></div>
             <div class="card-body">
-            <form action="/newRecipient" id="recipientForm" method="POST" novalidate>
+            <form action="/newRecipient/{{userId}}" id="recipientForm" method="POST" novalidate>
               <fieldset>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="messages text-danger font-weight-bold">{{msg}}</div>
                     <div class="form-group">
                       <label for="recipientName">Name</label>
-                      <input type="text" class="form-control mb-1" id="recipientName" name="recipientName" value="" required>
+                      <input type="text" class="form-control mb-1" id="recipientName" name="recipientName" placeholder="Surveneer User" value="" required>
                       {{#if errors}}
                           {{#each errors}}
                               {{#ifEquals param "recipientName"}}
@@ -47,7 +47,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="recipientEmail">Email Address</label>
-                      <input type="email" class="form-control mb-1" id="recipientEmail" name="recipientEmail" value="" required>
+                      <input type="email" class="form-control mb-1" id="recipientEmail" name="recipientEmail" placeholder="contact@surveneer.com" value="" required>
                         {{#if errors}}
                             {{#each errors}}
                                 {{#ifEquals param "recipientEmail"}} 
@@ -62,7 +62,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="recipientPhone">Phone Number</label>
-                      <input type="text" class="form-control mb-1" id="recipientPhone" name="recipientPhone" value="" required>
+                      <input type="text" class="form-control mb-1" id="recipientPhone" name="recipientPhone" placeholder="555-555-5555" value="" required>
                         {{#if errors}}
                             {{#each errors}}
                                 {{#ifEquals param "recipientPhone"}} 
@@ -73,7 +73,22 @@
                     </div>
                   </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label for="survey">Survey</label>
+                        <input type="text" class="form-control mb-1" id="survey" name="survey" placeholder="Select" autocomplete="off" value="">
+                        <small id="surveyHelp" class="form-text text-muted">Associate this contact with a survey</small>
+                            {{#if errors}}
+                                {{#each errors}}
+                                    {{#ifEquals param "survey"}}
+                                        <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                    {{/ifEquals}}
+                                {{/each}}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Save</button>
                 <button type="button" class="btn btn-sm btn-fill btn-primary float-right mr-2" onclick="resetModal()">Cancel</button>
               </fieldset>
@@ -84,16 +99,46 @@
       </div>
     </div>
       </div>
-</div>
+</div> {{!-- End Modal --}}
 
-{{#ifEquals loadJs 'true'}}
 <script type="text/javascript">
+const surveysSelectize;
+    function resetModal(){
+      $("#recipientModal").modal('hide');
+      $('.messages').text('');
+      $('#recipientName').val('');
+      $('#recipientEmail').val('');
+      $('#recipientPhone').val('');
+      $('#recipientId').val('');
+    }
 
 $('#addRecipient').on('click', ()=>{
+      fetch('api/getusersurveys/' + $('#userId').val())
+    .then((res)=>{ return res.json(); })
+    .then((data)=>{
+
+      surveysSelectize = $('#survey').selectize({
+        valueField: 'surveyId',
+        labelField: 'surveyName',
+        searchField: ['surveyName', 'surveyNotes'],
+        maxItems: 1,
+        create: false,
+        options: data,
+        render: function(item, escape){
+          return '<div data-value='+ escape(item.surveyId) +'>'+ escape(item.surveyName) +'</div>';
+        }
+      });
+
+// Show Modal
     $('#recipientModal').modal({
-        backdrop: false,
-        show: true 
+      backdrop: false,
+      show: true 
     });
+
+    });
+
+
+
 });
 
 $(document).ready(function(){
@@ -144,4 +189,3 @@ function renderRecipientsTable(data){
 
 });
 </script>
-{{/ifEquals}}
