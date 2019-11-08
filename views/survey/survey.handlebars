@@ -420,8 +420,7 @@ var openSurveyImageModal = (surveyId) => {
                             }]
                         }
                     }
-        }
-            )
+        }); // End Chart
         } 
         else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
         if ($('#q'+[i+1]+'YesResponseCount').val() == "" && $('#q'+[i+1]+'NoResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
@@ -475,7 +474,7 @@ var openSurveyImageModal = (surveyId) => {
         $('#numberOfRespondents').val(data.message);
         $('#ResponseSection').prepend(data.domData);
         for (var i = 0; i < charts.length; i++){
-            console.log(data.chartData[i]);
+            //console.log(data.chartData[i]);
             charts[i].data.datasets[0].data = data.chartData[i];
             charts[i].update();
         }
