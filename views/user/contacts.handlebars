@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div class="card card-user">
-        <div class="card-header"><h3 class="title" style="display: contents;">My Contacts</h3> <button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon float-right addRecipient"><i class="tim-icons icon-simple-add"></i></button></div>
+        <div class="card-header"><h3 class="title" style="display: contents;">My Contacts</h3> <button id="addRecipient" type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon float-right"><i class="tim-icons icon-simple-add"></i></button></div>
         <div class="card-body">
             <table id="recipientsTable" class="table">
                 <thead class=" text-primary">
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div id="recipientModal" class="modal animated fadeIn" tabindex="-1" role="dialog" aria-labelledby="recipientModalLabel" aria-hidden="true">
+<div id="recipientModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="recipientModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="col-md-10">
             <div class="modal-content">
@@ -30,7 +30,7 @@
                   <div class="col-md-12">
                     <div class="messages text-danger font-weight-bold">{{msg}}</div>
                     <div class="form-group">
-                      <label for="recipientName">First Name</label>
+                      <label for="recipientName">Name</label>
                       <input type="text" class="form-control mb-1" id="recipientName" name="recipientName" value="" required>
                       {{#if errors}}
                           {{#each errors}}
@@ -90,7 +90,6 @@
 <script type="text/javascript">
 
 $('#addRecipient').on('click', ()=>{
-    console.log("Figure")
     $('#recipientModal').modal({
         backdrop: false,
         show: true 
