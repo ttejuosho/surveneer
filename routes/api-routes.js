@@ -23,7 +23,7 @@ module.exports = (app) => {
   });
 
   // Get all Surveys by a User
-  app.get('/api/surveys/user/:userId', (req, res) => {
+  app.get('/api/getUserSurveys/:userId', (req, res) => {
     db.Survey.findAll({
       where: {
         UserUserId: req.params.userId,

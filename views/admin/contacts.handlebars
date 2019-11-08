@@ -1,8 +1,6 @@
 <div class="col-md-10">
     <div class="card card-user">
-        <div class="card-header">
-            SurvEnEEr Mailing List
-        </div>
+        <div class="card-header"><h2 class="title mb-1">SurvEnEEr Mailing List</h2></div>
         <div class="card-body">
             <table id="contactsTable" class="table">
                 <thead class=" text-primary">
@@ -178,51 +176,51 @@
 $(document).ready(function(){
 
 var contactsTable;
-    function renderContactsTable(data){
-        contactsTable = $('#contactsTable').DataTable({
-            dom: "<'row justify-content-between'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-4'f>>" +
-                 "<'row'<'col-sm-12'tr>>" +
-                 "<'row'<'col-sm-12 col-md-4'i><'col-sm-12 col-md-8'p>>",
-            data: data,
-            rowId: 'contactId',
-            responsive: true,
-            columns:[
-                {
-                    data: null,
-                    className: 'Names text-center',
-                    render: function(data, type, row, meta){
-                        return row.firstName +' '+ row.lastName ;
-                    }
-                },
-                {
-                    data: 'email',
-                    className: 'email text-center'
-                },
-                {
-                    data: 'active',
-                    className: 'active text-center'
-                },
-                {
-                    data: 'contactId',
-                    className: 'text-center',
-                    render: function(data, type, row){
-                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editContact"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteContact" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
-                    }
+function renderContactsTable(data){
+    contactsTable = $('#contactsTable').DataTable({
+        dom: "<'row justify-content-between'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-4'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-4'i><'col-sm-12 col-md-8'p>>",
+        data: data,
+        rowId: 'contactId',
+        responsive: true,
+        columns:[
+            {
+                data: null,
+                className: 'Names text-center',
+                render: function(data, type, row, meta){
+                    return row.firstName +' '+ row.lastName ;
                 }
-            ]
-        });
-    }
-
-    $.ajax({
-        url: '/api/contacts',
-        type: 'GET',
-        error: function() {
-            callback();
-        },
-        success: function(res) {           
-            renderContactsTable(res);
-        }
+            },
+            {
+                data: 'email',
+                className: 'email text-center'
+            },
+            {
+                data: 'active',
+                className: 'active text-center'
+            },
+            {
+                data: 'contactId',
+                className: 'text-center',
+                render: function(data, type, row){
+                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editContact"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteContact" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
+                }
+            }
+        ]
     });
+}
+
+$.ajax({
+    url: '/api/contacts',
+    type: 'GET',
+    error: function() {
+        callback();
+    },
+    success: function(res) {           
+        renderContactsTable(res);
+    }
+});
 
 });
 </script>

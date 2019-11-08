@@ -24,14 +24,14 @@
             <div class="card mb-0">
             <div class="card-header"><h2 class="title mb-1">Add Recipient</h2></div>
             <div class="card-body">
-            <form action="/newRecipient/{{userId}}" id="recipientForm" method="POST" novalidate>
+            <form action="/newRecipient/{{userId}}" id="recipientForm" method="POST">
               <fieldset>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="messages text-danger font-weight-bold">{{msg}}</div>
                     <div class="form-group">
                       <label for="recipientName">Name</label>
-                      <input type="text" class="form-control mb-1" id="recipientName" name="recipientName" placeholder="Surveneer User" value="" required>
+                      <input type="text" class="form-control form-control-success mb-1" id="recipientName" name="recipientName" placeholder="Surveneer User" value="" required>
                       {{#if errors}}
                           {{#each errors}}
                               {{#ifEquals param "recipientName"}}
@@ -77,7 +77,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                         <label for="survey">Survey</label>
-                        <input type="text" class="form-control mb-1" id="survey" name="survey" placeholder="Select" autocomplete="off" value="">
+                        <input type="text" class="" id="survey" name="survey" placeholder="Select" autocomplete="off" value="" required>
                         <small id="surveyHelp" class="form-text text-muted">Associate this contact with a survey</small>
                             {{#if errors}}
                                 {{#each errors}}
@@ -102,21 +102,20 @@
 </div> {{!-- End Modal --}}
 
 <script type="text/javascript">
-const surveysSelectize;
+let surveysSelectize;
     function resetModal(){
       $("#recipientModal").modal('hide');
       $('.messages').text('');
       $('#recipientName').val('');
       $('#recipientEmail').val('');
       $('#recipientPhone').val('');
-      $('#recipientId').val('');
+      surveysSelectize[0].selectize.clear();
     }
 
-$('#addRecipient').on('click', ()=>{
-      fetch('api/getusersurveys/' + $('#userId').val())
+function initSurveySelectize(){
+  fetch('api/getusersurveys/' + $('#userId').val())
     .then((res)=>{ return res.json(); })
     .then((data)=>{
-
       surveysSelectize = $('#survey').selectize({
         valueField: 'surveyId',
         labelField: 'surveyName',
@@ -128,20 +127,20 @@ $('#addRecipient').on('click', ()=>{
           return '<div data-value='+ escape(item.surveyId) +'>'+ escape(item.surveyName) +'</div>';
         }
       });
-
 // Show Modal
     $('#recipientModal').modal({
       backdrop: false,
       show: true 
     });
 
-    });
+  });
+}
 
-
-
+$('#addRecipient').on('click', ()=>{
+  initSurveySelectize();
 });
 
-$(document).ready(function(){
+//$(document).ready(function(){
 var recipientsTable;
 
 function renderRecipientsTable(data){
@@ -176,16 +175,49 @@ function renderRecipientsTable(data){
         });
     }
 
-    $.ajax({
-    url: '/api/getRecipients/'+ $('#userId').val(),
-    type: 'GET',
-    error: function() {
-        callback();
-    },
-    success: function(res) {         
-        renderRecipientsTable(res);
-        }
-    });
+  $.ajax({
+  url: '/api/getRecipients/'+ $('#userId').val(),
+  type: 'GET',
+  error: function() {
+      callback();
+  },
+  success: function(res) {         
+      renderRecipientsTable(res);
+      }
+  });
 
+    $('#recipientsTable tbody').on('click', '.editRecipient', function (){
+        var $row = $(this).closest('tr');
+        var data =  $('#recipientsTable').DataTable().row($row).data();
+        $('#recipientName').val(data.recipientName);
+        $('#recipientEmail').val(data.recipientEmail);
+        $('#recipientPhone').val(data.recipientPhone);
+        initSurveySelectize();
+        
+        $('#recipientModal').modal({
+            backdrop: false,
+            show: true 
+        });
+        $('#recipientModal').on('shown.bs.modal', function () {
+          $('#survey')[0].selectize.setValue(data.SurveySurveyId);
+        })
+        
+    });
+//});
+</script>
+
+{{#if successMessage}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Contact Saved');
+        });
+    </script>
+{{/if}}
+
+{{#if displayModal}}
+<script type="text/javascript">
+$(function () { 
+  survenaire.showNotification('danger', 'top', 'center', 'Required fields are missing, please try again');
 });
 </script>
+{{/if}}
