@@ -182,7 +182,7 @@ function InitRecipientsSelectize(){
 }
 
 $('#sendSurveyForm').on('submit',()=>{
-    $('#sendSurveyBtn').html('<i class="tim-icons icon-spaceship mr-1" style="vertical-align: baseline;"></i> Sending...');
+    $('#sendSurveyBtn').prop('disabled', true).css('opacity', 1).html('<i class="tim-icons icon-spaceship mr-1" style="vertical-align: baseline;"></i> Sending...');
 });
 
 InitRecipientsSelectize();
