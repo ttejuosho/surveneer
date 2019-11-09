@@ -78,7 +78,7 @@ app.use(methodOverride('_method'));
 app.use(cookieParser());
 
 // For Passport
-app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: false, cookie: {} })); // session secret
+app.use(session({ secret: 'alakori somebodi', resave: true, saveUninitialized: false, cookie: {} })); // session secret
 app.use(passport.initialize());
 passport.use(strategy);
 app.use(passport.session()); // persistent login sessions

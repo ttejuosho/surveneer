@@ -959,9 +959,11 @@ module.exports = (app) => {
         db.Recipient.findAll({
             where: {
                 UserUserId: req.params.userId
-            }
+            },
+            include: [
+                { model: db.Survey, as: 'Survey', attributes: ['surveyName'] },
+            ]
         }).then((dbRecipients) => {
-            console.log(dbRecipients);
             return res.json(dbRecipients);
         });
     });

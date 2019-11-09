@@ -1,4 +1,4 @@
-<div class="col-md-8">
+<div class="col-md-10">
     
     <div class="modal fade" id="confirmDeleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteQuestionModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -239,7 +239,7 @@
                         <input type="hidden" name="YesResponseCount" id="q{{counter @index}}YesResponseCount" value="{{YesResponseCount}}">
                         <input type="hidden" name="NoResponseCount" id="q{{counter @index}}NoResponseCount" value="{{NoResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}YesNoResponseChart"></canvas>
+                            <canvas id="q{{counter @index}}YesNoResponseChart" width="400" height="60"></canvas>
                         </div>
                     {{/ifEquals}}
                     {{#ifEquals optionType "TrueFalse"}}
@@ -436,30 +436,30 @@ var openSurveyImageModal = (surveyId) => {
                 { 
                     labels: ['Yes', 'No'], 
                     datasets: [{ 
-                        label: 'Responses Chart', 
+                        label: 'Response Chart', 
                         data: q1Values,
                         backgroundColor: ['#1f8ef1', '#2dce89']
                     }],
                 },
-                    options: {
-                        responsive: true,
-                        tooltips: {
-                            bodySpacing: 4,
-                            mode: "nearest",
-                            intersect: 0,
-                            position: "nearest",
-                            xPadding: 10,
-                            yPadding: 10,
-                            caretPadding: 10
-                        },
-                        scales: {
-                        xAxes: [{
-                            ticks: {
-                            beginAtZero: true
-                            }
-                        }]
-                        }
-                    }
+        options: {
+            responsive: true,
+            tooltips: {
+                bodySpacing: 4,
+                mode: "nearest",
+                intersect: 0,
+                position: "nearest",
+                xPadding: 10,
+                yPadding: 10,
+                caretPadding: 10
+            },
+            scales: {
+            xAxes: [{
+                ticks: {
+                beginAtZero: true
+                }
+            }]
+            }
+        }
         })
 }
     });

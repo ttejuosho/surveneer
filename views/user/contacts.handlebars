@@ -22,7 +22,7 @@
           <div class="col-md-10">
             <div class="modal-content">
             <div class="card mb-0">
-            <div class="card-header"><h2 class="title mb-1">Add Recipient</h2></div>
+            <div class="card-header"><h2 id="recipientModalTitle" class="title mb-1">Add Recipient</h2></div>
             <div class="card-body">
             <form action="/newRecipient/{{userId}}" id="recipientForm" method="POST">
               <fieldset>
@@ -102,7 +102,9 @@
 </div> {{!-- End Modal --}}
 
 <script type="text/javascript">
-let surveysSelectize;
+var surveysSelectize;
+var recipientsTable;
+
     function resetModal(){
       $('#survey')[0].selectize.clear();
       $('.messages').text('');
@@ -112,7 +114,7 @@ let surveysSelectize;
       $("#recipientModal").modal('hide');
     }
 
-function initSurveySelectize(){
+// Fetch  Surveys for User and initialize Selectize
   fetch('api/getusersurveys/' + $('#userId').val())
     .then((res)=>{ return res.json(); })
     .then((data)=>{
@@ -127,53 +129,59 @@ function initSurveySelectize(){
           return '<div data-value='+ escape(item.surveyId) +'>'+ escape(item.surveyName) +'</div>';
         }
       });
-// Show Modal
+  });
+
+
+$('#addRecipient').on('click', ()=>{
+  // Set Modal Title
+  $('#recipientModalTitle').text('Add Recipient');
+
+  // Show Modal
     $('#recipientModal').modal({
       backdrop: false,
       show: true 
     });
 
-  });
-}
-
-$('#addRecipient').on('click', ()=>{
-  initSurveySelectize();
+  // Clear Selectize
+    $('#recipientModal').on('shown.bs.modal', function () {
+      $('#survey')[0].selectize.clear();
+    });
 });
 
-//$(document).ready(function(){
-var recipientsTable;
-
 function renderRecipientsTable(data){
-        recipientsTable = $('#recipientsTable').DataTable({
-            dom: "<'row justify-content-between'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-4'f>>" +
-                 "<'row'<'col-sm-12'tr>>" +
-                 "<'row'<'col-sm-12 col-md-4'i><'col-sm-12 col-md-8'p>>",
-            data: data,
-            rowId: 'recipientId',
-            responsive: true,
-            columns:[
-                {
-                    data: 'recipientEmail',
-                    className: 'recipientEmail text-center'
-                },
-                {
-                    data: 'recipientName',
-                    className: 'recipientName text-center'
-                },
-                {
-                    data: 'recipientPhone',
-                    className: 'recipientPhone text-center'
-                },
-                {
-                    data: 'recipientId',
-                    className: 'text-center',
-                    render: function(data, type, row){
-                        return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editRecipient"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteRecipient" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
-                    }
+    recipientsTable = $('#recipientsTable').DataTable({
+        dom: "<'row justify-content-between'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-4'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-12 col-md-4'i><'col-sm-12 col-md-8'p>>",
+        data: data,
+        rowId: 'recipientId',
+        responsive: true,
+        //srowGroup: {
+                      //dataSrc: 'Survey.surveyName'
+                  //},
+        columns:[
+            {
+                data: 'recipientEmail',
+                className: 'recipientEmail text-center'
+            },
+            {
+                data: 'recipientName',
+                className: 'recipientName text-center'
+            },
+            {
+                data: 'recipientPhone',
+                className: 'recipientPhone text-center'
+            },
+            {
+                data: 'recipientId',
+                className: 'text-center',
+                render: function(data, type, row){
+                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editRecipient"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteRecipient" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
                 }
-            ]
-        });
-    }
+            }
+        ]
+    });
+}
 
   $.ajax({
   url: '/api/getRecipients/'+ $('#userId').val(),
@@ -192,18 +200,19 @@ function renderRecipientsTable(data){
         $('#recipientName').val(data.recipientName);
         $('#recipientEmail').val(data.recipientEmail);
         $('#recipientPhone').val(data.recipientPhone);
-        initSurveySelectize();
         
         $('#recipientModal').modal({
             backdrop: false,
             show: true 
         });
+        
         $('#recipientModal').on('shown.bs.modal', function () {
           $('#survey')[0].selectize.setValue(data.SurveySurveyId);
-        })
-        
+        });
+
+        $('#recipientModalTitle').text(data.recipientEmail);
     });
-//});
+
 </script>
 
 {{#if successMessage}}
