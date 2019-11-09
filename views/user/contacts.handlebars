@@ -104,12 +104,12 @@
 <script type="text/javascript">
 let surveysSelectize;
     function resetModal(){
-      $("#recipientModal").modal('hide');
+      $('#survey')[0].selectize.clear();
       $('.messages').text('');
       $('#recipientName').val('');
       $('#recipientEmail').val('');
       $('#recipientPhone').val('');
-      surveysSelectize[0].selectize.clear();
+      $("#recipientModal").modal('hide');
     }
 
 function initSurveySelectize(){
