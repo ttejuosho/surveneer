@@ -239,14 +239,14 @@
                         <input type="hidden" name="YesResponseCount" id="q{{counter @index}}YesResponseCount" value="{{YesResponseCount}}">
                         <input type="hidden" name="NoResponseCount" id="q{{counter @index}}NoResponseCount" value="{{NoResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}YesNoResponseChart" width="400" height="60"></canvas>
+                            <canvas id="q{{counter @index}}YesNoResponseChart" width="400" height="120"></canvas>
                         </div>
                     {{/ifEquals}}
                     {{#ifEquals optionType "TrueFalse"}}
                         <input type="hidden" name="TrueResponseCount" id="q{{counter @index}}TrueResponseCount" value="{{TrueResponseCount}}">
                         <input type="hidden" name="FalseResponseCount" id="q{{counter @index}}FalseResponseCount" value="{{FalseResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}TrueFalseResponseChart" width="400" height="60"></canvas>
+                            <canvas id="q{{counter @index}}TrueFalseResponseChart" width="400" height="120"></canvas>
                         </div>
                     {{/ifEquals}}
                 </div>
