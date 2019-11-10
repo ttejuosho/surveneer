@@ -5,10 +5,11 @@
             <table id="recipientsTable" class="table">
                 <thead class=" text-primary">
                     <tr>
-                        <th>Email Address</th>
-                        <th>Name</th>
-                        <th>Phone Number</th>
-                        <th class="text-right">Actions</th>
+                      <th>Id</th>
+                      <th>Email Address</th>
+                      <th>Name</th>
+                      <th>Phone Number</th>
+                      <th class="text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="recipientsTableBody"></tbody>
@@ -24,7 +25,7 @@
             <div class="card mb-0">
             <div class="card-header"><h2 id="recipientModalTitle" class="title mb-1">Add Recipient</h2></div>
             <div class="card-body">
-            <form action="/newRecipient/{{userId}}" id="recipientForm" method="POST">
+            <form id="recipientForm" action="/updateRecipient/{{userId}}" method="POST">
               <fieldset>
                 <div class="row">
                   <div class="col-md-12">
@@ -76,12 +77,12 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                        <label for="survey">Survey</label>
-                        <input type="text" class="" id="survey" name="survey" placeholder="Select" autocomplete="off" value="" required>
+                        <label for="surveyId">Survey</label>
+                        <input type="text" class="" id="surveyId" name="surveyId" placeholder="Select" autocomplete="off" value="" required>
                         <small id="surveyHelp" class="form-text text-muted">Associate this contact with a survey</small>
                             {{#if errors}}
                                 {{#each errors}}
-                                    {{#ifEquals param "survey"}}
+                                    {{#ifEquals param "surveyId"}}
                                         <div class="messages text-danger font-weight-bold">{{msg}}</div>
                                     {{/ifEquals}}
                                 {{/each}}
@@ -89,7 +90,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Save</button>
+                <button id="recipientSubmitBtn" type="submit" class="btn btn-sm btn-fill btn-primary float-right">Save</button>
                 <button type="button" class="btn btn-sm btn-fill btn-primary float-right mr-2" onclick="resetModal()">Cancel</button>
               </fieldset>
             </form>
@@ -106,19 +107,28 @@ var surveysSelectize;
 var recipientsTable;
 
     function resetModal(){
-      $('#survey')[0].selectize.clear();
+      $('#surveyId')[0].selectize.clear();
       $('.messages').text('');
+      $('#recipientId').val('');
       $('#recipientName').val('');
       $('#recipientEmail').val('');
       $('#recipientPhone').val('');
       $("#recipientModal").modal('hide');
+      $('#recipientSubmitBtn').removeClass('btn-danger');
+      $('#recipientModalTitle').removeClass('text-danger');
+      $('#recipientName').attr('disabled', false);
+      $('#recipientEmail').attr('disabled', false);
+      $('#recipientPhone').attr('disabled', false);
+      surveysSelectize[0].selectize.enable();
+      $('#surveyHelp').text('Associate this contact with a survey');
+      $('#recipientForm').attr('method', 'POST');
     }
 
 // Fetch  Surveys for User and initialize Selectize
-  fetch('api/getusersurveys/' + $('#userId').val())
+  fetch('/api/getusersurveys/' + $('#userId').val())
     .then((res)=>{ return res.json(); })
     .then((data)=>{
-      surveysSelectize = $('#survey').selectize({
+      surveysSelectize = $('#surveyId').selectize({
         valueField: 'surveyId',
         labelField: 'surveyName',
         searchField: ['surveyName', 'surveyNotes'],
@@ -135,7 +145,8 @@ var recipientsTable;
 $('#addRecipient').on('click', ()=>{
   // Set Modal Title
   $('#recipientModalTitle').text('Add Recipient');
-
+  $('#recipientSubmitBtn').text('Save').removeClass('btn-danger');
+  $('#recipientForm').attr('action', '/newRecipient/' + $('#userId').val());
   // Show Modal
     $('#recipientModal').modal({
       backdrop: false,
@@ -144,7 +155,7 @@ $('#addRecipient').on('click', ()=>{
 
   // Clear Selectize
     $('#recipientModal').on('shown.bs.modal', function () {
-      $('#survey')[0].selectize.clear();
+      $('#surveyId')[0].selectize.clear();
     });
 });
 
@@ -156,10 +167,17 @@ function renderRecipientsTable(data){
         data: data,
         rowId: 'recipientId',
         responsive: true,
-        //srowGroup: {
-                      //dataSrc: 'Survey.surveyName'
+        //rowGroup: {
+            //startRender: function(rows, group){ return $('<tr/>').append('<td colspan="7">'+ group +'</td>'); },
+                    //dataSrc: 'Survey.surveyName'
                   //},
         columns:[
+            {
+                data: 'recipientId',
+                className: 'recipientId',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'recipientEmail',
                 className: 'recipientEmail text-center'
@@ -176,7 +194,7 @@ function renderRecipientsTable(data){
                 data: 'recipientId',
                 className: 'text-center',
                 render: function(data, type, row){
-                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editRecipient"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteRecipient" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
+                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editRecipient"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteRecipient" data-id="'+ data +'"><i class="tim-icons icon-simple-remove"></i></button>';
                 }
             }
         ]
@@ -189,28 +207,55 @@ function renderRecipientsTable(data){
   error: function() {
       callback();
   },
-  success: function(res) {         
+  success: function(res) {
+    //res.sort(function(a,b) { if (a.Survey.surveyName > b.Survey.surveyName){ return 1 } else { return -1 } });         
       renderRecipientsTable(res);
       }
   });
 
-    $('#recipientsTable tbody').on('click', '.editRecipient', function (){
-        var $row = $(this).closest('tr');
-        var data =  $('#recipientsTable').DataTable().row($row).data();
-        $('#recipientName').val(data.recipientName);
-        $('#recipientEmail').val(data.recipientEmail);
-        $('#recipientPhone').val(data.recipientPhone);
-        
-        $('#recipientModal').modal({
-            backdrop: false,
-            show: true 
-        });
-        
-        $('#recipientModal').on('shown.bs.modal', function () {
-          $('#survey')[0].selectize.setValue(data.SurveySurveyId);
-        });
+function prepModal(row, action){
+  var $row = row.closest('tr');
+  var data =  $('#recipientsTable').DataTable().row($row).data();
+  $('#recipientName').val(data.recipientName);
+  $('#recipientEmail').val(data.recipientEmail);
+  $('#recipientPhone').val(data.recipientPhone);
+  $('#recipientId').val(data.recipientId);
+  $('#recipientModal').modal({
+      backdrop: false,
+      show: true 
+  });
+  
+  $('#recipientModal').on('shown.bs.modal', function () {
+    $('#surveyId')[0].selectize.setValue(data.SurveySurveyId);
+  });
 
-        $('#recipientModalTitle').text(data.recipientEmail);
+  $('#recipientModalTitle').text(data.recipientEmail);
+
+  if (action == 'edit'){
+    $('#recipientSubmitBtn').text('Update').removeClass('btn-danger');
+    $('#recipientForm').attr('action', '/updateRecipient/' + $('#recipientId').val());
+    //$('#surveyHelp').text('Associate this contact with a survey');
+  }
+
+  if (action == 'delete'){
+    $('#recipientName').attr('disabled', true);
+    $('#recipientEmail').attr('disabled', true);
+    $('#recipientPhone').attr('disabled', true);
+    surveysSelectize[0].selectize.disable();
+    $('#recipientSubmitBtn').text('Delete').addClass('btn-danger');
+    $('#recipientModalTitle').addClass('text-danger');
+    $('#surveyHelp').text('');
+    $('#recipientForm').attr('action', '/deleteRecipient/' + $('#recipientId').val()).attr('method', 'GET');
+    //$('#recipientForm').attr('method', "GET");
+  }
+
+}
+    $('#recipientsTable tbody').on('click', '.editRecipient', function (){
+        prepModal($(this), 'edit');
+    });
+
+    $('#recipientsTable tbody').on('click', '.deleteRecipient', function (){
+        prepModal($(this), 'delete');       
     });
 
 </script>
@@ -223,10 +268,26 @@ function renderRecipientsTable(data){
     </script>
 {{/if}}
 
+{{#if updateSuccess}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Contact Info Updated');
+        });
+    </script>
+{{/if}}
+
+{{#if deleteSuccess}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Contact deleted');
+        });
+    </script>
+{{/if}}
+
 {{#if displayModal}}
-<script type="text/javascript">
-$(function () { 
-  survenaire.showNotification('danger', 'top', 'center', 'Required fields are missing, please try again');
-});
-</script>
+  <script type="text/javascript">
+    $(function () { 
+      survenaire.showNotification('danger', 'top', 'center', 'Required fields are missing, please try again');
+    });
+  </script>
 {{/if}}
