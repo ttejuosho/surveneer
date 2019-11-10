@@ -1,4 +1,4 @@
-<div class="col-md-10">
+<div class="col-md-11">
     
     <div class="modal fade" id="confirmDeleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteQuestionModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -246,7 +246,7 @@
                         <input type="hidden" name="TrueResponseCount" id="q{{counter @index}}TrueResponseCount" value="{{TrueResponseCount}}">
                         <input type="hidden" name="FalseResponseCount" id="q{{counter @index}}FalseResponseCount" value="{{FalseResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}TrueFalseResponseChart"></canvas>
+                            <canvas id="q{{counter @index}}TrueFalseResponseChart" width="400" height="60"></canvas>
                         </div>
                     {{/ifEquals}}
                 </div>
@@ -406,8 +406,7 @@ var openSurveyImageModal = (surveyId) => {
                 datasets: [{ 
                     label: 'Responses Chart', 
                     data: q1Values,
-                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'], 
-                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'], 
+                    backgroundColor: ['#1f8ef1', '#2dce89'],
                     borderWidth: 1 
                 }],
             },

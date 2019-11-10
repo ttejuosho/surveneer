@@ -46,6 +46,7 @@
               <i class="tim-icons icon-image-02"></i>
             </div>
             <input type="file" class="custom-file-input" id="profileImage" name="profileImage" aria-describedby="inputGroupFileAddon01">
+            <small id="fileName" class="mt-0 form-text"></small>
             <div class="">
               <label class="custom-file-label" for="inputGroupFile01" style="padding-top: 1em; padding-left: 4.8em; font-size: 0.7rem;">Choose Image</label>
             </div>
@@ -66,6 +67,8 @@
   </div>
 </div>
 
-{{!-- <script>
-$('#signupForm').validate();
-</script> --}}
+<script type="text/javascript">
+$('#profileImage').change(()=>{
+    $('#fileName').text('File Name: ' + $('#profileImage').val().replace(/^.*[\\\/]/, ''));
+})
+</script>

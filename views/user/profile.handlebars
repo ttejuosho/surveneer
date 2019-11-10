@@ -1,8 +1,6 @@
 <div class="col-md-8">
     <div class="card card-user">
-        <div class="card-header">
-            User Profile
-        </div>
+        <div class="card-header"><h2 class="mb-1">User Profile</h2></div>
         <div class="card-body">
             <form id="userProfileForm" class="form" action="/userUpdate" method="POST" enctype="multipart/form-data">
                 <div class="messages text-danger font-weight-bold">{{error}}</div>
@@ -35,6 +33,7 @@
                             <label class="custom-file-label" for="inputGroupFile01">Choose Image</label>
                         </div>
                             <input type="file" class="custom-file-input" id="profileImage" name="profileImage" aria-describedby="inputGroupFileAddon01">
+                            <small id="fileName" class="mt-0 form-text"></small>
                     </div>
 
                     <div class="col-md-12">
@@ -97,3 +96,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+$('#profileImage').change(()=>{
+    $('#fileName').text('File Name: ' + $('#profileImage').val().replace(/^.*[\\\/]/, ''));
+})
+</script>
