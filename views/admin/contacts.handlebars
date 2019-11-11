@@ -3,12 +3,12 @@
         <div class="card-header"><h2 class="mb-1">SurvEnEEr Mailing List</h2></div>
         <div class="card-body">
             <table id="contactsTable" class="table">
-                <thead class=" text-primary">
+                <thead class="bg-primary">
                     <tr>
                         <th>Name</th>
                         <th>Email Address</th>
                         <th>Active</th>
-                        <th class="text-right">Actions</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody class="contactsTableBody"></tbody>
@@ -169,6 +169,7 @@
         $('.deleteName').text(data.firstName.toUpperCase() + ' ' + data.lastName.toUpperCase());
         $('#modalDeleteBtn').attr('href', '/deleteContact/' + data.contactId );
     });
+
 </script>
 
 {{#ifEquals loadJs 'true'}}

@@ -24,18 +24,52 @@ router.get('/', (req, res) => {
     res.redirect('/index');
 });
 
+router.get('/survey/v', (req,res)=>{
+    db.Response.findAll({
+        where: {
+            SurveySurveyId: req.params.SurveySurveyId,
+        },
+        include: [
+            { model: db.Question, as: "Question", attributes: [ "questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
+            { model: db.Respondent, as: "Respondent", attributes: [ "respondentId", "respondentName", "respondentEmail", "respondentPhone"]},
+            { model: db.Survey, as: "Survey", attributes: [ "surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions" ]}
+    ]
+    }).then(function(responses) {
+        //res.json(responses);
+        const hbsObject = {responses: responses};
+        Object.assign(hbsObject, req.session.globalUser);
+        console.log(hbsObject);
+        return res.render('response/view', hbsObject);
+    }).catch(function(err) {
+        res.render('error', err);
+    });
+    
+});
+
+router.get('/index', (req, res) => {
+    return res.render('index', req.session.globalUser);
+});
+
+router.get('/analytics', (req, res) => {
+    const hbsObject = {};
+    Object.assign(hbsObject, req.session.globalUser);
+    return res.render('survey/analytics', hbsObject);
+});
+
 router.get('/newSurvey', (req, res) => {
     const hbsObject = {};
     Object.assign(hbsObject, req.session.globalUser);
     return res.render('survey/new', hbsObject);
 });
 
+// List of Users Recipients
 router.get('/mycontacts', (req,res)=>{
     const hbsObject = { loadJs: 'true' };
     Object.assign(hbsObject, req.session.globalUser);
     return res.render('user/contacts', hbsObject);
 });
 
+// List of Users on SurvEnEEr
 router.get('/contacts', (req, res) => {
     const hbsObject = { loadJs: 'true' };
     Object.assign(hbsObject, req.session.globalUser);
@@ -92,16 +126,6 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Plea
             }
         });
     }
-});
-
-router.get('/index', (req, res) => {
-    return res.render('index', req.session.globalUser);
-});
-
-router.get('/analytics', (req, res) => {
-    const hbsObject = {};
-    Object.assign(hbsObject, req.session.globalUser);
-    return res.render('survey/analytics', hbsObject);
 });
 
 // Post Route to update Survey Information
@@ -241,7 +265,8 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
         });
 });
 
-router.post('/newQuestion/:surveyId', [
+router.post('/newQuestion/:surveyId', 
+[
     check('question').not().isEmpty().withMessage('Please enter a question'),
     check('optionType').not().isEmpty().withMessage('Please choose an option'),
 ], (req, res) => {
@@ -534,6 +559,11 @@ router.get('/responses/:SurveySurveyId/view', (req, res) => {
         where: {
             SurveySurveyId: req.params.SurveySurveyId,
         },
+        include: [
+            { model: db.Question, as: "Question", attributes: [ "questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
+            { model: db.Respondent, as: "Respondent", attributes: [ "respondentId", "respondentName", "respondentEmail", "respondentPhone"]},
+            { model: db.Survey, as: "Survey", attributes: [ "surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions" ]}
+    ]
     }).then(function(responses) {
         res.json(responses);
     }).catch(function(err) {
@@ -685,7 +715,6 @@ router.get('/sendSurvey/:surveyId', (req, res) => {
     }).catch((err) => {
         res.render('error', err);
     });
-
 });
 
 router.post('/emailSurvey/:surveyId', [
@@ -897,5 +926,5 @@ router.post('/emailSurvey/:surveyId', [
             }
         });
     });
-    
+
 module.exports = router;
