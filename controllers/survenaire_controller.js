@@ -24,10 +24,10 @@ router.get('/', (req, res) => {
     res.redirect('/index');
 });
 
-router.get('/survey/v', (req,res)=>{
+router.get('/survey/v/:surveyId', (req,res)=>{
     db.Response.findAll({
         where: {
-            SurveySurveyId: req.params.SurveySurveyId,
+            SurveySurveyId: req.params.surveyId,
         },
         include: [
             { model: db.Question, as: "Question", attributes: [ "questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
@@ -554,10 +554,10 @@ router.post('/responses/:userId', (req, res) => {
     });
 });
 
-router.get('/responses/:SurveySurveyId/view', (req, res) => {
+router.get('/responses/:surveyId/view', (req, res) => {
     db.Response.findAll({
         where: {
-            SurveySurveyId: req.params.SurveySurveyId,
+            SurveySurveyId: req.params.surveyId,
         },
         include: [
             { model: db.Question, as: "Question", attributes: [ "questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },

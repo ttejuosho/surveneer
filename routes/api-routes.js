@@ -245,7 +245,7 @@ module.exports = (app) => {
             // include: [{ association: 'Respondent' }]
             include: [{ model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone'] }, { model: db.Question, as: 'Question', attributes: ['question'] }],
         }).then((dbRespondent) => {
-            dbRespondent.push(d);
+            //dbRespondent.push(d);
             res.json(dbRespondent);
         });
     });

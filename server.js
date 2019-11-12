@@ -21,12 +21,15 @@ const flash = require('connect-flash');
 const nodemailer = require('nodemailer');
 const io = require('socket.io')(http);
 const exphbs = require('express-handlebars');
+const helmet = require('helmet');
+
 //const winston = require('./config/winston/winston');
 // eslint-disable-next-line new-cap
 require('dotenv').config();
 
 // cors setup
 app.use(cors());
+app.use(helmet());
 app.options('*', cors());
 
 const strategy = new Auth0Strategy({

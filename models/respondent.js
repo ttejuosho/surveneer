@@ -25,7 +25,25 @@ module.exports = (sequelize, DataTypes) => {
               allowNull: false,
               onDelete: 'cascade',
             },
-          });
+        });
+        Respondent.hasOne(models.Response, {
+            foreignKey: {
+              allowNull: false,
+              onDelete: 'cascade',
+            },
+        });
+        Respondent.belongsTo(models.Survey, {
+            foreignKey: {
+              allowNull: false,
+              onDelete: 'cascade',
+            },
+        });
+        Respondent.hasMany(models.Question, {
+            foreignKey: {
+              allowNull: false,
+              onDelete: 'cascade',
+            },
+        });
     }
     return Respondent;
 }

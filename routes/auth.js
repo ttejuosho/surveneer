@@ -194,7 +194,6 @@ module.exports = function(upload, app, passport) {
   app.get('/index', isLoggedIn);
   app.get('/newQuestion', isLoggedIn);
   app.get('/contacts', isLoggedIn);
-
   // route for logging out
   app.get('/logout', authController.logout);
 
