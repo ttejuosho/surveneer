@@ -194,7 +194,7 @@ function renderRecipientsTable(data){
                 data: 'recipientId',
                 className: 'text-center',
                 render: function(data, type, row){
-                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editRecipient"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteRecipient" data-id="'+ data +'"><i class="tim-icons icon-simple-remove"></i></button>';
+                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editRecipient" data-id="'+ data +'"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteRecipient" data-id="'+ data +'"><i class="tim-icons icon-simple-remove"></i></button>';
                 }
             }
         ]
@@ -213,9 +213,8 @@ function renderRecipientsTable(data){
       }
   });
 
-function prepModal(row, action){
-  var $row = row.closest('tr');
-  var data =  $('#recipientsTable').DataTable().row($row).data();
+function prepModal(rowId, action){
+  var data = recipientsTable.row( $('#' + rowId) ).data();
   $('#recipientName').val(data.recipientName);
   $('#recipientEmail').val(data.recipientEmail);
   $('#recipientPhone').val(data.recipientPhone);
@@ -251,11 +250,13 @@ function prepModal(row, action){
 
 }
     $('#recipientsTable tbody').on('click', '.editRecipient', function (){
-        prepModal($(this), 'edit');
+      var rowId = $(this).data('id');
+        prepModal(rowId, 'edit');
     });
 
     $('#recipientsTable tbody').on('click', '.deleteRecipient', function (){
-        prepModal($(this), 'delete');       
+        var rowId = $(this).data('id');
+        prepModal(rowId, 'delete');       
     });
 
 </script>
