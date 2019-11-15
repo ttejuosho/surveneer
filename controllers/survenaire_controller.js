@@ -721,7 +721,7 @@ router.post('/emailSurvey/:surveyId', [
         check('email').not().isEmpty().escape().withMessage('Please enter an email address'),
         check('subject').not().isEmpty().escape().withMessage('Please enter a subject for your email'),
         check('message').not().isEmpty().escape().withMessage('Please enter a message'),
-        check('surveyId').not().isEmpty().escape().withMessage('Survey Id is missing, Please refresh this page annd try again'),
+        check('surveyId').not().isEmpty().escape().withMessage('Survey Id is missing, Please refresh this page and try again'),
     ],
     (req, res) => {
         const errors = validationResult(req);

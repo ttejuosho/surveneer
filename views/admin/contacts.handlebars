@@ -122,61 +122,20 @@
 
 </div>
 
+
+
 <script type="text/javascript">
-
-    function resetModal(){
-      $("#updateContactModal").modal('hide');
-      $('.messages').text('');
-      $('#firstName').val('');
-      $('#lastName').val('');
-      $('#email').val('');
-      $('#contactId').val('');
-    }
-
-    $('#updateContactForm').on('submit', ()=>{
-      $("#updateContactModal").modal('hide');
-      survenaire.showNotification('info', 'top', 'right', 'Contact Info Updated !!');
-    });
-
-    $('#modalDeleteBtn').click(function(){
-        $('#confirmDeleteContactModal').modal('hide');
-        survenaire.showNotification('info', 'top', 'right', 'Contact Deleted !!');
-        event.stopImmediatePropagation();
-    });
-
-    $('#contactsTable tbody').on('click', '.editContact', function (){
-        var $row = $(this).closest('tr');
-        var data =  $('#contactsTable').DataTable().row($row).data();
-        $('#firstName').val(data.firstName);
-        $('#lastName').val(data.lastName);
-        $('#email').val(data.email);
-        $('#contactId').val(data.contactId);
-        if(data.active){ $('input.activeTrue').prop('checked', true); } 
-        else { $('input.activeFalse').prop('checked', true); }
-        $('#updateContactModal').modal({
-            backdrop: false,
-            show: true 
-        });
-    });
-    
-    $('#contactsTable tbody').on('click', '.deleteContact', function (){
-        $('#confirmDeleteContactModal').modal({
-            backdrop: false,
-            show: true
-        });
-        var drow = $(this).closest('tr');
-        var data = $('#contactsTable').DataTable().row(drow).data();
-        $('.deleteName').text(data.firstName.toUpperCase() + ' ' + data.lastName.toUpperCase());
-        $('#modalDeleteBtn').attr('href', '/deleteContact/' + data.contactId );
-    });
-
-</script>
-
-{{#ifEquals loadJs 'true'}}
-<script type="text/javascript">
-$(document).ready(function(){
 
 var contactsTable;
+function resetModal(){
+    $("#updateContactModal").modal('hide');
+    $('.messages').text('');
+    $('#firstName').val('');
+    $('#lastName').val('');
+    $('#email').val('');
+    $('#contactId').val('');
+}
+
 function renderContactsTable(data){
     contactsTable = $('#contactsTable').DataTable({
         dom: "<'row justify-content-between'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-4'f>>" +
@@ -205,7 +164,7 @@ function renderContactsTable(data){
                 data: 'contactId',
                 className: 'text-center',
                 render: function(data, type, row){
-                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editContact"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteContact" data-id="'+ data +'" onclick="openDeleteContactModal(`'+ data +'`)"><i class="tim-icons icon-simple-remove"></i></button>';
+                    return '<button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon mr-2 editContact" data-id="'+ data +'"><i class="tim-icons icon-pencil"></i></button><button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon deleteContact" data-id="'+ data +'"><i class="tim-icons icon-simple-remove"></i></button>';
                 }
             }
         ]
@@ -223,6 +182,46 @@ $.ajax({
     }
 });
 
-});
+    $('#updateContactForm').on('submit', ()=>{
+      $("#updateContactModal").modal('hide');
+      survenaire.showNotification('info', 'top', 'right', 'Contact Info Updated !!');
+    });
+
+    $('#modalDeleteBtn').click(function(){
+        $('#confirmDeleteContactModal').modal('hide');
+        survenaire.showNotification('info', 'top', 'right', 'Contact Deleted !!');
+        event.stopImmediatePropagation();
+    });
+
+    $('#contactsTable tbody').on('click', '.editContact', function (){
+        //var $row = $(this).closest('tr');
+        var rowId = $(this).data('id');
+        var data =  contactsTable.row($('#' + rowId)).data();
+        console.log(rowId);
+        $('#firstName').val(data.firstName);
+        $('#lastName').val(data.lastName);
+        $('#email').val(data.email);
+        $('#contactId').val(data.contactId);
+        if(data.active){ $('input.activeTrue').prop('checked', true); } 
+        else { $('input.activeFalse').prop('checked', true); }
+        $('#updateContactModal').modal({
+            backdrop: false,
+            show: true 
+        });
+    });
+    
+    $('#contactsTable tbody').on('click', '.deleteContact', function (){
+        $('#confirmDeleteContactModal').modal({
+            backdrop: false,
+            show: true
+        });
+        //var drow = $(this).closest('tr');
+        var rowId = $(this).data('id');
+        var data = contactsTable.row($('#' + rowId)).data();
+        console.log(rowId);
+        $('.deleteName').text(data.firstName.toUpperCase() + ' ' + data.lastName.toUpperCase());
+        $('#modalDeleteBtn').attr('href', '/deleteContact/' + data.contactId );
+    });
+
 </script>
-{{/ifEquals}}
+

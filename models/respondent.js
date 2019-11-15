@@ -38,12 +38,6 @@ module.exports = (sequelize, DataTypes) => {
               onDelete: 'cascade',
             },
         });
-        Respondent.hasMany(models.Question, {
-            foreignKey: {
-              allowNull: false,
-              onDelete: 'cascade',
-            },
-        });
     }
     return Respondent;
 }
