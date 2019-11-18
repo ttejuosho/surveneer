@@ -98,6 +98,7 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Plea
                     showTOU: req.body.showTOU,
                     surveyNotes: req.body.surveyNotes,
                     surveyTOU: req.body.surveyTOU,
+                    notify: req.body.notify,
                     preSurveyInstructions: req.body.preSurveyInstructions,
                     postSurveyInstructions: req.body.postSurveyInstructions,
                     numberOfRespondents: 0,
@@ -133,6 +134,7 @@ router.post('/updateSurvey', (req, res) => {
     const updatedSurveyInfo = {
         surveyName: req.body.surveyName,
         getId: req.body.getId,
+        notify: req.body.notify,
         showTOU: req.body.showTOU,
         surveyNotes: req.body.surveyNotes,
         surveyTOU: req.body.surveyTOU,
@@ -729,6 +731,7 @@ router.post('/emailSurvey/:surveyId', [
             errors.email = req.body.email;
             errors.subject = req.body.subject;
             errors.message = req.body.message;
+            errors.surveyId = req.params.surveyId;
             Object.assign(errors, req.session.globalUser);
             return res.render('survey/send', errors);
         } else {
@@ -744,7 +747,7 @@ router.post('/emailSurvey/:surveyId', [
                     errors.email = req.body.email;
                     errors.subject = req.body.subject;
                     errors.message = req.body.message;
-                    errors.noSurveyError = 'Invalid Survey Id, Please reload the page';
+                    errors.noSurveyError = 'Invalid Survey Id, Please go back';
                     Object.assign(errors, req.session.globalUser);
                     return res.render('survey/send', errors);
                 } else {

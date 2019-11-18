@@ -188,27 +188,11 @@ $(function() {
         if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', false); } else { $('#surveyNotesRow').removeClass('d-none'); }
         if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', false); } else { $('#surveyTOURow').removeClass('d-none'); }
 
-        $('#surveySaveButton').removeClass('d-none');
+        $('#updateSurveyBtn').removeClass('d-none');
 
         $('#editSurvey').addClass('d-none');
         $('.form-check').removeClass('disabled');
         $('.surveyEditCheck').attr('disabled', false);
-    });
-
-    $('#surveySaveButton').on('click', () => {
-        $('#updateSurveyForm').submit();
-        $('.surveyEditInput').attr('readonly', true);
-
-        $('#surveySaveButton').addClass('d-none');
-
-        $('#editSurvey').removeClass('d-none');
-        $('.form-check').addClass('disabled');
-        $('.surveyEditCheck').attr('disabled', true);
-
-        if ($('#preSurveyInstructions').val().trim().length > 0){ $('#preSurveyInstructions').attr('readonly', true); } else { $('#preSurveyInstructionsRow').addClass('d-none'); }
-        if ($('#postSurveyInstructions').val().trim().length > 0){ $('#postSurveyInstructions').attr('readonly', true); } else { $('#postSurveyInstructionsRow').addClass('d-none'); }
-        if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', true); } else { $('#surveyNotesRow').addClass('d-none'); }
-        if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', true); } else { $('#surveyTOURow').addClass('d-none'); }
     });
    
 });

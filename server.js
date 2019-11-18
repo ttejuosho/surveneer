@@ -17,8 +17,8 @@ const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
 const { check } = require('express-validator');
 const cookieParser = require(`cookie-parser`);
-const flash = require('connect-flash');
-const nodemailer = require('nodemailer');
+//const flash = require('connect-flash');
+//const nodemailer = require('nodemailer');
 const io = require('socket.io')(http);
 const exphbs = require('express-handlebars');
 const helmet = require('helmet');
@@ -161,15 +161,15 @@ app.use((err, req, res, next) => {
 
 const routes = require('./controllers/survenaire_controller');
 
-app.use(flash());
-// global vars
-app.use(function(req, res, next) {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    res.locals.user = req.user || null;
-    next();
-});
+// app.use(flash());
+// // global vars
+// app.use(function(req, res, next) {
+//     res.locals.success_msg = req.flash('success_msg');
+//     res.locals.error_msg = req.flash('error_msg');
+//     res.locals.error = req.flash('error');
+//     res.locals.user = req.user || null;
+//     next();
+// });
 
 require('./routes/auth.js')(upload, app, passport);
 

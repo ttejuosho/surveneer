@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
       allowNull: true,
     },
+    notify: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: true,
+    },
     preSurveyInstructions: {
       type: DataTypes.STRING,
       allowNull: true,

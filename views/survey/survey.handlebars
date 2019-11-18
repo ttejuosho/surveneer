@@ -84,12 +84,13 @@
         <div class="form-check disabled">
         <label class="form-check-label">Get Respondent Information
         {{#ifEquals getId 0}}
-        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>
+        <input id="getIdi" name="getIdi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>    
         {{else}}
-        <input id="getId" name="getId" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
+        <input id="getIdi" name="getIdi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>      
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
+        <input id="getId" name="getId" class="form-control form-control-sm" type="hidden" value=>
         </div>
     </div>
 </div>
@@ -99,12 +100,29 @@
         <div class="form-check disabled">
         <label class="form-check-label">Show Terms of Use
         {{#ifEquals showTOU 0}}
-        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled> 
+        <input id="showTOUi" name="showTOUi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>  
         {{else}} 
-        <input id="showTOU" name="showTOU" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled> 
+        <input id="showTOUi" name="showTOUi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
+        </div>
+         <input id="showTOU" name="showTOU" class="form-control form-control-sm" type="hidden" value=> 
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="form-check disabled">
+        <label class="form-check-label">Get Email Notifications for new responses
+        {{#ifEquals notify 0}}
+        <input id="notifyi" name="notifyi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>    
+        {{else}}
+        <input id="notifyi" name="notifyi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>      
+        {{/ifEquals}}
+        <span class="form-check-sign"><span class="check"></span></span>
+        </label>
+        <input id="notify" name="notify" class="form-control form-control-sm" type="hidden" value=>
         </div>
     </div>
 </div>
@@ -191,7 +209,7 @@
 
 </div>
 <div class="card-footer">
-    <button id="surveySaveButton" type="submit" class="btn btn-sm btn-primary d-none float-right">Update</button>
+    <button id="updateSurveyBtn" type="submit" class="btn btn-sm btn-primary d-none float-right">Update</button>
 </div>
 </fieldset>
 </form>
@@ -479,6 +497,81 @@ var openSurveyImageModal = (surveyId) => {
         }
     });
 
+$(function(){
+        if ($('input[name=getIdi]').is(':checked')) {
+            // Checkbox is checked..
+            $('#getId').val(true);
+        } else {
+            // Checkbox is not checked..
+            $('#getId').val(false);
+        }
+
+        if ($('input[name=showTOUi]').is(':checked')) {
+            // Checkbox is checked..
+            $('#showTOU').val(true);
+        } else {
+            // Checkbox is not checked..
+            $('#showTOU').val(false);
+        }
+
+        if ($('input[name=notifyi]').is(':checked')) {
+            // Checkbox is checked..
+            $('#notify').val(true);
+        } else {
+            // Checkbox is not checked..
+            $('#notify').val(false);
+        }
+});
+    //OnChange Event listener on Checkbox
+    $('input[name=getIdi]').change(function() {
+        if ($(this).is(':checked')) {
+            // Checkbox is checked..
+            $('#getId').val(true);
+        } else {
+            // Checkbox is not checked..
+            $('#getId').val(false);
+        }
+    });
+
+    //OnChange Event listener on Checkbox
+    $('input[name=showTOUi]').change(function() {
+        if ($(this).is(':checked')) {
+            // Checkbox is checked..
+            $('#showTOU').val(true);
+        } else {
+            // Checkbox is not checked..
+            $('#showTOU').val(false);
+        }
+    });
+
+    //OnChange Event listener on Checkbox
+    $('input[name=notifyi]').change(function() {
+        if ($(this).is(':checked')) {
+            // Checkbox is checked..
+            $('#notify').val(true);
+        } else {
+            // Checkbox is not checked..
+            $('#notify').val(false);
+        }
+    });
+
+    $('#updateSurveyBtn').on('click', () => {
+
+        console.log($('#getId').val(), $('#showTOU').val());
+
+        $('#updateSurveyForm').submit();
+        $('.surveyEditInput').attr('readonly', true);
+        $('#updateSurveyBtn').addClass('d-none');
+
+        $('#editSurvey').removeClass('d-none');
+        $('.form-check').addClass('disabled');
+        $('.surveyEditCheck').attr('disabled', true);
+
+        if ($('#preSurveyInstructions').val().trim().length > 0){ $('#preSurveyInstructions').attr('readonly', true); } else { $('#preSurveyInstructionsRow').addClass('d-none'); }
+        if ($('#postSurveyInstructions').val().trim().length > 0){ $('#postSurveyInstructions').attr('readonly', true); } else { $('#postSurveyInstructionsRow').addClass('d-none'); }
+        if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', true); } else { $('#surveyNotesRow').addClass('d-none'); }
+        if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', true); } else { $('#surveyTOURow').addClass('d-none'); }
+    });
 //console.log(countValues);
 </script>
 
