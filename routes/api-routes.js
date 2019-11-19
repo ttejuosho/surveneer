@@ -322,6 +322,7 @@ module.exports = (app) => {
                 surveyId: req.params.surveyId,
             },
             include: [
+                { model: db.User, as: 'User', attributes: ['name','emailAddress'] },
                 { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
                 { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
                 { model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'] },
@@ -476,6 +477,7 @@ module.exports = (app) => {
             });
         }
     });
+
     // Get all Users
     app.get('/api/users', (req, res) => {
         db.User.findAll().then(function(dbUser) {
@@ -551,6 +553,7 @@ module.exports = (app) => {
             res.json(dbQuestion);
         });
     });
+
     // ======================= QUESTIONS API Routes ================================
 
     // Get all Questions
@@ -770,22 +773,6 @@ module.exports = (app) => {
             include: [
                 { model: db.Survey, as: 'Survey', attributes: ['surveyName', 'numberOfRespondents', 'surveyNotes'] },
                 { model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone'] },
-            ],
-        }).then((dbResponse) => {
-            res.json(dbResponse);
-        });
-    });
-
-    // Get all questions,responses and respondents for a survey
-    app.get('/api/survey/:surveyId', (req, res) => {
-        db.Survey.findOne({
-            where: {
-                surveyId: req.params.surveyId,
-            },
-            include: [
-                { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
-                { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
-                { model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'] },
             ],
         }).then((dbResponse) => {
             res.json(dbResponse);

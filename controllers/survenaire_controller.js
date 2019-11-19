@@ -401,7 +401,6 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
 // Save Responses and Respondent (Needs Refactoring - Error handling)
 router.post('/responses/:userId', (req, res) => {
     var resId = '';
-
     // if respondent exists in Recipients table, update their information
     db.Recipient.findOne({
         where: {
@@ -420,6 +419,7 @@ router.post('/responses/:userId', (req, res) => {
         }
     });
 
+    // Save Respondent information to Respondent table
     db.Respondent.create({
         respondentName: req.body.respondentName,
         respondentEmail: req.body.respondentEmail,
@@ -507,6 +507,7 @@ router.post('/responses/:userId', (req, res) => {
             where: {
                 surveyId: req.body.surveyId,
             },
+            include: [{ model: db.User, as: 'User', attributes: ['name','emailAddress'] }]
         }).then((dbSurvey) => {
             dbSurvey.dataValues.numberOfRespondents += 1;
             const updatedSurvey = {
@@ -524,15 +525,42 @@ router.post('/responses/:userId', (req, res) => {
                 surveyId: req.body.surveyId,
                 qanda: qandaArray,
                 surveyName: dbSurvey.dataValues.surveyName,
-                // getId: dbSurvey.dataValues.getId,
-                // numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-                // preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
                 postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
-                // surveyNotes: dbSurvey.dataValues.surveyNotes,
                 layout: false,
                 resId: resId,
                 userId: req.params.userId,
             };
+
+            // if notify true Send Email
+            if(dbSurvey.dataValues.notify){
+                var userEmail = dbSurvey.dataValues.User.emailAddress;
+                var userName = dbSurvey.dataValues.User.name.split(" ")[0];
+                const emailBody = `
+                <p>Hello ${userName},</p>
+                <p style="color: black;">${req.body.respondentName} has just completed your survey (${updatedSurvey.surveyName})</p>    
+                <p>Please <a href="https://surveneer.herokuapp.com/signin">login</a> to view their responses.</p>
+                <span style="font-size: 1rem;color: black;"><strong>SurvEnEEr Inc.</strong></span>
+                `;
+    
+                let mailOptions = {
+                    from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
+                    to: userEmail, // list of receivers
+                    subject: 'New Response Notification', // Subject line
+                    text: 'Hello world?', // plain text body
+                    html: emailBody, // html body
+                    //template: 'templates/surveynotification'
+                };
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        resolve(false);
+                    } else {
+                        resolve(true);
+                        console.log('Message ID: %s', info.messageId);                     
+                        console.log(info.envelope.to.toString());
+                    }
+                });
+
+            }
 
             db.Survey.update(updatedSurvey, {
                 where: {
@@ -548,7 +576,6 @@ router.post('/responses/:userId', (req, res) => {
                 //   layout: false,
                 // };
             });
-            //console.log(hbsObject);
             return res.render('survey/complete', hbsObject);
         });
     }).catch((err) => {
@@ -607,7 +634,7 @@ router.get('/chart/:surveyId', (req, res) => {
             results.optionType.push(arr.shift());
             results.answerCounts.push(arr);
         }
-        console.log(results);
+        //console.log(results);
         return res.json(results);
     });
 });
