@@ -137,6 +137,10 @@ $(function() {
         $(this).val(this.checked ? true : false);
     });
 
+    $('input[name=\'notify\']').on('change', function() {
+        $(this).val(this.checked ? true : false);
+    });
+
     $('input[name=\'showTOU\']').on('change', function() {
         $(this).val(this.checked ? true : false);
         $('.surveyTOUInput').toggleClass('d-none');
