@@ -21,6 +21,9 @@
                         <h5 class="card-category"><span id="numberOfQuestions{{counter @index}}">{{numberOfQuestions}}</span> {{#ifEquals numberOfQuestions 1}} Question {{else}} Questions {{/ifEquals}}</h5>
                         <h5 class="card-category"><span id="numberOfRespondents{{counter @index}}">{{numberOfRespondents}}</span> {{#ifEquals numberOfRespondents 1}} Respondent {{else}} Respondents {{/ifEquals}}</h5>
                         <h5 class="card-category"><span id="numberOfRecipients{{counter @index}}">{{numberOfRecipients}}</span> {{#ifEquals numberOfRecipients 1}} Recipient {{else}} Recipients {{/ifEquals}}</h5>
+                        {{#ifEquals notify 0}}<h5 class="card-category text-danger">Email Notifications Off</h5>
+                        {{else}}<h5 class="card-category text-success">Email Notifications On</h5>
+                        {{/ifEquals}}
                         <h5>{{mess}}</h5>
                     </div>
                     <div id="surveyData{{counter @index}}" class="card-body pt-0 d-none">

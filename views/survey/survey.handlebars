@@ -429,14 +429,24 @@ var openSurveyImageModal = (surveyId) => {
                 }],
             },
             options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
+                responsive: true,
+                tooltips: {
+                    bodySpacing: 4,
+                    mode: "nearest",
+                    intersect: 0,
+                    position: "nearest",
+                    xPadding: 10,
+                    yPadding: 10,
+                    caretPadding: 10
+                },
+                scales: {
+                xAxes: [{
+                    ticks: {
+                    beginAtZero: true
                     }
+                }]
+                }
+            }
         }); // End Chart
         } 
         else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
@@ -449,36 +459,36 @@ var openSurveyImageModal = (surveyId) => {
         charts[i] = new Chart($('#q'+[i+1]+'YesNoResponseChart'), 
         {
             type: 'horizontalBar',
-            data: 
-                { 
+            data:
+                {
                     labels: ['Yes', 'No'], 
                     datasets: [{ 
-                        label: 'Response Chart', 
+                        label: 'Response Chart',
                         data: q1Values,
                         backgroundColor: ['#1f8ef1', '#2dce89']
                     }],
                 },
-        options: {
-            responsive: true,
-            tooltips: {
-                bodySpacing: 4,
-                mode: "nearest",
-                intersect: 0,
-                position: "nearest",
-                xPadding: 10,
-                yPadding: 10,
-                caretPadding: 10
-            },
-            scales: {
-            xAxes: [{
-                ticks: {
-                beginAtZero: true
+            options: {
+                responsive: true,
+                tooltips: {
+                    bodySpacing: 4,
+                    mode: "nearest",
+                    intersect: 0,
+                    position: "nearest",
+                    xPadding: 10,
+                    yPadding: 10,
+                    caretPadding: 10
+                },
+                scales: {
+                xAxes: [{
+                    ticks: {
+                    beginAtZero: true
+                    }
+                }]
                 }
-            }]
             }
-        }
-        })
-}
+        });
+    }
     });
 
     socket.on('connect', function() {
