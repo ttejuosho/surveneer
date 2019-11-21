@@ -112,8 +112,6 @@ $(function() {
         });
     });
 
-
-
     type = ['primary', 'info', 'success', 'warning', 'danger'];
     survenaire = {
         showNotification: function(type, from, align, msg) {

@@ -260,11 +260,67 @@
                             <canvas id="q{{counter @index}}YesNoResponseChart" width="400" height="120"></canvas>
                         </div>
                     {{/ifEquals}}
+                    
                     {{#ifEquals optionType "TrueFalse"}}
                         <input type="hidden" name="TrueResponseCount" id="q{{counter @index}}TrueResponseCount" value="{{TrueResponseCount}}">
                         <input type="hidden" name="FalseResponseCount" id="q{{counter @index}}FalseResponseCount" value="{{FalseResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
                             <canvas id="q{{counter @index}}TrueFalseResponseChart" width="400" height="120"></canvas>
+                        </div>
+                    {{/ifEquals}}
+
+                    {{#ifEquals optionType "LikertAgreement"}}
+                        <input type="hidden" name="StronglyDisagreeResponseCount" id="q{{counter @index}}StronglyDisagreeResponseCount" value="{{StronglyDisagreeResponseCount}}">
+                        <input type="hidden" name="DisagreeResponseCount" id="q{{counter @index}}DisagreeResponseCount" value="{{DisagreeResponseCount}}">
+                        <input type="hidden" name="UndecidedResponseCount" id="q{{counter @index}}UndecidedResponseCount" value="{{UndecidedResponseCount}}">
+                        <input type="hidden" name="AgreeResponseCount" id="q{{counter @index}}AgreeResponseCount" value="{{AgreeResponseCount}}">
+                        <input type="hidden" name="StronglyAgreeResponseCount" id="q{{counter @index}}StronglyAgreeResponseCount" value="{{StronglyAgreeResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}LikertAgreementResponseChart" width="400" height="120"></canvas>
+                        </div>
+                    {{/ifEquals}}
+
+                    {{#ifEquals optionType "LikertQuality"}}
+                        <input type="hidden" name="VeryGoodResponseCount" id="q{{counter @index}}VeryGoodResponseCount" value="{{VeryGoodResponseCount}}">
+                        <input type="hidden" name="GoodResponseCount" id="q{{counter @index}}GoodResponseCount" value="{{GoodResponseCount}}">
+                        <input type="hidden" name="AcceptableResponseCount" id="q{{counter @index}}AcceptableResponseCount" value="{{AcceptableResponseCount}}">
+                        <input type="hidden" name="PoorResponseCount" id="q{{counter @index}}PoorResponseCount" value="{{PoorResponseCount}}">
+                        <input type="hidden" name="VeryPoorResponseCount" id="q{{counter @index}}VeryPoorResponseCount" value="{{VeryPoorResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}LikertQualityResponseChart" width="400" height="120"></canvas>
+                        </div>
+                    {{/ifEquals}}
+
+                    {{#ifEquals optionType "LikertValue"}}
+                        <input type="hidden" name="VeryHighResponseCount" id="q{{counter @index}}VeryHighResponseCount" value="{{VeryHighResponseCount}}">
+                        <input type="hidden" name="HighResponseCount" id="q{{counter @index}}HighResponseCount" value="{{HighResponseCount}}">
+                        <input type="hidden" name="ModerateResponseCount" id="q{{counter @index}}ModerateResponseCount" value="{{ModerateResponseCount}}">
+                        <input type="hidden" name="LowResponseCount" id="q{{counter @index}}LowResponseCount" value="{{LowResponseCount}}">
+                        <input type="hidden" name="NoneResponseCount" id="q{{counter @index}}NoneResponseCount" value="{{NoneResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}LikertValueResponseChart" width="400" height="120"></canvas>
+                        </div>
+                    {{/ifEquals}}
+
+                    {{#ifEquals optionType "LikertFrequency"}}
+                        <input type="hidden" name="VeryFrequentlyResponseCount" id="q{{counter @index}}VeryFrequentlyResponseCount" value="{{VeryFrequentlyResponseCount}}">
+                        <input type="hidden" name="FrequentlyResponseCount" id="q{{counter @index}}FrequentlyResponseCount" value="{{FrequentlyResponseCount}}">
+                        <input type="hidden" name="OccasionallyResponseCount" id="q{{counter @index}}OccasionallyResponseCount" value="{{OccasionallyResponseCount}}">
+                        <input type="hidden" name="RarelyResponseCount" id="q{{counter @index}}RarelyResponseCount" value="{{RarelyResponseCount}}">
+                        <input type="hidden" name="NeverResponseCount" id="q{{counter @index}}NeverResponseCount" value="{{NeverResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}LikertFrequencyResponseChart" width="400" height="120"></canvas>
+                        </div>
+                    {{/ifEquals}}
+
+                    {{#ifEquals optionType "LikertImportance"}}
+                        <input type="hidden" name="VeryImportantResponseCount" id="q{{counter @index}}VeryImportantResponseCount" value="{{VeryImportantResponseCount}}">
+                        <input type="hidden" name="ImportantResponseCount" id="q{{counter @index}}ImportantResponseCount" value="{{ImportantResponseCount}}">
+                        <input type="hidden" name="ModeratelyImportantResponseCount" id="q{{counter @index}}ModeratelyImportantResponseCount" value="{{ModeratelyImportantResponseCount}}">
+                        <input type="hidden" name="SlightlyImportant" id="q{{counter @index}}SlightlyImportant" value="{{SlightlyImportant}}">
+                        <input type="hidden" name="NotImportantResponseCount" id="q{{counter @index}}NotImportantResponseCount" value="{{NotImportantResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}LikertImportanceResponseChart" width="400" height="120"></canvas>
                         </div>
                     {{/ifEquals}}
                 </div>
@@ -400,95 +456,60 @@ var openSurveyImageModal = (surveyId) => {
         });
     $('#addSurveyImageModal').modal('show');
 }
+
     var countValues = [];
     var q1Values = [];
     var charts = [];
     const userRoom = getUserId();
     const socket = io();
 
-    $('.optionCounts').each((i)=>{
-        var elementId = $('.optionCounts')[0].id;
-        if ($('#' + elementId).attr("data-optiontype") == "TrueFalse"){
-            if ($('#q'+[i+1]+'TrueResponseCount').val() == "" && $('#q'+[i+1]+'FalseResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
-        q1Values = [];
-        q1Values.push(parseInt($('#q'+[i+1]+'TrueResponseCount').val()));
-        q1Values.push(parseInt($('#q'+[i+1]+'FalseResponseCount').val()));
-        countValues.push(q1Values);
-
-        charts[i] = new Chart($('#q'+[i+1]+'TrueFalseResponseChart'), 
-        {
-        type: 'horizontalBar', 
+function createChart(i, optionType1, optionType2, optionType3, optionType4, optionType5, optionType6){
+    if ($('#q'+[i+1]+ optionType1 +'ResponseCount').val() == "" && $('#q'+[i+1] + optionType2 + 'ResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
+    chartData = [];
+    chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
+    chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
+    countValues.push(chartData);
+    charts[i] = new Chart($('#q' + [i+1] + optionType1 + optionType2 + 'ResponseChart'),{
+        type: 'horizontalBar',
         data: 
             { 
-                labels: ['True', 'False'], 
+                labels: [optionType1, optionType2],
                 datasets: [{ 
-                    label: 'Responses Chart', 
-                    data: q1Values,
+                    label: 'Responses Chart',
+                    data: chartData,
                     backgroundColor: ['#1f8ef1', '#2dce89'],
                     borderWidth: 1 
                 }],
             },
-            options: {
-                responsive: true,
-                tooltips: {
-                    bodySpacing: 4,
-                    mode: "nearest",
-                    intersect: 0,
-                    position: "nearest",
-                    xPadding: 10,
-                    yPadding: 10,
-                    caretPadding: 10
-                },
-                scales: {
-                xAxes: [{
-                    ticks: {
-                    beginAtZero: true
-                    }
-                }]
+        options: {
+            responsive: true,
+            tooltips: {
+                bodySpacing: 4,
+                mode: "nearest",
+                intersect: 0,
+                position: "nearest",
+                xPadding: 10,
+                yPadding: 10,
+                caretPadding: 10
+            },
+            scales: {
+            xAxes: [{
+                ticks: {
+                beginAtZero: true
                 }
+            }]
             }
-        }); // End Chart
-        } 
-        else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
-        if ($('#q'+[i+1]+'YesResponseCount').val() == "" && $('#q'+[i+1]+'NoResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
-        q1Values = [];
-        q1Values.push(parseInt($('#q'+[i+1]+'YesResponseCount').val()));
-        q1Values.push(parseInt($('#q'+[i+1]+'NoResponseCount').val()));
-        countValues.push(q1Values);
+        }
+    });
+}
 
-        charts[i] = new Chart($('#q'+[i+1]+'YesNoResponseChart'), 
-        {
-            type: 'horizontalBar',
-            data:
-                {
-                    labels: ['Yes', 'No'], 
-                    datasets: [{ 
-                        label: 'Response Chart',
-                        data: q1Values,
-                        backgroundColor: ['#1f8ef1', '#2dce89']
-                    }],
-                },
-            options: {
-                responsive: true,
-                tooltips: {
-                    bodySpacing: 4,
-                    mode: "nearest",
-                    intersect: 0,
-                    position: "nearest",
-                    xPadding: 10,
-                    yPadding: 10,
-                    caretPadding: 10
-                },
-                scales: {
-                xAxes: [{
-                    ticks: {
-                    beginAtZero: true
-                    }
-                }]
-                }
-            }
-        });
-    }
+    $('.optionCounts').each((i)=>{
+        var elementId = $('.optionCounts')[0].id;
+        if ($('#' + elementId).attr("data-optiontype") == "TrueFalse"){
+            createChart(i, 'True', 'False'); // End Chart
+        } else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
+            createChart(i, 'Yes', 'No');
+        } 
     });
 
     socket.on('connect', function() {
