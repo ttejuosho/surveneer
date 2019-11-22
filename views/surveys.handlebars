@@ -57,7 +57,7 @@ function openModal (surveyId) {
     var responseRatecharts = [];
     var numberOfSurveys = $('.chart-area').length;
     for (var i = 0; i < numberOfSurveys; i++){
-        console.log(i)
+        //console.log(i)
         var numberOfRespondents = parseInt($('#numberOfRespondents' + [i+1]).text());
         var numberOfRecipients = parseInt($('#numberOfRecipients' + [i+1]).text());
         var awaitingResponse = numberOfRecipients - numberOfRespondents;
@@ -66,7 +66,12 @@ function openModal (surveyId) {
         var data = [numberOfRespondents, awaitingResponse]
         var responseRatePercentage = ((numberOfRespondents/numberOfRecipients)*100).toFixed();
         var ctx = $('#chartLinePurple' + [i+1]);
-        $('#responseRatePercentage' + [i+1]).text(responseRatePercentage + '% Response Rate')
+        if (parseInt(responseRatePercentage) > 0){
+            $('#responseRatePercentage' + [i+1]).text(responseRatePercentage + '% Response Rate');
+        } else {
+            $('#responseRatePercentage' + [i+1]).text('0% Response Rate');
+        }
+        
         responseRatecharts[i] = new Chart(ctx,
         {
             type: "pie",

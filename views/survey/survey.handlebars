@@ -463,21 +463,33 @@ var openSurveyImageModal = (surveyId) => {
     const userRoom = getUserId();
     const socket = io();
 
-function createChart(i, optionType1, optionType2, optionType3, optionType4, optionType5, optionType6){
+function createChart(i, optionType, optionType1, optionType2, optionType3, optionType4, optionType5){
     if ($('#q'+[i+1]+ optionType1 +'ResponseCount').val() == "" && $('#q'+[i+1] + optionType2 + 'ResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
+    var chartLabels = (optionType3 ? [optionType1, optionType2, optionType3, optionType4, optionType5] : [optionType1, optionType2])
     chartData = [];
-    chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
-    chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
+    if (optionType3){
+        chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + optionType3 + 'ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + optionType4 + 'ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + optionType5 + 'ResponseCount').val()));
+        chartBgColor = ['#1f8ef1', '#2dce89', '#f5f5f5', '#f96332', '#283d6a'];
+    } else {
+        chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
+        chartBgColor = ['#1f8ef1', '#2dce89'];
+    }
+    console.log(chartData);
     countValues.push(chartData);
-    charts[i] = new Chart($('#q' + [i+1] + optionType1 + optionType2 + 'ResponseChart'),{
+    charts[i] = new Chart($('#q' + [i+1] + optionType + 'ResponseChart'),{
         type: 'horizontalBar',
         data: 
             { 
-                labels: [optionType1, optionType2],
+                labels: chartLabels,
                 datasets: [{ 
                     label: 'Responses Chart',
                     data: chartData,
-                    backgroundColor: ['#1f8ef1', '#2dce89'],
+                    backgroundColor: chartBgColor,
                     borderWidth: 1 
                 }],
             },
@@ -504,12 +516,15 @@ function createChart(i, optionType1, optionType2, optionType3, optionType4, opti
 }
 
     $('.optionCounts').each((i)=>{
-        var elementId = $('.optionCounts')[0].id;
+        var elementId = $('.optionCounts')[i].id;
+        console.log($('#' + elementId).attr("data-optiontype"));
         if ($('#' + elementId).attr("data-optiontype") == "TrueFalse"){
-            createChart(i, 'True', 'False'); // End Chart
+            createChart(i, 'TrueFalse', 'True', 'False'); // End Chart
         } else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
-            createChart(i, 'Yes', 'No');
-        } 
+            createChart(i, 'YesNo', 'Yes', 'No');
+        } else if ($('#' + elementId).attr("data-optiontype") == "LikertAgreement"){
+            createChart(i, 'LikertAgreement', 'StronglyDisagree', 'Disagree', 'Undecided', 'Agree', 'StronglyAgree');
+        }
     });
 
     socket.on('connect', function() {

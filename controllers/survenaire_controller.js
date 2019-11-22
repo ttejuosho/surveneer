@@ -24,26 +24,26 @@ router.get('/', (req, res) => {
     res.redirect('/index');
 });
 
-router.get('/survey/v/:surveyId', (req,res)=>{
+router.get('/survey/v/:surveyId', (req, res) => {
     db.Response.findAll({
         where: {
             SurveySurveyId: req.params.surveyId,
         },
         include: [
-            { model: db.Question, as: "Question", attributes: [ "questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
-            { model: db.Respondent, as: "Respondent", attributes: [ "respondentId", "respondentName", "respondentEmail", "respondentPhone"]},
-            { model: db.Survey, as: "Survey", attributes: [ "surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions" ]}
-    ]
+            { model: db.Question, as: "Question", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
+            { model: db.Respondent, as: "Respondent", attributes: ["respondentId", "respondentName", "respondentEmail", "respondentPhone"] },
+            { model: db.Survey, as: "Survey", attributes: ["surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions"] }
+        ]
     }).then(function(responses) {
         //res.json(responses);
-        const hbsObject = {responses: responses};
+        const hbsObject = { responses: responses };
         Object.assign(hbsObject, req.session.globalUser);
         console.log(hbsObject);
         return res.render('response/view', hbsObject);
     }).catch(function(err) {
         res.render('error', err);
     });
-    
+
 });
 
 router.get('/index', (req, res) => {
@@ -63,7 +63,7 @@ router.get('/newSurvey', (req, res) => {
 });
 
 // List of Users Recipients
-router.get('/mycontacts', (req,res)=>{
+router.get('/mycontacts', (req, res) => {
     const hbsObject = { loadJs: 'true' };
     Object.assign(hbsObject, req.session.globalUser);
     return res.render('user/contacts', hbsObject);
@@ -267,8 +267,7 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
         });
 });
 
-router.post('/newQuestion/:surveyId', 
-[
+router.post('/newQuestion/:surveyId', [
     check('question').not().isEmpty().withMessage('Please enter a question'),
     check('optionType').not().isEmpty().withMessage('Please choose an option'),
 ], (req, res) => {
@@ -352,10 +351,19 @@ router.get('/mysurveys/:surveyId', function(req, res) {
             surveyId: req.params.surveyId,
         },
         include: [
-            {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
-            {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
-            {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount']},
-          ],
+            { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
+            { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
+            {
+                model: db.Question,
+                as: 'Questions'
+                    // attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 
+                    // 'option1', 'option2', 'option3', 'option4', 
+                    // 'YesResponseCount', 'NoResponseCount', 
+                    // 'TrueResponseCount', 'FalseResponseCount',
+
+                //]
+            },
+        ],
     }).then(function(survey) {
         const hbsObject = survey.dataValues;
         Object.assign(hbsObject, req.session.globalUser);
@@ -406,9 +414,9 @@ router.post('/responses/:userId', (req, res) => {
         where: {
             recipientEmail: req.body.respondentEmail,
         }
-    }).then((dbRecipient)=>{
-        if (dbRecipient !== null){
-            db.Recipient.update({ 
+    }).then((dbRecipient) => {
+        if (dbRecipient !== null) {
+            db.Recipient.update({
                 recipientName: req.body.respondentName,
                 recipientPhone: req.body.respondentPhone,
             }, {
@@ -442,64 +450,81 @@ router.post('/responses/:userId', (req, res) => {
         for (let i = 0; i < qandaArray.length; i++) {
             // Save response to Database
             db.Response.create(qandaArray[i]);
+
             // Update Response Counts in DB
-            if (qandaArray[i].answer.toLowerCase() === 'yes') {
-                db.Question.findOne({
+            db.Question.findOne({
+                where: {
+                    questionId: qandaArray[i].QuestionQuestionId,
+                },
+            }).then((dbQuestion) => {
+                var optionType1 = qandaArray[i].answer + 'ResponseCount';
+                dbQuestion.dataValues[optionType1] += 1;
+                var updatedQuestion = {};
+                updatedQuestion[optionType1] = dbQuestion.dataValues[optionType1];
+                db.Question.update(updatedQuestion, {
                     where: {
-                        questionId: qandaArray[i].QuestionQuestionId,
+                        questionId: dbQuestion.dataValues.questionId,
                     },
-                }).then((dbQuestion) => {
-                    dbQuestion.dataValues.YesResponseCount += 1;
-                    var updatedQuestion = { YesResponseCount: dbQuestion.dataValues.YesResponseCount };
-                    db.Question.update(updatedQuestion, {
-                        where: {
-                            questionId: dbQuestion.dataValues.questionId,
-                        },
-                    });
                 });
-            } else if (qandaArray[i].answer.toLowerCase() === 'no') {
-                db.Question.findOne({
-                    where: {
-                        questionId: qandaArray[i].QuestionQuestionId,
-                    },
-                }).then((dbQuestion) => {
-                    dbQuestion.dataValues.NoResponseCount += 1;
-                    var updatedQuestion = { NoResponseCount: dbQuestion.dataValues.NoResponseCount };
-                    db.Question.update(updatedQuestion, {
-                        where: {
-                            questionId: dbQuestion.dataValues.questionId,
-                        },
-                    });
-                });
-            } else if (qandaArray[i].answer.toLowerCase() === 'true') {
-                db.Question.findOne({
-                    where: {
-                        questionId: qandaArray[i].QuestionQuestionId,
-                    },
-                }).then((dbQuestion) => {
-                    dbQuestion.dataValues.TrueResponseCount += 1;
-                    var updatedQuestion = { TrueResponseCount: dbQuestion.dataValues.TrueResponseCount };
-                    db.Question.update(updatedQuestion, {
-                        where: {
-                            questionId: dbQuestion.dataValues.questionId,
-                        },
-                    });
-                });
-            } else if (qandaArray[i].answer.toLowerCase() === 'false') {
-                db.Question.findOne({
-                    where: {
-                        questionId: qandaArray[i].QuestionQuestionId,
-                    },
-                }).then((dbQuestion) => {
-                    dbQuestion.dataValues.FalseResponseCount += 1;
-                    var updatedQuestion = { FalseResponseCount: dbQuestion.dataValues.FalseResponseCount };
-                    db.Question.update(updatedQuestion, {
-                        where: {
-                            questionId: dbQuestion.dataValues.questionId,
-                        },
-                    });
-                });
-            }
+            });
+
+            //     if (qandaArray[i].answer.toLowerCase() === 'yes') {
+            //         db.Question.findOne({
+            //             where: {
+            //                 questionId: qandaArray[i].QuestionQuestionId,
+            //             },
+            //         }).then((dbQuestion) => {
+            //             dbQuestion.dataValues.YesResponseCount += 1;
+            //             var updatedQuestion = { YesResponseCount: dbQuestion.dataValues.YesResponseCount };
+            //             db.Question.update(updatedQuestion, {
+            //                 where: {
+            //                     questionId: dbQuestion.dataValues.questionId,
+            //                 },
+            //             });
+            //         });
+            //     } else if (qandaArray[i].answer.toLowerCase() === 'no') {
+            //         db.Question.findOne({
+            //             where: {
+            //                 questionId: qandaArray[i].QuestionQuestionId,
+            //             },
+            //         }).then((dbQuestion) => {
+            //             dbQuestion.dataValues.NoResponseCount += 1;
+            //             var updatedQuestion = { NoResponseCount: dbQuestion.dataValues.NoResponseCount };
+            //             db.Question.update(updatedQuestion, {
+            //                 where: {
+            //                     questionId: dbQuestion.dataValues.questionId,
+            //                 },
+            //             });
+            //         });
+            //     } else if (qandaArray[i].answer.toLowerCase() === 'true') {
+            //         db.Question.findOne({
+            //             where: {
+            //                 questionId: qandaArray[i].QuestionQuestionId,
+            //             },
+            //         }).then((dbQuestion) => {
+            //             dbQuestion.dataValues.TrueResponseCount += 1;
+            //             var updatedQuestion = { TrueResponseCount: dbQuestion.dataValues.TrueResponseCount };
+            //             db.Question.update(updatedQuestion, {
+            //                 where: {
+            //                     questionId: dbQuestion.dataValues.questionId,
+            //                 },
+            //             });
+            //         });
+            //     } else if (qandaArray[i].answer.toLowerCase() === 'false') {
+            //         db.Question.findOne({
+            //             where: {
+            //                 questionId: qandaArray[i].QuestionQuestionId,
+            //             },
+            //         }).then((dbQuestion) => {
+            //             dbQuestion.dataValues.FalseResponseCount += 1;
+            //             var updatedQuestion = { FalseResponseCount: dbQuestion.dataValues.FalseResponseCount };
+            //             db.Question.update(updatedQuestion, {
+            //                 where: {
+            //                     questionId: dbQuestion.dataValues.questionId,
+            //                 },
+            //             });
+            //         });
+            //     }
         }
 
         // Now increment Number of respondents
@@ -507,7 +532,7 @@ router.post('/responses/:userId', (req, res) => {
             where: {
                 surveyId: req.body.surveyId,
             },
-            include: [{ model: db.User, as: 'User', attributes: ['name','emailAddress'] }]
+            include: [{ model: db.User, as: 'User', attributes: ['name', 'emailAddress'] }]
         }).then((dbSurvey) => {
             dbSurvey.dataValues.numberOfRespondents += 1;
             const updatedSurvey = {
@@ -531,8 +556,8 @@ router.post('/responses/:userId', (req, res) => {
                 userId: req.params.userId,
             };
 
-            // if notify true Send Email
-            if(dbSurvey.dataValues.notify){
+            // if notify is true Send Email
+            if (dbSurvey.dataValues.notify) {
                 var userEmail = dbSurvey.dataValues.User.emailAddress;
                 var userName = dbSurvey.dataValues.User.name.split(" ")[0];
                 const emailBody = `
@@ -541,7 +566,7 @@ router.post('/responses/:userId', (req, res) => {
                 <p>Please <a href="https://surveneer.herokuapp.com/signin">login</a> to view their responses.</p>
                 <span style="font-size: 1rem;color: black;"><strong>SurvEnEEr Inc.</strong></span>
                 `;
-    
+
                 let mailOptions = {
                     from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
                     to: userEmail, // list of receivers
@@ -555,7 +580,7 @@ router.post('/responses/:userId', (req, res) => {
                         resolve(false);
                     } else {
                         resolve(true);
-                        console.log('Message ID: %s', info.messageId);                     
+                        console.log('Message ID: %s', info.messageId);
                         console.log(info.envelope.to.toString());
                     }
                 });
@@ -589,10 +614,10 @@ router.get('/responses/:surveyId/view', (req, res) => {
             SurveySurveyId: req.params.surveyId,
         },
         include: [
-            { model: db.Question, as: "Question", attributes: [ "questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
-            { model: db.Respondent, as: "Respondent", attributes: [ "respondentId", "respondentName", "respondentEmail", "respondentPhone"]},
-            { model: db.Survey, as: "Survey", attributes: [ "surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions" ]}
-    ]
+            { model: db.Question, as: "Question", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
+            { model: db.Respondent, as: "Respondent", attributes: ["respondentId", "respondentName", "respondentEmail", "respondentPhone"] },
+            { model: db.Survey, as: "Survey", attributes: ["surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions"] }
+        ]
     }).then(function(responses) {
         res.json(responses);
     }).catch(function(err) {
@@ -606,7 +631,7 @@ router.get('/profile', (req, res) => {
         .findByPk(req.session.passport.user)
         .then((dbUser) => {
             const hbsObject = dbUser.dataValues;
-            delete hbsObject.password;  
+            delete hbsObject.password;
             hbsObject['initials'] = hbsObject.name.split(' ')[0][0] + hbsObject.name.split(' ')[1][0];
             res.render('user/profile', hbsObject);
         });
@@ -678,7 +703,7 @@ router.post('/subscribe', [
                         showConfirmation: true,
                         layout: 'partials/prelogin',
                     };
-                return res.render('auth/signin', message);
+                    return res.render('auth/signin', message);
                 }).catch((err) => {
                     res.render('error', err);
                 });
@@ -701,7 +726,7 @@ router.post('/updateContact', (req, res) => {
                 where: {
                     contactId: req.body.contactId,
                 },
-            }).then(()=>{
+            }).then(() => {
                 res.redirect('/contacts');
             }).catch((err) => {
                 res.render('error', err);
@@ -721,7 +746,7 @@ router.get('/deleteContact/:contactId', (req, res) => {
                     where: {
                         contactId: req.params.contactId,
                     },
-                }).then(()=>{
+                }).then(() => {
                     res.redirect('/contacts');
                 }).catch((err) => {
                     res.render('error', err);
@@ -768,8 +793,8 @@ router.post('/emailSurvey/:surveyId', [
                 where: {
                     surveyId: req.params.surveyId
                 }
-            }).then((dbSurvey)=>{
-                if(dbSurvey == null){
+            }).then((dbSurvey) => {
+                if (dbSurvey == null) {
                     const errors = {};
                     errors.email = req.body.email;
                     errors.subject = req.body.subject;
@@ -779,97 +804,96 @@ router.post('/emailSurvey/:surveyId', [
                     return res.render('survey/send', errors);
                 } else {
                     const hbsObject = { surveyId: dbSurvey.dataValues.surveyId }
-            
-            const output = `
+
+                    const output = `
             <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
             <p>Hello,</p>
             <p style="color: black;">${req.body.message}</p>
             <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
             `;
 
-            return new Promise((resolve,reject)=>{
+                    return new Promise((resolve, reject) => {
 
-            // transporter.use('compile', eht({
-            //     viewEngine: 'express-handlebars',
-            //     viewPath: `${appRoot}/views`,
-            // }));
+                        // transporter.use('compile', eht({
+                        //     viewEngine: 'express-handlebars',
+                        //     viewPath: `${appRoot}/views`,
+                        // }));
 
-            for (var i = 0; i < emailArray.length; i++) {
-                // setup email data with unicode symbols
-                let mailOptions = {
-                    from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
-                    to: emailArray[i], // list of receivers
-                    subject: req.body.subject, // Subject line
-                    text: 'Hello world?', // plain text body
-                    html: output, // html body
-                    //template: 'templates/surveynotification'
-                };
+                        for (var i = 0; i < emailArray.length; i++) {
+                            // setup email data with unicode symbols
+                            let mailOptions = {
+                                from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
+                                to: emailArray[i], // list of receivers
+                                subject: req.body.subject, // Subject line
+                                text: 'Hello world?', // plain text body
+                                html: output, // html body
+                                //template: 'templates/surveynotification'
+                            };
 
-                // send mail with defined transport object
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        resolve(false);
-                        const hbsObject = {
-                            emailFailedAlertMessage: true,
-                        };
+                            // send mail with defined transport object
+                            transporter.sendMail(mailOptions, (error, info) => {
+                                if (error) {
+                                    resolve(false);
+                                    const hbsObject = {
+                                        emailFailedAlertMessage: true,
+                                    };
+                                    Object.assign(hbsObject, req.session.globalUser);
+                                    res.render('survey/send', hbsObject);
+                                } else {
+                                    resolve(true);
+                                    console.log('Message ID: %s', info.messageId);
+                                    console.log(info.envelope.to.toString());
+
+                                    // Add email to recipient table if it doesnt exist
+                                    db.Recipient.findOne({
+                                        where: {
+                                            recipientEmail: info.envelope.to.toString(),
+                                            SurveySurveyId: req.params.surveyId,
+                                        }
+                                    }).then((dbRecipient) => {
+                                        if (dbRecipient == null) {
+                                            db.Recipient.create({
+                                                recipientEmail: info.envelope.to.toString(),
+                                                UserUserId: req.session.globalUser.userId,
+                                                SurveySurveyId: req.params.surveyId,
+                                            });
+                                        }
+                                    });
+
+                                    // Increase Number of recipients by 1
+                                    dbSurvey.dataValues.numberOfRecipients += 1;
+                                    const updatedSurvey = {
+                                        numberOfRecipients: dbSurvey.dataValues.numberOfRecipients,
+                                    };
+                                    db.Survey.update(updatedSurvey, {
+                                        where: {
+                                            surveyId: dbSurvey.dataValues.surveyId,
+                                        },
+                                    });
+                                }
+                            });
+
+                        } //===For loop end
+                        hbsObject["emailSentAlertMessage"] = true;
                         Object.assign(hbsObject, req.session.globalUser);
                         res.render('survey/send', hbsObject);
-                    } else {
-                        resolve(true);
-                        console.log('Message ID: %s', info.messageId);                     
-                        console.log(info.envelope.to.toString());
-
-                        // Add email to recipient table if it doesnt exist
-                        db.Recipient.findOne({
-                            where: {
-                                recipientEmail: info.envelope.to.toString(),
-                                SurveySurveyId: req.params.surveyId,
-                            }
-                        }).then((dbRecipient)=>{
-                            if (dbRecipient == null){
-                                db.Recipient.create({
-                                    recipientEmail: info.envelope.to.toString(), 
-                                    UserUserId: req.session.globalUser.userId,
-                                    SurveySurveyId: req.params.surveyId,
-                                });
-                            }
-                        });
-
-                        // Increase Number of recipients by 1
-                        dbSurvey.dataValues.numberOfRecipients += 1;
-                        const updatedSurvey = {
-                            numberOfRecipients: dbSurvey.dataValues.numberOfRecipients,
-                        };
-                        db.Survey.update(updatedSurvey, {
-                            where: {
-                                surveyId: dbSurvey.dataValues.surveyId,
-                            },
-                        });
-                    }
-                });
-
-            }//===For loop end
-            hbsObject["emailSentAlertMessage"] = true;
-            Object.assign(hbsObject, req.session.globalUser);
-            res.render('survey/send', hbsObject);
-        });//======
-    }
-    }).catch((err)=>{
-        res.render('error', err);
-    });
+                    }); //======
+                }
+            }).catch((err) => {
+                res.render('error', err);
+            });
         }
     });
 
-    router.post('/updateRecipient/:recipientId', 
-    [                                                                                                 
+router.post('/updateRecipient/:recipientId', [
         check('recipientName').not().isEmpty().escape().withMessage('Please enter a name'),
         check('recipientEmail').not().isEmpty().escape().withMessage('Please enter an email'),
         check('recipientPhone').not().isEmpty().escape().withMessage('Please enter a phone number'),
         check('surveyId').not().isEmpty().escape().withMessage('Please select a survey'),
-    ], 
-    (req,res)=>{   
+    ],
+    (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) {           
+        if (!errors.isEmpty()) {
             errors.recipientName = req.body.recipientName;
             errors.recipientEmail = req.body.recipientEmail;
             errors.recipientPhone = req.body.recipientPhone;
@@ -881,8 +905,8 @@ router.post('/emailSurvey/:surveyId', [
             where: {
                 recipientId: req.params.recipientId
             }
-        }).then((dbRecipient)=>{
-            if (dbRecipient !== null){
+        }).then((dbRecipient) => {
+            if (dbRecipient !== null) {
                 // Update Recipient Info
                 db.Recipient.update({
                     recipientName: req.body.recipientName,
@@ -890,31 +914,30 @@ router.post('/emailSurvey/:surveyId', [
                     recipientPhone: req.body.recipientPhone,
                     UserUserId: req.params.userId,
                     SurveySurveyId: req.body.surveyId
-                },{
+                }, {
                     where: {
                         recipientId: dbRecipient.dataValues.recipientId,
                     }
-                }).then((dbRecipient)=>{
+                }).then((dbRecipient) => {
                     var hbsObject = { updateSuccess: true }
                     Object.assign(hbsObject, req.session.globalUser);
                     return res.render('user/contacts', hbsObject);
                 });
-            }           
-        }).catch((err)=>{
+            }
+        }).catch((err) => {
             return res.render('error', err);
         });
     });
 
-    router.post('/newRecipient/:userId',
-    [                                                                                                         
+router.post('/newRecipient/:userId', [
         check('recipientName').not().isEmpty().escape().withMessage('Please enter a name'),
         check('recipientEmail').not().isEmpty().escape().withMessage('Please enter an email'),
         check('recipientPhone').not().isEmpty().escape().withMessage('Please enter a phone number'),
         check('surveyId').not().isEmpty().escape().withMessage('Please select a survey'),
-    ], 
-    (req,res)=>{
+    ],
+    (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) {           
+        if (!errors.isEmpty()) {
             errors.recipientName = req.body.recipientName;
             errors.recipientEmail = req.body.recipientEmail;
             errors.recipientPhone = req.body.recipientPhone;
@@ -928,33 +951,32 @@ router.post('/emailSurvey/:surveyId', [
             recipientPhone: req.body.recipientPhone,
             UserUserId: req.params.userId,
             SurveySurveyId: req.body.surveyId
-        }).then((dbRecipient)=>{
+        }).then((dbRecipient) => {
             console.log(dbRecipient.dataValues);
             var hbsObject = { successMessage: true }
             Object.assign(hbsObject, req.session.globalUser);
             return res.render('user/contacts', hbsObject);
-        }).catch((err)=>{
+        }).catch((err) => {
             return res.render('error', err);
         });
     });
-    
-    router.get('/deleteRecipient/:recipientId', (req,res)=>{
-        db.Recipient.findByPk(req.params.recipientId).then((dbRecipient)=>{
-            if (dbRecipient !== null){
-                db.Recipient.destroy({
-                    where: 
-                    { 
-                        recipientId: req.params.recipientId 
-                    }
-                }).then(()=>{
-                    var hbsObject = { deleteSuccess: true }
-                    Object.assign(hbsObject, req.session.globalUser);
-                    return res.render('user/contacts', hbsObject);
-                }).catch((err) => {
-                    res.render('error', err);
-                });
-            }
-        });
+
+router.get('/deleteRecipient/:recipientId', (req, res) => {
+    db.Recipient.findByPk(req.params.recipientId).then((dbRecipient) => {
+        if (dbRecipient !== null) {
+            db.Recipient.destroy({
+                where: {
+                    recipientId: req.params.recipientId
+                }
+            }).then(() => {
+                var hbsObject = { deleteSuccess: true }
+                Object.assign(hbsObject, req.session.globalUser);
+                return res.render('user/contacts', hbsObject);
+            }).catch((err) => {
+                res.render('error', err);
+            });
+        }
     });
+});
 
 module.exports = router;
