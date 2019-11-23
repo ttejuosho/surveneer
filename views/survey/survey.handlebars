@@ -326,48 +326,58 @@
                 </div>
             </div>
             {{#ifEquals optionType "MultipleChoice"}}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                    <label>Option 1</label>
-                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
+
+                {{#if option1}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                            <label>Option 1</label>
+                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                    <label>Option 2</label>
-                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
+                {{/if}}
+
+                {{#if option2}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                            <label>Option 2</label>
+                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                    <label>Option 3</label>
-                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
+                {{/if}}
+                {{#if option3}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                            <label>Option 3</label>
+                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                    <label>Option 4</label>
-                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
+                {{/if}}
+                {{#if option4}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                            <label>Option 4</label>
+                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                {{/if}}
             {{/ifEquals}}
             {{#if questionInstruction}}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                    <label>Instruction</label>
-                    <input id="{{questionInstruction}}" name="options" type="text" class="form-control form-control-sm" value="{{questionInstruction}}" readonly>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label>Instruction</label>
+                        <input id="{{questionInstruction}}" name="options" type="text" class="form-control form-control-sm" value="{{questionInstruction}}" readonly>
+                        </div>
                     </div>
                 </div>
-            </div>
             {{/if}}
         </div>
     </div>
@@ -464,7 +474,7 @@ var openSurveyImageModal = (surveyId) => {
     const socket = io();
 
 function createChart(i, optionType, optionType1, optionType2, optionType3, optionType4, optionType5){
-    if ($('#q'+[i+1]+ optionType1 +'ResponseCount').val() == "" && $('#q'+[i+1] + optionType2 + 'ResponseCount').val() == ""){ return; } else { $('.chartDiv').removeClass('d-none'); }
+    if ( parseInt($('#numberOfRespondents').val()) < 1 ){ return; } else { $('.chartDiv').removeClass('d-none'); }
     var chartLabels = (optionType3 ? [optionType1, optionType2, optionType3, optionType4, optionType5] : [optionType1, optionType2])
     chartData = [];
     if (optionType3){
@@ -523,6 +533,14 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
             createChart(i, 'YesNo', 'Yes', 'No');
         } else if ($('#' + elementId).attr("data-optiontype") == "LikertAgreement"){
             createChart(i, 'LikertAgreement', 'StronglyDisagree', 'Disagree', 'Undecided', 'Agree', 'StronglyAgree');
+        } else if ($('#' + elementId).attr("data-optiontype") == "LikertQuality"){
+            createChart(i, 'LikertQuality', 'VeryGood', 'Good', 'Acceptable', 'Poor', 'VeryPoor');
+        } else if ($('#' + elementId).attr("data-optiontype") == "LikertValue"){
+            createChart(i, 'LikertValue', 'VeryHigh', 'High', 'Moderate', 'Low', 'None');
+        } else if ($('#' + elementId).attr("data-optiontype") == "LikertFrequency"){
+            createChart(i, 'LikertFrequency', 'VeryFrequently', 'Frequently', 'Occasionally', 'Rarely', 'Never');
+        } else if ($('#' + elementId).attr("data-optiontype") == "LikertImportance"){
+            createChart(i, 'LikertImportance', 'VeryImportant', 'Important', 'ModeratelyImportant', 'SlightlyImportant', 'NotImportant');
         }
     });
 

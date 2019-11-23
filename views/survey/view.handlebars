@@ -101,34 +101,42 @@
                 </div>
             {{/ifEquals}}
             {{#ifEquals optionType "MultipleChoice"}}
-                <div class="form-check form-check-radio">
-                    <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option1}}" required>
-                        {{option1}}
-                        <span class="form-check-sign"></span>
-                    </label>
-                </div>
-                <div class="form-check form-check-radio">
-                    <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option2}}" required>
-                        {{option2}}
-                        <span class="form-check-sign"></span>
-                    </label>
-                </div>
-                <div class="form-check form-check-radio">
-                    <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option3}}" required>
-                        {{option3}}
-                        <span class="form-check-sign"></span>
-                    </label>
-                </div>
-                <div class="form-check form-check-radio">
-                    <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option4}}" required>
-                        {{option4}}
-                        <span class="form-check-sign"></span>
-                    </label>
-                </div>
+                {{#if option1}}
+                    <div class="form-check form-check-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option1}}" required>
+                            {{option1}}
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                {{/if}}
+                {{#if option2}}
+                    <div class="form-check form-check-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option2}}" required>
+                            {{option2}}
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                {{/if}}
+                {{#if option3}}
+                    <div class="form-check form-check-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option3}}" required>
+                            {{option3}}
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                {{/if}}
+                {{#if option4}}
+                    <div class="form-check form-check-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="{{option4}}" required>
+                            {{option4}}
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                {{/if}}
             {{/ifEquals}}
             {{#ifEquals optionType "LikertAgreement"}}
                 <div class="row">

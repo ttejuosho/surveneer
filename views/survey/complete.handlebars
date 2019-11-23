@@ -110,7 +110,7 @@ $(document).ready(function(){
                             '</div>' +
                         '</div>' +
                     '</div>';
-                    // Emit User Id along with message
+        // Emit User Id along with message
         var socketData = { message: data[0][0].numberOfRespondents, domData: html, room: userId, chartData: [] };
         data[1].forEach((d, i)=>{
             if(d.Question.optionType === 'YesNo'){
@@ -125,7 +125,39 @@ $(document).ready(function(){
                 parseInt(d.Question.AgreeResponseCount),
                 parseInt(d.Question.StronglyAgreeResponseCount)
                 ]);
-            }
+            } else if (d.Question.optionType === 'LikertQuality'){
+                socketData.chartData.push([
+                parseInt(d.Question.VeryGoodResponseCount),
+                parseInt(d.Question.GoodResponseCount),
+                parseInt(d.Question.AcceptableResponseCount),
+                parseInt(d.Question.PoorResponseCount),
+                parseInt(d.Question.VeryPoorResponseCount)
+                ]);
+            } else if (d.Question.optionType === 'LikertValue'){
+                socketData.chartData.push([
+                parseInt(d.Question.VeryHighResponseCount),
+                parseInt(d.Question.HighResponseCount),
+                parseInt(d.Question.ModerateResponseCount),
+                parseInt(d.Question.LowResponseCount),
+                parseInt(d.Question.NoneResponseCount)
+                ]);
+            } else if (d.Question.optionType === 'LikertFrequency'){
+                socketData.chartData.push([
+                parseInt(d.Question.VeryFrequentlyResponseCount),
+                parseInt(d.Question.FrequentlyResponseCount),
+                parseInt(d.Question.OccasionallyResponseCount),
+                parseInt(d.Question.RarelyResponseCount),
+                parseInt(d.Question.NeverResponseCount)
+                ]);
+            } else if (d.Question.optionType === 'LikertImportance'){
+                socketData.chartData.push([
+                parseInt(d.Question.VeryImportantResponseCount),
+                parseInt(d.Question.ImportantResponseCount),
+                parseInt(d.Question.ModeratelyImportantResponseCount),
+                parseInt(d.Question.SlightlyImportantResponseCount),
+                parseInt(d.Question.NotImportantResponseCount)
+                ]);
+            } 
         });
         socket.emit('response', socketData);
     });
