@@ -267,7 +267,7 @@ module.exports = (app) => {
                 },
                 include: [
                     { model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone'] },
-                    { model: db.Question, as: 'Question', attributes: ['questionId', 'question', 'optionType', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'] }
+                    { model: db.Question, as: 'Question' }
                 ],
             }).then((dbRespondent) => {
                 data.push([{ numberOfRespondents: d }]);
@@ -322,7 +322,7 @@ module.exports = (app) => {
                 surveyId: req.params.surveyId,
             },
             include: [
-                { model: db.User, as: 'User', attributes: ['name','emailAddress'] },
+                { model: db.User, as: 'User', attributes: ['name', 'emailAddress'] },
                 { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
                 { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
                 { model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'] },

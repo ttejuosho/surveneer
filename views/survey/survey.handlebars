@@ -473,13 +473,13 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         chartData.push(parseInt($('#q' + [i+1] + optionType3 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType4 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType5 + 'ResponseCount').val()));
-        chartBgColor = ['#1f8ef1', '#2dce89', '#f5f5f5', '#f96332', '#283d6a'];
+        chartBgColor = ['#1f8ef1', '#2dce89', '#f5f5f5', '#f96332', '#e14eca'];
     } else {
         chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
         chartBgColor = ['#1f8ef1', '#2dce89'];
     }
-    console.log(chartData);
+    
     countValues.push(chartData);
     charts[i] = new Chart($('#q' + [i+1] + optionType + 'ResponseChart'),{
         type: 'horizontalBar',
@@ -517,7 +517,6 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
 
     $('.optionCounts').each((i)=>{
         var elementId = $('.optionCounts')[i].id;
-        console.log($('#' + elementId).attr("data-optiontype"));
         if ($('#' + elementId).attr("data-optiontype") == "TrueFalse"){
             createChart(i, 'TrueFalse', 'True', 'False'); // End Chart
         } else if ($('#' + elementId).attr("data-optiontype") == "YesNo"){
@@ -537,7 +536,6 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         $('#numberOfRespondents').val(data.message);
         $('#ResponseSection').prepend(data.domData);
         for (var i = 0; i < charts.length; i++){
-            //console.log(data.chartData[i]);
             charts[i].data.datasets[0].data = data.chartData[i];
             charts[i].update();
         }

@@ -116,7 +116,15 @@ $(document).ready(function(){
             if(d.Question.optionType === 'YesNo'){
                 socketData.chartData.push([parseInt(d.Question.YesResponseCount), parseInt(d.Question.NoResponseCount)]);
             } else if (d.Question.optionType === 'TrueFalse'){
-                socketData.chartData.push([parseInt(d.Question.TrueResponseCount), parseInt(d.Question.FalseResponseCount)])
+                socketData.chartData.push([parseInt(d.Question.TrueResponseCount), parseInt(d.Question.FalseResponseCount)]);
+            } else if (d.Question.optionType === 'LikertAgreement'){
+                socketData.chartData.push([
+                parseInt(d.Question.StronglyDisagreeResponseCount),
+                parseInt(d.Question.DisagreeResponseCount),
+                parseInt(d.Question.UndecidedResponseCount),
+                parseInt(d.Question.AgreeResponseCount),
+                parseInt(d.Question.StronglyAgreeResponseCount)
+                ]);
             }
         });
         socket.emit('response', socketData);
