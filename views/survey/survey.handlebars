@@ -323,51 +323,66 @@
                             <canvas id="q{{counter @index}}LikertImportanceResponseChart" width="400" height="120"></canvas>
                         </div>
                     {{/ifEquals}}
+
+                    {{#ifEquals optionType "MultipleChoice"}}
+                        <input type="hidden" name="Option1ResponseCount" id="q{{counter @index}}Option1ResponseCount" value="{{option1ResponseCount}}">
+                        <input type="hidden" name="Option2ResponseCount" id="q{{counter @index}}Option2ResponseCount" value="{{option2ResponseCount}}">
+                        <input type="hidden" name="Option3ResponseCount" id="q{{counter @index}}Option3ResponseCount" value="{{option3ResponseCount}}">
+                        <input type="hidden" name="Option4ResponseCount" id="q{{counter @index}}Option4ResponseCount" value="{{option4ResponseCount}}">
+                        <div class="chart-container" style="position: relative; height: auto;">
+                            <canvas id="q{{counter @index}}MultipleChoiceResponseChart" width="400" height="120"></canvas>
+                        </div>
+                    {{/ifEquals}}
                 </div>
             </div>
             {{#ifEquals optionType "MultipleChoice"}}
+                
+                <div class="row">
+                    {{#if option1}}
+                        <div class="col-6 pr-0">
+                            <div class="col-md-12 pl-0">
+                                <div class="form-group">
+                                    <label>Option 1</label>
+                                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if option2}}
+                        <div class="col-6 pl-0">
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group">
+                                    <label>Option 2</label>
+                                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
 
-                {{#if option1}}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                            <label>Option 1</label>
-                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
+                <div class="row">
+                    {{#if option3}}
+                        <div class="col-6 pl-0">
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group">
+                                <label>Option 3</label>
+                                <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {{/if}}
+                    {{/if}}
+                    {{#if option4}}
+                        <div class="col-6 pl-0">
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group">
+                                <label>Option 4</label>
+                                <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
 
-                {{#if option2}}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                            <label>Option 2</label>
-                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                {{/if}}
-                {{#if option3}}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                            <label>Option 3</label>
-                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                {{/if}}
-                {{#if option4}}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                            <label>Option 4</label>
-                            <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                {{/if}}
             {{/ifEquals}}
             {{#if questionInstruction}}
                 <div class="row">
@@ -474,22 +489,39 @@ var openSurveyImageModal = (surveyId) => {
     const socket = io();
 
 function createChart(i, optionType, optionType1, optionType2, optionType3, optionType4, optionType5){
+    // if there are no recipients, exit this function else show Chart Div 
     if ( parseInt($('#numberOfRespondents').val()) < 1 ){ return; } else { $('.chartDiv').removeClass('d-none'); }
-    var chartLabels = (optionType3 ? [optionType1, optionType2, optionType3, optionType4, optionType5] : [optionType1, optionType2])
+
+    //var chartLabels = (optionType3 ? [optionType1, optionType2, optionType3, optionType4, optionType5] : [optionType1, optionType2])
+    var chartLabels = [];
     chartData = [];
-    if (optionType3){
+
+    if (optionType === 'MultipleChoice'){
+        chartLabels = [optionType1, optionType2, optionType3, optionType4];
+        chartData.push(parseInt($('#q' + [i+1] + 'Option1ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + 'Option2ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + 'Option3ResponseCount').val()));
+        chartData.push(parseInt($('#q' + [i+1] + 'Option4ResponseCount').val()));
+        chartBgColor = ['#1f8ef1', '#2dce89', '#f96332', '#e14eca'];
+    }
+
+    if (optionType.includes('Likert')){
+        chartLabels = [optionType1, optionType2, optionType3, optionType4, optionType5];
         chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType3 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType4 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType5 + 'ResponseCount').val()));
         chartBgColor = ['#1f8ef1', '#2dce89', '#f5f5f5', '#f96332', '#e14eca'];
-    } else {
+    }
+
+    if (optionType.includes('YesNo') || optionType.includes('TrueFalse')) {
+        chartLabels = [optionType1, optionType2];
         chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
         chartBgColor = ['#1f8ef1', '#2dce89'];
     }
-    
+
     countValues.push(chartData);
     charts[i] = new Chart($('#q' + [i+1] + optionType + 'ResponseChart'),{
         type: 'horizontalBar',
@@ -541,6 +573,8 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
             createChart(i, 'LikertFrequency', 'VeryFrequently', 'Frequently', 'Occasionally', 'Rarely', 'Never');
         } else if ($('#' + elementId).attr("data-optiontype") == "LikertImportance"){
             createChart(i, 'LikertImportance', 'VeryImportant', 'Important', 'ModeratelyImportant', 'SlightlyImportant', 'NotImportant');
+        } else if ($('#' + elementId).attr("data-optiontype") == "MultipleChoice"){
+            createChart(i, 'MultipleChoice', 'option1', 'option2', 'option3', 'option4');
         }
     });
 

@@ -33,6 +33,26 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    option1ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    option2ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    option3ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    option4ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
     YesResponseCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,

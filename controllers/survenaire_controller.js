@@ -193,7 +193,7 @@ router.put('/updateQuestion/:questionId', (req, res) => {
         option4: (req.body.option4 == undefined ? null : req.body.option4),
         SurveySurveyId: req.body.SurveyId,
     };
-    // console.log(dbQuestion);
+
     db.Question.update(dbQuestion, {
         where: {
             questionId: req.params.questionId,
@@ -246,8 +246,8 @@ router.get('/deleteQuestion/:questionId', (req, res) => {
                 });
             }).catch((err) => {
                 res.render('error', err);
-            });
         });
+    });
 });
 
 // Improvise Adapt & Overcome
@@ -319,7 +319,6 @@ router.post('/newQuestion/:surveyId', [
                     if (req.body.action === 'Finish') {
                         return res.redirect('/mysurveys/' + req.params.surveyId);
                     }
-                    // req.flash('success_msg','Survey created, Please add a question to your survey');
                     delete req.session.globalUser.surveyAlertMessage;
                     return res.render('question/new', hbsObject);
                 });
@@ -329,20 +328,6 @@ router.post('/newQuestion/:surveyId', [
         });
     }
 });
-
-// ======Get All User Surveys With Questions==================
-// router.get('/mysurveys', function(req, res) {
-//     where = (req.query.where && JSON.parse(req.query.where) || null);
-//     db.Survey.findAll({
-//         where: where,
-//         order: req.query.order || [],
-//         include: [{ model: db.Question, as: "Questions", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] }]
-//     }).then(function(surveys) {
-//         res.json(surveys);
-//     }).catch(function(err) {
-//         res.render('error', err);
-//     });
-// });
 
 // =================Get One User Survey With Questions & Responses (Survey Panel)==========
 router.get('/mysurveys/:surveyId', function(req, res) {
@@ -356,12 +341,6 @@ router.get('/mysurveys/:surveyId', function(req, res) {
             {
                 model: db.Question,
                 as: 'Questions'
-                    // attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 
-                    // 'option1', 'option2', 'option3', 'option4', 
-                    // 'YesResponseCount', 'NoResponseCount', 
-                    // 'TrueResponseCount', 'FalseResponseCount',
-
-                //]
             },
         ],
     }).then(function(survey) {
@@ -457,7 +436,13 @@ router.post('/responses/:userId', (req, res) => {
                     questionId: qandaArray[i].QuestionQuestionId,
                 },
             }).then((dbQuestion) => {
-                var optionType1 = qandaArray[i].answer + 'ResponseCount';
+                var optionType1 = '';
+                if (dbQuestion.dataValues.optionType === "MultipleChoice"){
+                    optionType1 = qandaArray[i].answer.slice(0, 7) + 'ResponseCount';
+                } else {
+                    optionType1 = qandaArray[i].answer + 'ResponseCount';
+                }
+
                 dbQuestion.dataValues[optionType1] += 1;
                 var updatedQuestion = {};
                 updatedQuestion[optionType1] = dbQuestion.dataValues[optionType1];
@@ -467,64 +452,6 @@ router.post('/responses/:userId', (req, res) => {
                     },
                 });
             });
-
-            //     if (qandaArray[i].answer.toLowerCase() === 'yes') {
-            //         db.Question.findOne({
-            //             where: {
-            //                 questionId: qandaArray[i].QuestionQuestionId,
-            //             },
-            //         }).then((dbQuestion) => {
-            //             dbQuestion.dataValues.YesResponseCount += 1;
-            //             var updatedQuestion = { YesResponseCount: dbQuestion.dataValues.YesResponseCount };
-            //             db.Question.update(updatedQuestion, {
-            //                 where: {
-            //                     questionId: dbQuestion.dataValues.questionId,
-            //                 },
-            //             });
-            //         });
-            //     } else if (qandaArray[i].answer.toLowerCase() === 'no') {
-            //         db.Question.findOne({
-            //             where: {
-            //                 questionId: qandaArray[i].QuestionQuestionId,
-            //             },
-            //         }).then((dbQuestion) => {
-            //             dbQuestion.dataValues.NoResponseCount += 1;
-            //             var updatedQuestion = { NoResponseCount: dbQuestion.dataValues.NoResponseCount };
-            //             db.Question.update(updatedQuestion, {
-            //                 where: {
-            //                     questionId: dbQuestion.dataValues.questionId,
-            //                 },
-            //             });
-            //         });
-            //     } else if (qandaArray[i].answer.toLowerCase() === 'true') {
-            //         db.Question.findOne({
-            //             where: {
-            //                 questionId: qandaArray[i].QuestionQuestionId,
-            //             },
-            //         }).then((dbQuestion) => {
-            //             dbQuestion.dataValues.TrueResponseCount += 1;
-            //             var updatedQuestion = { TrueResponseCount: dbQuestion.dataValues.TrueResponseCount };
-            //             db.Question.update(updatedQuestion, {
-            //                 where: {
-            //                     questionId: dbQuestion.dataValues.questionId,
-            //                 },
-            //             });
-            //         });
-            //     } else if (qandaArray[i].answer.toLowerCase() === 'false') {
-            //         db.Question.findOne({
-            //             where: {
-            //                 questionId: qandaArray[i].QuestionQuestionId,
-            //             },
-            //         }).then((dbQuestion) => {
-            //             dbQuestion.dataValues.FalseResponseCount += 1;
-            //             var updatedQuestion = { FalseResponseCount: dbQuestion.dataValues.FalseResponseCount };
-            //             db.Question.update(updatedQuestion, {
-            //                 where: {
-            //                     questionId: dbQuestion.dataValues.questionId,
-            //                 },
-            //             });
-            //         });
-            //     }
         }
 
         // Now increment Number of respondents

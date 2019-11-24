@@ -157,7 +157,14 @@ $(document).ready(function(){
                 parseInt(d.Question.SlightlyImportantResponseCount),
                 parseInt(d.Question.NotImportantResponseCount)
                 ]);
-            } 
+            } else if (d.Question.optionType === 'MultipleChoice'){
+                socketData.chartData.push([
+                parseInt(d.Question.option1ResponseCount),
+                parseInt(d.Question.option2ResponseCount),
+                parseInt(d.Question.option3ResponseCount),
+                parseInt(d.Question.option4ResponseCount)
+                ]);
+            }
         });
         socket.emit('response', socketData);
     });
