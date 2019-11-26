@@ -276,7 +276,7 @@
                         <input type="hidden" name="AgreeResponseCount" id="q{{counter @index}}AgreeResponseCount" value="{{AgreeResponseCount}}">
                         <input type="hidden" name="StronglyAgreeResponseCount" id="q{{counter @index}}StronglyAgreeResponseCount" value="{{StronglyAgreeResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertAgreementResponseChart" width="400" height="120"></canvas>
+                            <canvas id="q{{counter @index}}LikertAgreementResponseChart" width="400" height="160"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -287,7 +287,7 @@
                         <input type="hidden" name="PoorResponseCount" id="q{{counter @index}}PoorResponseCount" value="{{PoorResponseCount}}">
                         <input type="hidden" name="VeryPoorResponseCount" id="q{{counter @index}}VeryPoorResponseCount" value="{{VeryPoorResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertQualityResponseChart" width="400" height="120"></canvas>
+                            <canvas id="q{{counter @index}}LikertQualityResponseChart" width="400" height="160"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -298,7 +298,7 @@
                         <input type="hidden" name="LowResponseCount" id="q{{counter @index}}LowResponseCount" value="{{LowResponseCount}}">
                         <input type="hidden" name="NoneResponseCount" id="q{{counter @index}}NoneResponseCount" value="{{NoneResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertValueResponseChart" width="400" height="120"></canvas>
+                            <canvas id="q{{counter @index}}LikertValueResponseChart" width="400" height="160"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -309,7 +309,7 @@
                         <input type="hidden" name="RarelyResponseCount" id="q{{counter @index}}RarelyResponseCount" value="{{RarelyResponseCount}}">
                         <input type="hidden" name="NeverResponseCount" id="q{{counter @index}}NeverResponseCount" value="{{NeverResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertFrequencyResponseChart" width="400" height="120"></canvas>
+                            <canvas id="q{{counter @index}}LikertFrequencyResponseChart" width="400" height="160"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -320,7 +320,7 @@
                         <input type="hidden" name="SlightlyImportant" id="q{{counter @index}}SlightlyImportant" value="{{SlightlyImportant}}">
                         <input type="hidden" name="NotImportantResponseCount" id="q{{counter @index}}NotImportantResponseCount" value="{{NotImportantResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertImportanceResponseChart" width="400" height="120"></canvas>
+                            <canvas id="q{{counter @index}}LikertImportanceResponseChart" width="400" height="160"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -421,9 +421,9 @@
 
         <div id="collapseOne{{@index}}" class="collapse" role="tabpanel" aria-labelledby="headingOne{{@index}}">
         <div id="Respondent{{@index}}" class="card-body">
-            {{#ifEquals getId "true"}}
-            <h5>Phone Number: {{respondentPhone}}</h5> 
-            <h5>Email Address: {{respondentEmail}}</h5>
+            {{#ifEquals ../getId 1}}
+                <h5><span class="title mr-1">Phone Number: </span>{{respondentPhone}}</h5> 
+                <h5><span class="title mr-1">Email Address: </span>{{respondentEmail}}</h5>
             {{/ifEquals}}
             <div class="row">
                 <div class="col-md-6 pr-md-1">

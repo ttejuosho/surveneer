@@ -246,8 +246,8 @@ router.get('/deleteQuestion/:questionId', (req, res) => {
                 });
             }).catch((err) => {
                 res.render('error', err);
+            });
         });
-    });
 });
 
 // Improvise Adapt & Overcome
@@ -338,10 +338,7 @@ router.get('/mysurveys/:surveyId', function(req, res) {
         include: [
             { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
             { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
-            {
-                model: db.Question,
-                as: 'Questions'
-            },
+            { model: db.Question, as: 'Questions' },
         ],
     }).then(function(survey) {
         const hbsObject = survey.dataValues;
@@ -437,7 +434,7 @@ router.post('/responses/:userId', (req, res) => {
                 },
             }).then((dbQuestion) => {
                 var optionType1 = '';
-                if (dbQuestion.dataValues.optionType === "MultipleChoice"){
+                if (dbQuestion.dataValues.optionType === "MultipleChoice") {
                     optionType1 = qandaArray[i].answer.slice(0, 7) + 'ResponseCount';
                 } else {
                     optionType1 = qandaArray[i].answer + 'ResponseCount';
