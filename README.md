@@ -8,7 +8,7 @@ Create Surveys and Analyze data from the Surveys
 * Node.js
 * Passport
 * MySQL
-* Handlbars
+* Handlebars
 * Sequelize
 * (a full list of dependencies can be found in `package.json`)
 * Deployed to Heroku
@@ -22,7 +22,7 @@ These instructions will get you a copy of the project up and running on your loc
 Before you get started, make sure you have the following software installed on your computer:
 
 - [Node.js](https://nodejs.org/en/)
-- [PostrgeSQL](https://www.postgresql.org/)
+- [MySQL](https://www.mysql.com/)
 - [Nodemon](https://nodemon.io/)
 
 ### Installing
