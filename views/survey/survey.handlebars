@@ -276,7 +276,7 @@
                         <input type="hidden" name="AgreeResponseCount" id="q{{counter @index}}AgreeResponseCount" value="{{AgreeResponseCount}}">
                         <input type="hidden" name="StronglyAgreeResponseCount" id="q{{counter @index}}StronglyAgreeResponseCount" value="{{StronglyAgreeResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertAgreementResponseChart" width="400" height="160"></canvas>
+                            <canvas id="q{{counter @index}}LikertAgreementResponseChart" width="400" height="170"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -287,7 +287,7 @@
                         <input type="hidden" name="PoorResponseCount" id="q{{counter @index}}PoorResponseCount" value="{{PoorResponseCount}}">
                         <input type="hidden" name="VeryPoorResponseCount" id="q{{counter @index}}VeryPoorResponseCount" value="{{VeryPoorResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertQualityResponseChart" width="400" height="160"></canvas>
+                            <canvas id="q{{counter @index}}LikertQualityResponseChart" width="400" height="170"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -298,7 +298,7 @@
                         <input type="hidden" name="LowResponseCount" id="q{{counter @index}}LowResponseCount" value="{{LowResponseCount}}">
                         <input type="hidden" name="NoneResponseCount" id="q{{counter @index}}NoneResponseCount" value="{{NoneResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertValueResponseChart" width="400" height="160"></canvas>
+                            <canvas id="q{{counter @index}}LikertValueResponseChart" width="400" height="170"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -309,7 +309,7 @@
                         <input type="hidden" name="RarelyResponseCount" id="q{{counter @index}}RarelyResponseCount" value="{{RarelyResponseCount}}">
                         <input type="hidden" name="NeverResponseCount" id="q{{counter @index}}NeverResponseCount" value="{{NeverResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertFrequencyResponseChart" width="400" height="160"></canvas>
+                            <canvas id="q{{counter @index}}LikertFrequencyResponseChart" width="400" height="170"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -320,7 +320,7 @@
                         <input type="hidden" name="SlightlyImportant" id="q{{counter @index}}SlightlyImportant" value="{{SlightlyImportant}}">
                         <input type="hidden" name="NotImportantResponseCount" id="q{{counter @index}}NotImportantResponseCount" value="{{NotImportantResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}LikertImportanceResponseChart" width="400" height="160"></canvas>
+                            <canvas id="q{{counter @index}}LikertImportanceResponseChart" width="400" height="170" style="max-height: 160px;"></canvas>
                         </div>
                     {{/ifEquals}}
 
@@ -521,7 +521,7 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
         chartBgColor = ['#1f8ef1', '#2dce89'];
     }
-
+    //console.log(chartLabels);
     countValues.push(chartData);
     charts[i] = new Chart($('#q' + [i+1] + optionType + 'ResponseChart'),{
         type: 'horizontalBar',

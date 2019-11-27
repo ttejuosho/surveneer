@@ -11,7 +11,7 @@
     width: 350px;
 }
 
-.tab-content{
+.tab-content {
     min-height: 300px;
 }
 
@@ -62,23 +62,23 @@ img {
     border-radius: calc(0.2857rem - 0.0625rem) calc(0.2857rem - 0.0625rem) 0 0;
 }
 
-.responseCount{
+.responseCount {
     background: #cf51de;
     padding: 0.1em 0.4em;
     color: black;
     font-weight: 700;
 }
 
-@media (max-width: 800px) { 
+@media (max-width: 800px) {
     .main-panel>.partial-content {
         padding: 70px 10px 0px 20px;
         min-height: calc(100vh - 70px);
     }
- }
+}
 
- @media (max-width: 450px) { 
+@media (max-width: 450px) {
     .card-register .card-header {
         padding: 0 0 15px;
         overflow: hidden;
     }
- }
+}

@@ -40,11 +40,11 @@
         <input type="text" id="questionLength" name="questionLength" value="{{getLength Questions}}" />
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="surveyTOUModal" tabindex="-1" role="dialog" aria-labelledby="surveyTOUModalLabel" aria-hidden="true" style="background: #2a2e33;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Terms & Agreement</h5>
+                <h5 class="modal-title" id="surveyTOUModalLabel">Terms & Agreement</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -421,7 +421,7 @@
     {{#ifEquals showTOU true}}
         <script type="text/javascript">
             $(function () {
-                $("#exampleModal").modal({
+                $("#surveyTOUModal").modal({
                     backdrop: false,
                     show: true
                 });
