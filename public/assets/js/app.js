@@ -189,6 +189,7 @@ $(function() {
         if ($('#postSurveyInstructions').val().trim().length > 0){ $('#postSurveyInstructions').attr('readonly', false); } else { $('#postSurveyInstructionsRow').removeClass('d-none'); }
         if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', false); } else { $('#surveyNotesRow').removeClass('d-none'); }
         if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', false); } else { $('#surveyTOURow').removeClass('d-none'); }
+        if ($('#showTOU').val() === 'false'){ $('#surveyTOURow').addClass('d-none'); }
 
         $('#updateSurveyBtn').removeClass('d-none');
 
@@ -196,5 +197,6 @@ $(function() {
         $('.form-check').removeClass('disabled');
         $('.surveyEditCheck').attr('disabled', false);
     });
+   
    
 });

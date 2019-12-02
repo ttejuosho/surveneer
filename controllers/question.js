@@ -89,9 +89,9 @@ router.get('/deleteQuestion/:questionId', (req, res) => {
                     surveyId: SurveyId,
                 },
             }).then((dbSurvey) => {
-                dbSurvey.dataValues.numberOfQuestions -= 1;
+                dbSurvey.dataValues.QuestionCount -= 1;
                 const updatedSurvey = {
-                    numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+                    QuestionCount: dbSurvey.dataValues.QuestionCount,
                 };
 
                 db.Survey.update(updatedSurvey, {
@@ -137,12 +137,12 @@ router.post('/newQuestion/:surveyId',
                     surveyId: req.params.surveyId,
                 },
             }).then((dbSurvey) => {
-                dbSurvey.dataValues.numberOfQuestions += 1;
+                dbSurvey.dataValues.QuestionCount += 1;
                 const updatedSurvey = {
                     surveyName: dbSurvey.dataValues.surveyName,
                     getId: dbSurvey.dataValues.getId,
-                    numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-                    numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+                    RespondentCount: dbSurvey.dataValues.RespondentCount,
+                    QuestionCount: dbSurvey.dataValues.QuestionCount,
                     preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
                     postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                     surveyNotes: dbSurvey.dataValues.surveyNotes,

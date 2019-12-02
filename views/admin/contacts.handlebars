@@ -177,7 +177,7 @@ $.ajax({
     error: function() {
         callback();
     },
-    success: function(res) {           
+    success: function(res) {         
         renderContactsTable(res);
     }
 });
@@ -197,7 +197,7 @@ $.ajax({
         //var $row = $(this).closest('tr');
         var rowId = $(this).data('id');
         var data =  contactsTable.row($('#' + rowId)).data();
-        console.log(rowId);
+        //console.log(rowId);
         $('#firstName').val(data.firstName);
         $('#lastName').val(data.lastName);
         $('#email').val(data.email);
@@ -218,7 +218,7 @@ $.ajax({
         //var drow = $(this).closest('tr');
         var rowId = $(this).data('id');
         var data = contactsTable.row($('#' + rowId)).data();
-        console.log(rowId);
+        //console.log(rowId);
         $('.deleteName').text(data.firstName.toUpperCase() + ' ' + data.lastName.toUpperCase());
         $('#modalDeleteBtn').attr('href', '/deleteContact/' + data.contactId );
     });

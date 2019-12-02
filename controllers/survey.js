@@ -38,7 +38,7 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Plea
                     surveyTOU: req.body.surveyTOU,
                     preSurveyInstructions: req.body.preSurveyInstructions,
                     postSurveyInstructions: req.body.postSurveyInstructions,
-                    numberOfRespondents: 0,
+                    RespondentCount: 0,
                     UserUserId: req.session.passport.user,
                 }).then((dbSurvey) => {
                     // set the Id in the returned object as SurveyId (Object Destructuring)
@@ -263,9 +263,9 @@ router.post('/emailSurvey/:surveyId', [
                     });
 
                     // Increase Number of recipients by 1
-                    dbSurvey.dataValues.numberOfRecipients += 1;
+                    dbSurvey.dataValues.RecipientCount += 1;
                     const updatedSurvey = {
-                        numberOfRecipients: dbSurvey.dataValues.numberOfRecipients,
+                        RecipientCount: dbSurvey.dataValues.RecipientCount,
                     };
                     db.Survey.update(updatedSurvey, {
                         where: {

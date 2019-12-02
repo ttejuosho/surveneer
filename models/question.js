@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    required: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
     questionInstruction: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -69,6 +74,56 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     FalseResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Star5ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Star4ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Star3ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Star2ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Star1ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Number5ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Number4ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Number3ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Number2ResponseCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
+    Number1ResponseCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true,

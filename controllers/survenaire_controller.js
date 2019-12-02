@@ -32,7 +32,7 @@ router.get('/survey/v/:surveyId', (req, res) => {
         include: [
             { model: db.Question, as: "Question", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
             { model: db.Respondent, as: "Respondent", attributes: ["respondentId", "respondentName", "respondentEmail", "respondentPhone"] },
-            { model: db.Survey, as: "Survey", attributes: ["surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions"] }
+            { model: db.Survey, as: "Survey", attributes: ["surveyId", "surveyName", "RespondentCount", "RecipientCount", "QuestionCount"] }
         ]
     }).then(function(responses) {
         //res.json(responses);
@@ -101,9 +101,18 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Plea
                     notify: req.body.notify,
                     preSurveyInstructions: req.body.preSurveyInstructions,
                     postSurveyInstructions: req.body.postSurveyInstructions,
-                    numberOfRespondents: 0,
+                    RespondentCount: 0,
                     UserUserId: req.session.passport.user,
                 }).then((dbSurvey) => {
+                    // increase number of surveys for user
+                    db.User.findByPk(req.session.passport.user).then((dbUser)=>{
+                        dbUser.dataValues.surveyCount += 1;
+                        db.User.update({surveyCount: dbUser.dataValues.surveyCount},{
+                            where: {
+                                userId: req.session.passport.user
+                            }
+                        });
+                    });
                     // set the Id in the returned object as SurveyId (Object Destructuring)
                     const {
                         // eslint-disable-next-line no-unused-vars
@@ -141,7 +150,7 @@ router.post('/updateSurvey', (req, res) => {
         preSurveyInstructions: req.body.preSurveyInstructions,
         postSurveyInstructions: req.body.postSurveyInstructions,
     };
-    // console.log(updatedSurveyInfo);
+
     db.Survey.update(updatedSurveyInfo, {
         where: {
             surveyId: req.body.surveyId,
@@ -186,6 +195,7 @@ router.put('/updateQuestion/:questionId', (req, res) => {
     const dbQuestion = {
         question: req.body.question,
         optionType: req.body.optionType,
+        required: req.body.required,
         questionInstruction: (req.body.questionInstruction == undefined ? null : req.body.questionInstruction),
         option1: (req.body.option1 == undefined ? null : req.body.option1),
         option2: (req.body.option2 == undefined ? null : req.body.option2),
@@ -231,9 +241,9 @@ router.get('/deleteQuestion/:questionId', (req, res) => {
                     surveyId: SurveyId,
                 },
             }).then((dbSurvey) => {
-                dbSurvey.dataValues.numberOfQuestions -= 1;
+                dbSurvey.dataValues.QuestionCount -= 1;
                 const updatedSurvey = {
-                    numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+                    QuestionCount: dbSurvey.dataValues.QuestionCount,
                 };
 
                 db.Survey.update(updatedSurvey, {
@@ -251,9 +261,14 @@ router.get('/deleteQuestion/:questionId', (req, res) => {
 });
 
 // Improvise Adapt & Overcome
-// Delete Route for Survey (Needs Revisit)
+// Delete Route for Survey
 router.get('/deleteSurvey/:surveyId', (req, res) => {
-    db.Survey.findByPk(req.params.surveyId)
+    db.Question.destroy({
+        where: {
+            SurveySurveyId: req.params.surveyId
+        }
+    }).then(()=>{
+        db.Survey.findByPk(req.params.surveyId)
         .then((dbSurvey) => {
             db.Survey.destroy({
                 where: {
@@ -262,9 +277,11 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
             }).then(() => {
                 res.redirect('/surveys');
             });
-        }).catch((err) => {
-            res.render('error', err);
         });
+    }).catch((err) => {
+        res.render('error', err);
+    });
+    
 });
 
 router.post('/newQuestion/:surveyId', [
@@ -282,6 +299,7 @@ router.post('/newQuestion/:surveyId', [
         db.Question.create({
             question: req.body.question,
             optionType: req.body.optionType,
+            required: req.body.required,
             questionInstruction: req.body.questionInstruction,
             SurveySurveyId: req.params.surveyId,
             option1: (req.body.option1 == undefined ? null : req.body.option1),
@@ -295,12 +313,12 @@ router.post('/newQuestion/:surveyId', [
                     surveyId: req.params.surveyId,
                 },
             }).then((dbSurvey) => {
-                dbSurvey.dataValues.numberOfQuestions += 1;
+                dbSurvey.dataValues.QuestionCount += 1;
                 const updatedSurvey = {
                     surveyName: dbSurvey.dataValues.surveyName,
                     getId: dbSurvey.dataValues.getId,
-                    numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
-                    numberOfQuestions: dbSurvey.dataValues.numberOfQuestions,
+                    RespondentCount: dbSurvey.dataValues.RespondentCount,
+                    QuestionCount: dbSurvey.dataValues.QuestionCount,
                     preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
                     postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                     surveyNotes: dbSurvey.dataValues.surveyNotes,
@@ -357,7 +375,7 @@ router.get('/viewSurvey/:surveyId', (req, res) => {
         where: {
             surveyId: req.params.surveyId,
         },
-        include: [{ model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] }],
+        include: [{ model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'required', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] }],
     }).then(function(survey) {
         const hbsObject = survey.dataValues;
         Object.assign(hbsObject, req.session.globalUser);
@@ -373,7 +391,7 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
         where: {
             surveyId: req.params.surveyId,
         },
-        include: [{ model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] }],
+        include: [{ model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'required', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] }],
     }).then(function(survey) {
         survey.dataValues['layout'] = false;
         res.render('survey/view2', survey.dataValues);
@@ -416,7 +434,7 @@ router.post('/responses/:userId', (req, res) => {
         for (let i = 0; i < req.body.questionLength; i++) {
             const qanda = {
                 QuestionQuestionId: req.body['questionId' + i],
-                answer: req.body['answer' + i],
+                answer: (req.body['answer' + i] == null ? '' : req.body['answer' + i]),
                 RespondentRespondentId: dbRespondent.dataValues.respondentId,
                 SurveySurveyId: req.body.surveyId,
             };
@@ -434,20 +452,23 @@ router.post('/responses/:userId', (req, res) => {
                 },
             }).then((dbQuestion) => {
                 var optionType1 = '';
-                if (dbQuestion.dataValues.optionType === "MultipleChoice") {
-                    optionType1 = qandaArray[i].answer.slice(0, 7) + 'ResponseCount';
-                } else {
-                    optionType1 = qandaArray[i].answer + 'ResponseCount';
-                }
+                if (qandaArray[i].answer.trim().length > 1){
 
-                dbQuestion.dataValues[optionType1] += 1;
-                var updatedQuestion = {};
-                updatedQuestion[optionType1] = dbQuestion.dataValues[optionType1];
-                db.Question.update(updatedQuestion, {
-                    where: {
-                        questionId: dbQuestion.dataValues.questionId,
-                    },
-                });
+                    if (dbQuestion.dataValues.optionType === "MultipleChoice") {
+                        optionType1 = qandaArray[i].answer.slice(0, 7) + 'ResponseCount';
+                    } else {
+                        optionType1 = qandaArray[i].answer + 'ResponseCount';
+                    }
+
+                    dbQuestion.dataValues[optionType1] += 1;
+                    var updatedQuestion = {};
+                    updatedQuestion[optionType1] = dbQuestion.dataValues[optionType1];
+                    db.Question.update(updatedQuestion, {
+                        where: {
+                            questionId: dbQuestion.dataValues.questionId,
+                        },
+                    });
+                }
             });
         }
 
@@ -458,11 +479,11 @@ router.post('/responses/:userId', (req, res) => {
             },
             include: [{ model: db.User, as: 'User', attributes: ['name', 'emailAddress'] }]
         }).then((dbSurvey) => {
-            dbSurvey.dataValues.numberOfRespondents += 1;
+            dbSurvey.dataValues.RespondentCount += 1;
             const updatedSurvey = {
                 surveyName: dbSurvey.dataValues.surveyName,
                 getId: dbSurvey.dataValues.getId,
-                numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                RespondentCount: dbSurvey.dataValues.RespondentCount,
                 preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
                 postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                 surveyNotes: dbSurvey.dataValues.surveyNotes,
@@ -540,7 +561,7 @@ router.get('/responses/:surveyId/view', (req, res) => {
         include: [
             { model: db.Question, as: "Question", attributes: ["questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
             { model: db.Respondent, as: "Respondent", attributes: ["respondentId", "respondentName", "respondentEmail", "respondentPhone"] },
-            { model: db.Survey, as: "Survey", attributes: ["surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions"] }
+            { model: db.Survey, as: "Survey", attributes: ["surveyId", "surveyName", "RespondentCount", "RecipientCount", "QuestionCount"] }
         ]
     }).then(function(responses) {
         res.json(responses);
@@ -627,7 +648,44 @@ router.post('/subscribe', [
                         showConfirmation: true,
                         layout: 'partials/prelogin',
                     };
-                    return res.render('auth/signin', message);
+                    // Send Email
+                    const emailBody = `
+                    <p>Hello ${req.body.firstName},</p>
+                    <p style="color: black;">Thank you for subscribing to the SurvEnEEr mailing list. We will keep you informed about the latest features and updates.</p>
+                    <span style="font-size: 1rem;color: black;"><strong>SurvEnEEr Team</strong></span>
+                    `;
+
+                    return new Promise((resolve, reject) => {
+                        let mailOptions = {
+                            from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
+                            to: req.body.email, // list of receivers
+                            subject: "Welcome Aboard", // Subject line
+                            text: 'Hello world?', // plain text body
+                            html: emailBody, // html body
+                            //template: 'templates/surveynotification'
+                        };
+
+                        // send mail with defined transport object
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                resolve(false);
+                                const hbsObject = {
+                                    msg: "An error occurred while sending email.",
+                                    showModal: true
+                                };
+                                Object.assign(hbsObject, req.session.globalUser);
+                                res.render('auth/sign', hbsObject);
+                            } else {
+                                resolve(true);
+                                console.log('Message ID: %s', info.messageId);
+                                console.log(info.envelope.to.toString());
+                            }
+                        });
+                        return res.render('auth/signin', message);
+                    });
+
+
+                    
                 }).catch((err) => {
                     res.render('error', err);
                 });
@@ -734,6 +792,7 @@ router.post('/emailSurvey/:surveyId', [
             <p>Hello,</p>
             <p style="color: black;">${req.body.message}</p>
             <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
+            <p>Surveneer Team</p>
             `;
 
                     return new Promise((resolve, reject) => {
@@ -785,9 +844,9 @@ router.post('/emailSurvey/:surveyId', [
                                     });
 
                                     // Increase Number of recipients by 1
-                                    dbSurvey.dataValues.numberOfRecipients += 1;
+                                    dbSurvey.dataValues.RecipientCount += 1;
                                     const updatedSurvey = {
-                                        numberOfRecipients: dbSurvey.dataValues.numberOfRecipients,
+                                        RecipientCount: dbSurvey.dataValues.RecipientCount,
                                     };
                                     db.Survey.update(updatedSurvey, {
                                         where: {

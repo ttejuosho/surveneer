@@ -9,7 +9,7 @@ commit;
 -- addColumns
 begin;
 ALTER TABLE surveys
-ADD COLUMN numberOfRespondents INT DEFAULT 0 AFTER getId;
+ADD COLUMN RespondentCount INT DEFAULT 0 AFTER getId;
 commit;
 
 

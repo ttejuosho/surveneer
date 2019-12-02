@@ -44,17 +44,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    numberOfRespondents: {
+    RespondentCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true,
     },
-    numberOfRecipients: {
+    RecipientCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true,
     },
-    numberOfQuestions: {
+    QuestionCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true,

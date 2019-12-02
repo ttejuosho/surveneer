@@ -111,7 +111,7 @@ $(document).ready(function(){
                         '</div>' +
                     '</div>';
         // Emit User Id along with message
-        var socketData = { message: data[0][0].numberOfRespondents, domData: html, room: userId, chartData: [] };
+        var socketData = { message: data[0][0].RespondentCount, domData: html, room: userId, chartData: [] };
         data[1].forEach((d, i)=>{
             if(d.Question.optionType === 'YesNo'){
                 socketData.chartData.push([parseInt(d.Question.YesResponseCount), parseInt(d.Question.NoResponseCount)]);
@@ -163,6 +163,22 @@ $(document).ready(function(){
                 parseInt(d.Question.option2ResponseCount),
                 parseInt(d.Question.option3ResponseCount),
                 parseInt(d.Question.option4ResponseCount)
+                ]);
+            } else if (d.Question.optionType === 'StarRating'){
+                socketData.chartData.push([
+                parseInt(d.Question.Star5ResponseCount),
+                parseInt(d.Question.Star4ResponseCount),
+                parseInt(d.Question.Star3ResponseCount),
+                parseInt(d.Question.Star2ResponseCount),
+                parseInt(d.Question.Star1ResponseCount)
+                ]);
+            } else if (d.Question.optionType === 'NumberRating'){
+                socketData.chartData.push([
+                parseInt(d.Question.Number5ResponseCount),
+                parseInt(d.Question.Number4ResponseCount),
+                parseInt(d.Question.Number3ResponseCount),
+                parseInt(d.Question.Number2ResponseCount),
+                parseInt(d.Question.Number1ResponseCount)
                 ]);
             }
         });

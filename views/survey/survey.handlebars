@@ -56,7 +56,7 @@
     <div class="col-md-12">
         <div class="form-group">
         <label>Number of Recipients</label>
-        <input id="numberOfRecipients" type="text" class="form-control form-control-sm" value="{{numberOfRecipients}}" readonly>
+        <input id="RecipientCount" type="text" class="form-control form-control-sm" value="{{RecipientCount}}" readonly>
         </div>
     </div>
 </div>
@@ -65,7 +65,7 @@
     <div class="col-md-12">
         <div class="form-group">
         <label>Number of Respondents</label>
-        <input id="numberOfRespondents" type="text" class="form-control form-control-sm" value="{{numberOfRespondents}}" readonly>
+        <input id="RespondentCount" type="text" class="form-control form-control-sm" value="{{RespondentCount}}" readonly>
         </div>
     </div>
 </div>
@@ -74,7 +74,7 @@
     <div class="col-md-12">
         <div class="form-group">
         <label>Number of Questions</label>
-        <input id="numberOfQuestions" type="text" class="form-control form-control-sm" value="{{getLength Questions}}" readonly>
+        <input id="QuestionCount" type="text" class="form-control form-control-sm" value="{{getLength Questions}}" readonly>
         </div>
     </div>
 </div>
@@ -90,7 +90,7 @@
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
-        <input id="getId" name="getId" class="form-control form-control-sm" type="hidden" value=>
+        <input id="getId" name="getId" class="form-control form-control-sm" type="hidden" value= {{#ifEquals getId 0}} false {{else}} true {{/ifEquals}}>
         </div>
     </div>
 </div>
@@ -107,7 +107,7 @@
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
         </div>
-         <input id="showTOU" name="showTOU" class="form-control form-control-sm" type="hidden" value=> 
+        <input id="showTOU" name="showTOU" class="form-control form-control-sm" type="hidden" value= {{#ifEquals showTOU 0}} false {{else}} true {{/ifEquals}}> 
     </div>
 </div>
 
@@ -122,7 +122,7 @@
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
-        <input id="notify" name="notify" class="form-control form-control-sm" type="hidden" value=>
+        <input id="notify" name="notify" class="form-control form-control-sm" type="hidden" value= {{#ifEquals notify 0}} false {{else}} true {{/ifEquals}}>
         </div>
     </div>
 </div>
@@ -243,14 +243,24 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 pl-0 pr-0">
                 <div class="col-md-12">
                     <div class="form-group">
                     <label>Option Type</label>
-                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{optionType}}" readonly>
+                    <input id="optionType{{questionId}}" name="optionType" type="text" class="form-control form-control-sm" value="{{optionType}}" readonly>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6 col-sm-12 pl-0 pr-0">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Required</label>
+                    <input id="required{{questionId}}" name="required" type="text" class="form-control form-control-sm" value="{{required}}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
             <div class="row chartDiv d-none">
                 <div class="col-md-12">
                     {{#ifEquals optionType "YesNo"}}
@@ -267,6 +277,28 @@
                         <div class="chart-container" style="position: relative; height: auto;">
                             <canvas id="q{{counter @index}}TrueFalseResponseChart" width="400" height="120"></canvas>
                         </div>
+                    {{/ifEquals}}
+
+                    {{#ifEquals optionType "StarRating"}}
+                    <input type="hidden" name="Star1ResponseCount" id="q{{counter @index}}Star1ResponseCount" value="{{Star1ResponseCount}}"/>
+                    <input type="hidden" name="Star2ResponseCount" id="q{{counter @index}}Star2ResponseCount" value="{{Star2ResponseCount}}"/>
+                    <input type="hidden" name="Star3ResponseCount" id="q{{counter @index}}Star3ResponseCount" value="{{Star3ResponseCount}}"/>
+                    <input type="hidden" name="Star4ResponseCount" id="q{{counter @index}}Star4ResponseCount" value="{{Star4ResponseCount}}"/>
+                    <input type="hidden" name="Star5ResponseCount" id="q{{counter @index}}Star5ResponseCount" value="{{Star5ResponseCount}}"/>
+                    <div class="chart-container" style="position: relative; height: auto;">
+                        <canvas id="q{{counter @index}}StarRatingResponseChart" width="400" height="170"></canvas>
+                    </div>
+                    {{/ifEquals}}
+
+                    {{#ifEquals optionType "NumberRating"}}
+                    <input type="hidden" name="Number1ResponseCount" id="q{{counter @index}}Number1ResponseCount" value="{{Number1ResponseCount}}"/>
+                    <input type="hidden" name="Number2ResponseCount" id="q{{counter @index}}Number2ResponseCount" value="{{Number2ResponseCount}}"/>
+                    <input type="hidden" name="Number3ResponseCount" id="q{{counter @index}}Number3ResponseCount" value="{{Number3ResponseCount}}"/>
+                    <input type="hidden" name="Number4ResponseCount" id="q{{counter @index}}Number4ResponseCount" value="{{Number4ResponseCount}}"/>
+                    <input type="hidden" name="Number5ResponseCount" id="q{{counter @index}}Number5ResponseCount" value="{{Number5ResponseCount}}"/>
+                    <div class="chart-container" style="position: relative; height: auto;">
+                        <canvas id="q{{counter @index}}NumberRatingResponseChart" width="400" height="170"></canvas>
+                    </div>
                     {{/ifEquals}}
 
                     {{#ifEquals optionType "LikertAgreement"}}
@@ -339,7 +371,7 @@
                 
                 <div class="row">
                     {{#if option1}}
-                        <div class="col-6 pr-0">
+                        <div class="col-sm-12 col-lg-6 pr-0">
                             <div class="col-md-12 pl-0">
                                 <div class="form-group">
                                     <label>Option 1</label>
@@ -349,7 +381,7 @@
                         </div>
                     {{/if}}
                     {{#if option2}}
-                        <div class="col-6 pl-0">
+                        <div class="col-sm-12 col-lg-6 pl-0">
                             <div class="col-md-12 pr-0">
                                 <div class="form-group">
                                     <label>Option 2</label>
@@ -362,7 +394,7 @@
 
                 <div class="row">
                     {{#if option3}}
-                        <div class="col-6 pl-0">
+                        <div class="col-sm-12 col-lg-6 pl-0">
                             <div class="col-md-12 pr-0">
                                 <div class="form-group">
                                 <label>Option 3</label>
@@ -372,7 +404,7 @@
                         </div>
                     {{/if}}
                     {{#if option4}}
-                        <div class="col-6 pl-0">
+                        <div class="col-sm-12 col-lg-6 pl-0">
                             <div class="col-md-12 pr-0">
                                 <div class="form-group">
                                 <label>Option 4</label>
@@ -434,7 +466,7 @@
                 <div class="col-md-6 pr-md-1">
                     {{#each ../Responses}}
                         {{#ifEquals RespondentRespondentId ../respondentId}}              
-                            <h5>{{answer}}</h5>
+                            <h5>{{#ifEquals answer ''}} No Response {{else}} {{answer}} {{/ifEquals}}</h5>
                         {{/ifEquals}} 
                     {{/each}}
                 </div>
@@ -490,7 +522,7 @@ var openSurveyImageModal = (surveyId) => {
 
 function createChart(i, optionType, optionType1, optionType2, optionType3, optionType4, optionType5){
     // if there are no recipients, exit this function else show Chart Div 
-    if ( parseInt($('#numberOfRespondents').val()) < 1 ){ return; } else { $('.chartDiv').removeClass('d-none'); }
+    if ( parseInt($('#RespondentCount').val()) < 1 ){ return; } else { $('.chartDiv').removeClass('d-none'); }
 
     //var chartLabels = (optionType3 ? [optionType1, optionType2, optionType3, optionType4, optionType5] : [optionType1, optionType2])
     var chartLabels = [];
@@ -505,7 +537,7 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         chartBgColor = ['#1f8ef1', '#2dce89', '#f96332', '#e14eca'];
     }
 
-    if (optionType.includes('Likert')){
+    if (optionType.includes('Likert') || optionType.includes('Rating')){
         chartLabels = [optionType1, optionType2, optionType3, optionType4, optionType5];
         chartData.push(parseInt($('#q' + [i+1] + optionType1 + 'ResponseCount').val()));
         chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
@@ -521,6 +553,7 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         chartData.push(parseInt($('#q' + [i+1] + optionType2 + 'ResponseCount').val()));
         chartBgColor = ['#1f8ef1', '#2dce89'];
     }
+
     //console.log(chartLabels);
     countValues.push(chartData);
     charts[i] = new Chart($('#q' + [i+1] + optionType + 'ResponseChart'),{
@@ -575,6 +608,10 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
             createChart(i, 'LikertImportance', 'VeryImportant', 'Important', 'ModeratelyImportant', 'SlightlyImportant', 'NotImportant');
         } else if ($('#' + elementId).attr("data-optiontype") == "MultipleChoice"){
             createChart(i, 'MultipleChoice', 'option1', 'option2', 'option3', 'option4');
+        } else if ($('#' + elementId).attr("data-optiontype") == "StarRating"){
+            createChart(i, 'StarRating', 'Star5', 'Star4', 'Star3', 'Star2', 'Star1');
+        } else if ($('#' + elementId).attr("data-optiontype") == "NumberRating"){
+            createChart(i, 'NumberRating', 'Number5', 'Number4', 'Number3', 'Number2', 'Number1');
         }
     });
 
@@ -585,7 +622,7 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
     socket.on('news', function(data) {
         if($('#accordion').length == 0){ $('#noResponse').empty(); }
         $('.responseCount').text(data.message);
-        $('#numberOfRespondents').val(data.message);
+        $('#RespondentCount').val(data.message);
         $('#ResponseSection').prepend(data.domData);
         for (var i = 0; i < charts.length; i++){
             charts[i].data.datasets[0].data = data.chartData[i];
@@ -593,23 +630,31 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         }
     });
 
-$(function(){
+$(document).ready(function() {
+    $('#getIdi').click(()=>{
         if ($('input[name=getIdi]').is(':checked')) {
             // Checkbox is checked..
             $('#getId').val(true);
+            
         } else {
             // Checkbox is not checked..
             $('#getId').val(false);
         }
-
+    });
+    
+    $('#showTOUi').click(()=>{
         if ($('input[name=showTOUi]').is(':checked')) {
             // Checkbox is checked..
             $('#showTOU').val(true);
+            $('#surveyTOURow').removeClass('d-none');
         } else {
             // Checkbox is not checked..
             $('#showTOU').val(false);
+            $('#surveyTOURow').addClass('d-none');
         }
+    });
 
+    $('#notifyi').click(()=>{
         if ($('input[name=notifyi]').is(':checked')) {
             // Checkbox is checked..
             $('#notify').val(true);
@@ -617,43 +662,17 @@ $(function(){
             // Checkbox is not checked..
             $('#notify').val(false);
         }
+    });
 });
-    //OnChange Event listener on Checkbox
-    $('input[name=getIdi]').change(function() {
-        if ($(this).is(':checked')) {
-            // Checkbox is checked..
-            $('#getId').val(true);
-        } else {
-            // Checkbox is not checked..
-            $('#getId').val(false);
-        }
-    });
-
-    //OnChange Event listener on Checkbox
-    $('input[name=showTOUi]').change(function() {
-        if ($(this).is(':checked')) {
-            // Checkbox is checked..
-            $('#showTOU').val(true);
-        } else {
-            // Checkbox is not checked..
-            $('#showTOU').val(false);
-        }
-    });
-
-    //OnChange Event listener on Checkbox
-    $('input[name=notifyi]').change(function() {
-        if ($(this).is(':checked')) {
-            // Checkbox is checked..
-            $('#notify').val(true);
-        } else {
-            // Checkbox is not checked..
-            $('#notify').val(false);
-        }
-    });
 
     $('#updateSurveyBtn').on('click', () => {
+        //console.log($('#getId').val(), $('#showTOU').val());
+        if ($('#surveyTOU').val().trim().length < 1 && $('#showTOU').val() === 'true'){
+            $('input[name=showTOUi]').attr('checked', false);
+            $('#showTOU').val(false);
+        }
 
-        console.log($('#getId').val(), $('#showTOU').val());
+        if ($('#showTOU').val() === 'false'){ $('#surveyTOU').empty(); }
 
         $('#updateSurveyForm').submit();
         $('.surveyEditInput').attr('readonly', true);
@@ -668,6 +687,7 @@ $(function(){
         if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', true); } else { $('#surveyNotesRow').addClass('d-none'); }
         if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', true); } else { $('#surveyTOURow').addClass('d-none'); }
     });
+    
 //console.log(countValues);
 </script>
 

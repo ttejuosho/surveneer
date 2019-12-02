@@ -28,7 +28,11 @@
 <div class="col-md-10 container mt-2">
     <div class="card">
     <div class="card-header">
-        {{#if surveyImage}} <div><img class="survey-banner" src="../../{{surveyImage}}" ></div> {{/if}}
+        {{#if surveyImage}} 
+            <div><img class="survey-banner" src="../../{{surveyImage}}" ></div> 
+        {{!-- {{else}} --}}
+            {{!-- <div><img class="survey-banner" src="../../900x150xBanner.jpg" ></div> --}}
+        {{/if}}
         <h2><p>Thank you for taking the {{surveyName}} survey.</p></h2>
     </div>
     
@@ -69,19 +73,19 @@
     <div class="row">
         <div class="col-md-4 pr-md-1">
             <div class="form-group">
-            <label>Name</label>
+            <label class="required">Name</label>
             <input type="text" class="form-control" name="respondentName" id="respondentName" placeholder="Name" required>
             </div>
         </div>
         <div class="col-md-4 px-md-1">
             <div class="form-group">
-            <label>Email Address</label>
+            <label class="required">Email Address</label>
             <input type="email" class="form-control" name="respondentEmail" id="respondentEmail" placeholder="Email" required>
             </div>
         </div>
         <div class="col-md-4 pl-md-1">
             <div class="form-group">
-            <label>Phone Number</label>
+            <label class="required">Phone Number</label>
             <input type="number" class="form-control" name="respondentPhone" id="respondentPhone" placeholder="Phone Number" required>
             </div>
         </div>
@@ -92,7 +96,7 @@
         <div class="row">
             <div class="col-md-12 mb-3 qanda">
                 <div class="form-group mb-1">
-                    <h4>Question {{counter @index}}</h4>
+                    <h4 class= "{{#ifEquals required true}} required {{/ifEquals}}">Question {{counter @index}}</h4>
                     {{#if questionInstruction}}<h6>Information: {{questionInstruction}}</h6>{{/if}}
                     <input type="text" name="questionId{{@index}}" id="questionId" class="questionId d-none" value="{{questionId}}" />
                     <p class="question">{{question}}</p>
@@ -101,13 +105,13 @@
             {{#ifEquals optionType "YesNo"}}
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="Yes" required> Yes
+                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="Yes" {{#ifEquals required 1}} required {{/ifEquals}}> Yes
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="No" required> No
+                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="No" {{#ifEquals required 1}} required {{/ifEquals}}> No
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
@@ -115,22 +119,45 @@
             {{#ifEquals optionType "TrueFalse"}}
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="True" required> True
+                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="True" {{#ifEquals required 1}} required {{/ifEquals}}> True
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
                 <div class="form-check form-check-radio form-check-inline mt-0">
                     <label class="form-check-label">
-                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="False" required> False
+                        <input class="form-check-input answer" type="radio" name="answer{{@index}}" id="{{question}}" value="False" {{#ifEquals required 1}} required {{/ifEquals}}> False
                         <span class="form-check-sign"></span>
                     </label>
                 </div>
+            {{/ifEquals}}
+            {{#ifEquals optionType "StarRating"}}
+            <div class="rate">
+                <input class="form-check-input answer" type="radio" id="star5" name="answer{{@index}}" value="Star5" {{#ifEquals required 1}} required {{/ifEquals}} />
+                <label for="star5" title="5 Stars" class="mr-2">5 Stars</label>
+                <input class="form-check-input answer" type="radio" id="star4" name="answer{{@index}}" value="Star4" {{#ifEquals required 1}} required {{/ifEquals}} />
+                <label for="star4" title="4 Stars" class="mr-2">4 Stars</label>
+                <input class="form-check-input answer" type="radio" id="star3" name="answer{{@index}}" value="Star3" {{#ifEquals required 1}} required {{/ifEquals}} />
+                <label for="star3" title="3 Stars" class="mr-2">3 Stars</label>
+                <input class="form-check-input answer" type="radio" id="star2" name="answer{{@index}}" value="Star2" {{#ifEquals required 1}} required {{/ifEquals}}/>
+                <label for="star2" title="2 Stars" class="mr-2">2 Stars</label>
+                <input class="form-check-input answer" type="radio" id="star1" name="answer{{@index}}" value="Star1" {{#ifEquals required 1}} required {{/ifEquals}}/>
+                <label for="star1" title="1 Star" class="mr-2">1 Star</label>
+            </div>
+            {{/ifEquals}}
+            {{#ifEquals optionType "NumberRating"}}
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary numberRating"><input type="radio" class="answer" name="answer{{@index}}" id="answer{{@index}}" value="Number1" autocomplete="off" {{#ifEquals required 1}} required {{/ifEquals}}>1</label>
+                <label class="btn btn-secondary numberRating"><input type="radio" class="answer" name="answer{{@index}}" id="answer{{@index}}" value="Number2" autocomplete="off" {{#ifEquals required 1}} required {{/ifEquals}}>2</label>
+                <label class="btn btn-secondary numberRating"><input type="radio" class="answer" name="answer{{@index}}" id="answer{{@index}}" value="Number3" autocomplete="off" {{#ifEquals required 1}} required {{/ifEquals}}>3</label>
+                <label class="btn btn-secondary numberRating"><input type="radio" class="answer" name="answer{{@index}}" id="answer{{@index}}" value="Number4" autocomplete="off" {{#ifEquals required 1}} required {{/ifEquals}}>4</label>
+                <label class="btn btn-secondary numberRating"><input type="radio" class="answer" name="answer{{@index}}" id="answer{{@index}}" value="Number5" autocomplete="off" {{#ifEquals required 1}} required {{/ifEquals}}>5</label>
+            </div>
             {{/ifEquals}}
             {{#ifEquals optionType "MultipleChoice"}}
                 {{#if option1}}
                     <div class="form-check form-check-radio">
                         <label class="form-check-label">
-                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option1{{option1}}" required>
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option1{{option1}}" {{#ifEquals required 1}} required {{/ifEquals}}>
                             {{option1}}
                             <span class="form-check-sign"></span>
                         </label>
@@ -139,7 +166,7 @@
                 {{#if option2}}
                     <div class="form-check form-check-radio">
                         <label class="form-check-label">
-                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option2{{option2}}" required>
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option2{{option2}}" {{#ifEquals required 1}} required {{/ifEquals}}>
                             {{option2}}
                             <span class="form-check-sign"></span>
                         </label>
@@ -148,7 +175,7 @@
                 {{#if option3}}
                     <div class="form-check form-check-radio">
                         <label class="form-check-label">
-                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option3{{option3}}" required>
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option3{{option3}}" {{#ifEquals required 1}} required {{/ifEquals}}>
                             {{option3}}
                             <span class="form-check-sign"></span>
                         </label>
@@ -157,7 +184,7 @@
                 {{#if option4}}
                     <div class="form-check form-check-radio">
                         <label class="form-check-label">
-                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option4{{option4}}" required>
+                            <input class="form-check-input answer" type="radio" id="{{question}}" name="answer{{@index}}" value="option4{{option4}}" {{#ifEquals required 1}} required {{/ifEquals}}>
                             {{option4}}
                             <span class="form-check-sign"></span>
                         </label>
@@ -169,31 +196,31 @@
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="StronglyDisagree" required> Strongly Disagree
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="StronglyDisagree" {{#ifEquals required 1}} required {{/ifEquals}}> Strongly Disagree
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Disagree" required> Disagree
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Disagree" {{#ifEquals required 1}} required {{/ifEquals}}> Disagree
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Undecided" required> Undecided
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Undecided" {{#ifEquals required 1}} required {{/ifEquals}}> Undecided
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Agree" required> Agree
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Agree" {{#ifEquals required 1}} required {{/ifEquals}}> Agree
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="StronglyAgree" required> Strongly Agree
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="StronglyAgree" {{#ifEquals required 1}} required {{/ifEquals}}> Strongly Agree
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
@@ -205,31 +232,31 @@
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryGood" required> Very Good
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryGood" {{#ifEquals required 1}} required {{/ifEquals}}> Very Good
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Good" required> Good
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Good" {{#ifEquals required 1}} required {{/ifEquals}}> Good
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Acceptable" required> Acceptable
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Acceptable" {{#ifEquals required 1}} required {{/ifEquals}}> Acceptable
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Poor" required> Poor
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Poor" {{#ifEquals required 1}} required {{/ifEquals}}> Poor
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryPoor" required> Very Poor
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryPoor" {{#ifEquals required 1}} required {{/ifEquals}}> Very Poor
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
@@ -241,31 +268,31 @@
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryHigh" required> Very High
+                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryHigh" {{#ifEquals required 1}} required {{/ifEquals}}> Very High
                                 <span class="form-check-sign"></span>
                             </label>
                         </div>
                         <div class="form-check form-check-radio form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="High" required> High
+                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="High" {{#ifEquals required 1}} required {{/ifEquals}}> High
                                 <span class="form-check-sign"></span>
                             </label>
                         </div>
                         <div class="form-check form-check-radio form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Moderate" required> Moderate
+                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Moderate" {{#ifEquals required 1}} required {{/ifEquals}}> Moderate
                                 <span class="form-check-sign"></span>
                             </label>
                         </div>
                         <div class="form-check form-check-radio form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Low" required> Low
+                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Low" {{#ifEquals required 1}} required {{/ifEquals}}> Low
                                 <span class="form-check-sign"></span>
                             </label>
                         </div>
                         <div class="form-check form-check-radio form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="None" required> None
+                                <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="None" {{#ifEquals required 1}} required {{/ifEquals}}> None
                                 <span class="form-check-sign"></span>
                             </label>
                         </div>
@@ -277,31 +304,31 @@
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryFrequently" required> Very Frequently
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryFrequently" {{#ifEquals required 1}} required {{/ifEquals}}> Very Frequently
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Frequently" required> Frequently
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Frequently" {{#ifEquals required 1}} required {{/ifEquals}}> Frequently
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Occasionally" required> Occasionally
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Occasionally" {{#ifEquals required 1}} required {{/ifEquals}}> Occasionally
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Rarely" required> Rarely
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Rarely" {{#ifEquals required 1}} required {{/ifEquals}}> Rarely
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Never" required> Never
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Never" {{#ifEquals required 1}} required {{/ifEquals}}> Never
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
@@ -313,31 +340,31 @@
                     <div class="col-md-12">
                         <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryImportant" required> Very Important
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="VeryImportant" {{#ifEquals required 1}} required {{/ifEquals}}> Very Important
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Important" required> Important
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="Important" {{#ifEquals required 1}} required {{/ifEquals}}> Important
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="ModeratelyImportant" required> Moderately Important
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="ModeratelyImportant" {{#ifEquals required 1}} required {{/ifEquals}}> Moderately Important
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="SlightlyImportant" required> Slightly Important
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="SlightlyImportant" {{#ifEquals required 1}} required {{/ifEquals}}> Slightly Important
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
                             <div class="form-check form-check-radio form-check-inline">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="NotImportant" required> Not Important
+                                    <input class="form-check-input" type="radio" name="answer{{@index}}" id="{{question}}"  value="NotImportant" {{#ifEquals required 1}} required {{/ifEquals}}> Not Important
                                     <span class="form-check-sign"></span>
                                 </label>
                             </div>
@@ -349,7 +376,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="4" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" required></textarea>
+                        <textarea rows="4" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
                       </div>
                     </div>
                   </div>
@@ -359,7 +386,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="8" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" required></textarea>
+                        <textarea rows="8" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
                       </div>
                     </div>
                   </div>
@@ -417,7 +444,12 @@
   <!-- Black Dashboard DEMO methods, don't include it in your project! -->
   <script src="/assets/demo/demo.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-
+    <script type="text/javascript">
+    $('.numberRating').click((e)=>{
+        $('.numberRating').removeClass('btn-primary');
+        $(e.target).addClass('btn-primary');
+    });
+    </script>
     {{#ifEquals showTOU true}}
         <script type="text/javascript">
             $(function () {

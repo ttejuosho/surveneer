@@ -17,7 +17,7 @@ router.get('/responses/:SurveySurveyId/view', (req, res) => {
         include: [
             { model: db.Question, as: "Question", attributes: [ "questionId", "question", "questionInstruction", "optionType", "option1", "option2", "option3", "option4"] },
             { model: db.Respondent, as: "Respondent", attributes: [ "respondentId", "respondentName", "respondentEmail", "respondentPhone"]},
-            { model: db.Survey, as: "Survey", attributes: [ "surveyId", "surveyName", "numberOfRespondents", "numberOfRecipients", "numberOfQuestions" ]}
+            { model: db.Survey, as: "Survey", attributes: [ "surveyId", "surveyName", "RespondentCount", "RecipientCount", "QuestionCount" ]}
     ]
     }).then(function(responses) {
         res.json(responses);
@@ -136,11 +136,11 @@ router.post('/responses/:userId', (req, res) => {
                 surveyId: req.body.surveyId,
             },
         }).then((dbSurvey) => {
-            dbSurvey.dataValues.numberOfRespondents += 1;
+            dbSurvey.dataValues.RespondentCount += 1;
             const updatedSurvey = {
                 surveyName: dbSurvey.dataValues.surveyName,
                 getId: dbSurvey.dataValues.getId,
-                numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                RespondentCount: dbSurvey.dataValues.RespondentCount,
                 preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
                 postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                 surveyNotes: dbSurvey.dataValues.surveyNotes,
@@ -153,7 +153,7 @@ router.post('/responses/:userId', (req, res) => {
                 qanda: qandaArray,
                 surveyName: dbSurvey.dataValues.surveyName,
                 // getId: dbSurvey.dataValues.getId,
-                // numberOfRespondents: dbSurvey.dataValues.numberOfRespondents,
+                // RespondentCount: dbSurvey.dataValues.RespondentCount,
                 // preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
                 postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                 // surveyNotes: dbSurvey.dataValues.surveyNotes,

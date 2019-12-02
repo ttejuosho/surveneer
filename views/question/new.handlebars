@@ -42,6 +42,22 @@
 
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="StarRating" >
+                                Star Rating
+                                <span class="form-check-sign"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="optionType" id="options" value="NumberRating" >
+                                Number Rating
+                                <span class="form-check-sign"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-check-radio">
+                            <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="optionType" id="options" value="ShortAnswer" >
                                 Short Answer
                                 <span class="form-check-sign"></span>
@@ -65,7 +81,7 @@
                             <small class="form-text text-muted ml-3" style="display: unset;">(Scales)</small>
                         </div>
 
-<div id="LikertMoreOptions" class="d-none">
+                    <div id="LikertMoreOptions" class="d-none">
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
                                 <input class="form-check-input LikertAgreement" type="radio" name="optionType" id="options" value="LikertAgreement">
@@ -106,17 +122,17 @@
                             </label>
                             <small class="form-text text-muted ml-3" style="display: unset;">(Scale: Very Important to Not Important)</small>
                         </div>
-</div>
+                    </div>
 
-                        <div id="MultipleChoiceDiv" class="form-check form-check-radio">
-                            <label class="form-check-label">
-                                <input class="form-check-input MultipleChoiceOption" type="radio" name="optionType" id="MultipleChoiceOption" value="MultipleChoice">
-                                Multiple Choice
-                                <span class="form-check-sign"></span>
-                            </label>
-                        </div>
+                    <div id="MultipleChoiceDiv" class="form-check form-check-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input MultipleChoiceOption" type="radio" name="optionType" id="MultipleChoiceOption" value="MultipleChoice">
+                            Multiple Choice
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
 
-<div id="MultipleChoiceMoreOptions" class="d-none">
+                    <div id="MultipleChoiceMoreOptions" class="d-none">
                         <small class="form-text text-muted">Choose from one of the options below.</small>
                         <div class="form-group">
                             <label for="option1">Option 1</label>
@@ -134,7 +150,7 @@
                             <label for="option4">Option 4</label>
                             <input type="text" class="form-control MultipleChoiceInput" name="option4" id="options" placeholder="option4">
                         </div>
-</div>
+                    </div>
 
                         <div class="form-check form-check-radio disabled">
                             <label class="form-check-label">
@@ -152,6 +168,20 @@
                             {{/ifEquals}}
                         {{/each}}
                     {{/if}}
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input id="requiredi" name="requiredi" class="form-check-input" type="checkbox" value=true checked>
+                        Required
+                        <span class="form-check-sign"><span class="check"></span></span>
+                        </label>
+                    </div>
+                    <input id="required" name="required" class="form-check-input" type="hidden" value=true>
+                    <small class="form-text text-muted" style="display: unset;">Question will be marked as required if checked</small>
                 </div>
             </div>
 
@@ -187,3 +217,18 @@
             });
         </script>
     {{/if}}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#requiredi').click(()=>{
+            if ($('input[name=requiredi]').is(':checked')) {
+                // Checkbox is checked..
+                $('#required').val(true);
+            } else {
+                // Checkbox is not checked..
+                $('#required').val(false);
+            }
+        })
+    });
+</script>
+

@@ -22,6 +22,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: true,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    surveyCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: true,
+    },
     profileImage: {
       type: DataTypes.STRING,
       allowNull: true,
