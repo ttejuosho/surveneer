@@ -110,10 +110,10 @@ router.get('/mysurveys/:surveyId', function(req, res) {
             surveyId: req.params.surveyId,
         },
         include: [
-            {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
-            {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
-            {model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount']},
-          ],
+            { model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer'] },
+            { model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
+            { model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount'] },
+        ],
     }).then(function(survey) {
         const hbsObject = survey.dataValues;
         Object.assign(hbsObject, req.session.globalUser);
@@ -142,7 +142,7 @@ router.get('/viewSurvey/:surveyId', (req, res) => {
 });
 
 // View Route For a Survey (Public) Without Layout
-router.get('/surveys/:surveyId/view2', (req, res) => {
+router.get('/surveys/:surveyId/v2', (req, res) => {
     db.Survey.findOne({
         where: {
             surveyId: req.params.surveyId,
@@ -150,7 +150,7 @@ router.get('/surveys/:surveyId/view2', (req, res) => {
         include: [{ model: db.Question, as: 'Questions', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] }],
     }).then(function(survey) {
         survey.dataValues['layout'] = false;
-        res.render('survey/view2', survey.dataValues);
+        res.render('survey/v2', survey.dataValues);
     }).catch(function(err) {
         res.render('error', err);
     });
@@ -175,116 +175,116 @@ router.get('/sendSurvey/:surveyId', (req, res) => {
 
 // Send Survey via Email POST
 router.post('/emailSurvey/:surveyId', [
-    check('email').not().isEmpty().escape().withMessage('Please enter an email address'),
-    check('subject').not().isEmpty().escape().withMessage('Please enter a subject for your email'),
-    check('message').not().isEmpty().escape().withMessage('Please enter a message'),
-    check('surveyId').not().isEmpty().escape().withMessage('Survey Id is missing, Please refresh this page annd try again'),
-],
-(req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        errors.email = req.body.email;
-        errors.subject = req.body.subject;
-        errors.message = req.body.message;
-        Object.assign(errors, req.session.globalUser);
-        return res.render('survey/send', errors);
-    } else {
-        const emailArray = req.body.email.split(',');
-        // Verify SurveyId
-        db.Survey.findOne({
-            where: {
-                surveyId: req.params.surveyId
-            }
-        }).then((dbSurvey)=>{
-            if(dbSurvey == null){
-                const errors = {};
-                errors.email = req.body.email;
-                errors.subject = req.body.subject;
-                errors.message = req.body.message;
-                errors.noSurveyError = 'Invalid Survey Id, Please reload the page';
-                Object.assign(errors, req.session.globalUser);
-                return res.render('survey/send', errors);
-            } else {
-                const hbsObject = { surveyId: dbSurvey.dataValues.surveyId }
-        
-        const output = `
+        check('email').not().isEmpty().escape().withMessage('Please enter an email address'),
+        check('subject').not().isEmpty().escape().withMessage('Please enter a subject for your email'),
+        check('message').not().isEmpty().escape().withMessage('Please enter a message'),
+        check('surveyId').not().isEmpty().escape().withMessage('Survey Id is missing, Please refresh this page annd try again'),
+    ],
+    (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            errors.email = req.body.email;
+            errors.subject = req.body.subject;
+            errors.message = req.body.message;
+            Object.assign(errors, req.session.globalUser);
+            return res.render('survey/send', errors);
+        } else {
+            const emailArray = req.body.email.split(',');
+            // Verify SurveyId
+            db.Survey.findOne({
+                where: {
+                    surveyId: req.params.surveyId
+                }
+            }).then((dbSurvey) => {
+                if (dbSurvey == null) {
+                    const errors = {};
+                    errors.email = req.body.email;
+                    errors.subject = req.body.subject;
+                    errors.message = req.body.message;
+                    errors.noSurveyError = 'Invalid Survey Id, Please reload the page';
+                    Object.assign(errors, req.session.globalUser);
+                    return res.render('survey/send', errors);
+                } else {
+                    const hbsObject = { surveyId: dbSurvey.dataValues.surveyId }
+
+                    const output = `
         <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
         <p>Hello,</p>
         <p style="color: black;">${req.body.message}</p>
-        <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
+        <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/v2">Open Survey</a>
         `;
 
-        return new Promise((resolve,reject)=>{
+                    return new Promise((resolve, reject) => {
 
-        // transporter.use('compile', eht({
-        //     viewEngine: 'express-handlebars',
-        //     viewPath: `${appRoot}/views`,
-        // }));
+                        // transporter.use('compile', eht({
+                        //     viewEngine: 'express-handlebars',
+                        //     viewPath: `${appRoot}/views`,
+                        // }));
 
-        for (var i = 0; i < emailArray.length; i++) {
-            // setup email data with unicode symbols
-            let mailOptions = {
-                from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
-                to: emailArray[i], // list of receivers
-                subject: req.body.subject, // Subject line
-                text: 'Hello world?', // plain text body
-                html: output, // html body
-                //template: 'templates/surveynotification'
-            };
+                        for (var i = 0; i < emailArray.length; i++) {
+                            // setup email data with unicode symbols
+                            let mailOptions = {
+                                from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
+                                to: emailArray[i], // list of receivers
+                                subject: req.body.subject, // Subject line
+                                text: 'Hello world?', // plain text body
+                                html: output, // html body
+                                //template: 'templates/surveynotification'
+                            };
 
-            // send mail with defined transport object
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    resolve(false);
-                    const hbsObject = {
-                        emailFailedAlertMessage: true,
-                    };
-                    Object.assign(hbsObject, req.session.globalUser);
-                    res.render('survey/send', hbsObject);
-                } else {
-                    resolve(true);
-                    console.log('Message ID: %s', info.messageId);                     
-                    console.log(info.envelope.to.toString());
+                            // send mail with defined transport object
+                            transporter.sendMail(mailOptions, (error, info) => {
+                                if (error) {
+                                    resolve(false);
+                                    const hbsObject = {
+                                        emailFailedAlertMessage: true,
+                                    };
+                                    Object.assign(hbsObject, req.session.globalUser);
+                                    res.render('survey/send', hbsObject);
+                                } else {
+                                    resolve(true);
+                                    console.log('Message ID: %s', info.messageId);
+                                    console.log(info.envelope.to.toString());
 
-                    // Add email to recipient table if it doesnt exist
-                    db.Recipient.findOne({
-                        where: {
-                            recipientEmail: info.envelope.to.toString(),
-                            SurveySurveyId: req.params.surveyId,
-                        }
-                    }).then((dbRecipient)=>{
-                        if (dbRecipient == null){
-                            db.Recipient.create({
-                                recipientEmail: info.envelope.to.toString(), 
-                                UserUserId: req.session.globalUser.userId,
-                                SurveySurveyId: req.params.surveyId,
+                                    // Add email to recipient table if it doesnt exist
+                                    db.Recipient.findOne({
+                                        where: {
+                                            recipientEmail: info.envelope.to.toString(),
+                                            SurveySurveyId: req.params.surveyId,
+                                        }
+                                    }).then((dbRecipient) => {
+                                        if (dbRecipient == null) {
+                                            db.Recipient.create({
+                                                recipientEmail: info.envelope.to.toString(),
+                                                UserUserId: req.session.globalUser.userId,
+                                                SurveySurveyId: req.params.surveyId,
+                                            });
+                                        }
+                                    });
+
+                                    // Increase Number of recipients by 1
+                                    dbSurvey.dataValues.RecipientCount += 1;
+                                    const updatedSurvey = {
+                                        RecipientCount: dbSurvey.dataValues.RecipientCount,
+                                    };
+                                    db.Survey.update(updatedSurvey, {
+                                        where: {
+                                            surveyId: dbSurvey.dataValues.surveyId,
+                                        },
+                                    });
+                                }
                             });
-                        }
-                    });
 
-                    // Increase Number of recipients by 1
-                    dbSurvey.dataValues.RecipientCount += 1;
-                    const updatedSurvey = {
-                        RecipientCount: dbSurvey.dataValues.RecipientCount,
-                    };
-                    db.Survey.update(updatedSurvey, {
-                        where: {
-                            surveyId: dbSurvey.dataValues.surveyId,
-                        },
-                    });
+                        } //===For loop end
+                        hbsObject["emailSentAlertMessage"] = true;
+                        Object.assign(hbsObject, req.session.globalUser);
+                        res.render('survey/send', hbsObject);
+                    }); //======
                 }
+            }).catch((err) => {
+                res.render('error', err);
             });
-
-        }//===For loop end
-        hbsObject["emailSentAlertMessage"] = true;
-        Object.assign(hbsObject, req.session.globalUser);
-        res.render('survey/send', hbsObject);
-    });//======
-}
-}).catch((err)=>{
-    res.render('error', err);
-});
-    }
-});
+        }
+    });
 
 module.exports = router;

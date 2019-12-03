@@ -23,7 +23,7 @@
                 <div class="dropdown-menu dropdown-black" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="/newQuestion/{{surveyId}}">Add Question to Survey</a>
                     <a class="dropdown-item" href="/viewSurvey/{{surveyId}}">View Survey</a>
-                    <a class="dropdown-item" href="/surveys/{{surveyId}}/view2">Respondent View</a>
+                    <a class="dropdown-item" href="/surveys/{{surveyId}}/v2">Respondent View</a>
                     <a class="dropdown-item" href="/sendSurvey/{{surveyId}}">Share</a>
                 </div>
             </div>
@@ -48,6 +48,15 @@
         <div class="form-group">
         <label>Survey Name</label>
         <input id="surveyName" name="surveyName" type="text" class="form-control form-control-sm surveyEditInput" value="{{surveyName}}" readonly>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Brand Name</label>
+        <input id="surveyBrandname" name="surveyBrandname" type="text" class="form-control form-control-sm surveyEditInput" value="{{surveyBrandname}}" readonly>
         </div>
     </div>
 </div>

@@ -6,9 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="/assets/img/favicon.png">
-  <title>
-    Survenaire
-  </title>
+  <title>SurvEnEEr</title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
   <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
@@ -25,6 +23,26 @@
 </head>
 
 <body>
+    {{!-- <div class=""> --}}
+        <nav class="navbar navbar-expand-lg navbar-transparent">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">           
+            <a class="navbar-brand" href="#"><i class="tim-icons icon-chart-bar-32 mr-2" style="vertical-align: unset;"></i>{{#if surveyBrandname}} {{surveyBrandname}} {{else}} Surveneer {{/if}}</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navigation">
+            <ul class="navbar-nav ml-auto">
+              <li class="search-bar input-group"></li>
+              <li class="separator d-lg-none"></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    {{!-- </div> --}}
 <div class="col-md-10 container mt-2">
     <div class="card">
     <div class="card-header">
@@ -33,7 +51,7 @@
         {{!-- {{else}} --}}
             {{!-- <div><img class="survey-banner" src="../../900x150xBanner.jpg" ></div> --}}
         {{/if}}
-        <h2><p>Thank you for taking the {{surveyName}} survey.</p></h2>
+        <h2><p>{{surveyName}}</p></h2>
     </div>
     
     <div class="card-body">

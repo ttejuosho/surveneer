@@ -96,6 +96,7 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Plea
                     surveyName: req.body.surveyName,
                     getId: req.body.getId,
                     showTOU: req.body.showTOU,
+                    surveyBrandname: req.body.surveyBrandname,
                     surveyNotes: req.body.surveyNotes,
                     surveyTOU: req.body.surveyTOU,
                     notify: req.body.notify,
@@ -105,9 +106,9 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Plea
                     UserUserId: req.session.passport.user,
                 }).then((dbSurvey) => {
                     // increase number of surveys for user
-                    db.User.findByPk(req.session.passport.user).then((dbUser)=>{
+                    db.User.findByPk(req.session.passport.user).then((dbUser) => {
                         dbUser.dataValues.surveyCount += 1;
-                        db.User.update({surveyCount: dbUser.dataValues.surveyCount},{
+                        db.User.update({ surveyCount: dbUser.dataValues.surveyCount }, {
                             where: {
                                 userId: req.session.passport.user
                             }
@@ -145,6 +146,7 @@ router.post('/updateSurvey', (req, res) => {
         getId: req.body.getId,
         notify: req.body.notify,
         showTOU: req.body.showTOU,
+        surveyBrandname: req.body.surveyBrandname,
         surveyNotes: req.body.surveyNotes,
         surveyTOU: req.body.surveyTOU,
         preSurveyInstructions: req.body.preSurveyInstructions,
@@ -267,21 +269,21 @@ router.get('/deleteSurvey/:surveyId', (req, res) => {
         where: {
             SurveySurveyId: req.params.surveyId
         }
-    }).then(()=>{
+    }).then(() => {
         db.Survey.findByPk(req.params.surveyId)
-        .then((dbSurvey) => {
-            db.Survey.destroy({
-                where: {
-                    surveyId: dbSurvey.dataValues.surveyId,
-                },
-            }).then(() => {
-                res.redirect('/surveys');
+            .then((dbSurvey) => {
+                db.Survey.destroy({
+                    where: {
+                        surveyId: dbSurvey.dataValues.surveyId,
+                    },
+                }).then(() => {
+                    res.redirect('/surveys');
+                });
             });
-        });
     }).catch((err) => {
         res.render('error', err);
     });
-    
+
 });
 
 router.post('/newQuestion/:surveyId', [
@@ -386,7 +388,7 @@ router.get('/viewSurvey/:surveyId', (req, res) => {
 });
 
 // View Route For a Survey (Public) Without Layout
-router.get('/surveys/:surveyId/view2', (req, res) => {
+router.get('/surveys/:surveyId/v2', (req, res) => {
     db.Survey.findOne({
         where: {
             surveyId: req.params.surveyId,
@@ -452,7 +454,7 @@ router.post('/responses/:userId', (req, res) => {
                 },
             }).then((dbQuestion) => {
                 var optionType1 = '';
-                if (qandaArray[i].answer.trim().length > 1){
+                if (qandaArray[i].answer.trim().length > 1) {
 
                     if (dbQuestion.dataValues.optionType === "MultipleChoice") {
                         optionType1 = qandaArray[i].answer.slice(0, 7) + 'ResponseCount';
@@ -685,7 +687,7 @@ router.post('/subscribe', [
                     });
 
 
-                    
+
                 }).catch((err) => {
                     res.render('error', err);
                 });
@@ -791,7 +793,7 @@ router.post('/emailSurvey/:surveyId', [
             <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
             <p>Hello,</p>
             <p style="color: black;">${req.body.message}</p>
-            <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/view2">Open Survey</a>
+            <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/v2">Open Survey</a>
             <p>Surveneer Team</p>
             `;
 

@@ -37,6 +37,7 @@ module.exports = (app) => {
     app.post('/api/surveys', (req, res) => {
         db.Survey.create({
             surveyName: req.body.surveyName,
+            surveyBrandname: req.body.surveyBrandname,
             surveyNotes: req.body.surveyNotes,
             getId: req.body.getId,
         }).then((dbSurvey) => {
@@ -492,17 +493,6 @@ module.exports = (app) => {
                 UserUserId: req.params.userId,
             },
         }).then(function(dbSurvey) {
-            res.json(dbSurvey);
-        });
-    });
-
-    // Create a Survey
-    app.post('/api/surveys', (req, res) => {
-        db.Survey.create({
-            surveyName: req.body.surveyName,
-            surveyNotes: req.body.surveyNotes,
-            getId: req.body.getId,
-        }).then((dbSurvey) => {
             res.json(dbSurvey);
         });
     });

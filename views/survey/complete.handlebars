@@ -94,6 +94,8 @@ $(document).ready(function(){
                             '</div>' +
                             '<div id="collapseOne'+ responseClass +'" class="collapse" role="tabpanel" aria-labelledby="headingOne'+ responseClass +'" style="">' +
                                 '<div id="Respondent0" class="card-body">' +
+                                    '<h5><span class="title mr-1">Phone Number: </span>'+ data[1][0].Respondent.respondentPhone +'</h5>' +
+                                    '<h5><span class="title mr-1">Email Address: </span>'+ data[1][0].Respondent.respondentEmail +'</h5>' +
                                     '<div class="row">' +
                                         '<div class="col-md-6 pr-md-1">';
                                             data[1].forEach((q)=>{
