@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                    <label>Question</label>
+                    <label class="required">Question</label>
                     <textarea id="question" name="question" rows="2" cols="8" class="form-control" placeholder=""></textarea>
                     {{#if errors}}
                         {{#each errors}}
@@ -23,7 +23,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <label>Options</label>
+                    <label class="required">Options</label>
                         <div class="form-check form-check-radio">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="optionType" id="options" value="YesNo" checked>
