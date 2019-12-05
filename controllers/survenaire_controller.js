@@ -11,7 +11,7 @@ const passport = require('passport');
 //const io = require('socket.io');
 const { check, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
-const transporter = require('../config/email/email');
+const sendEmail = require('../config/email/email');
 //const eht = require('nodemailer-express-handlebars');
 
 router.get('/login', passport.authenticate('auth0', {
@@ -405,23 +405,25 @@ router.get('/surveys/:surveyId/v2', (req, res) => {
 // Save Responses and Respondent (Needs Refactoring - Error handling)
 router.post('/responses/:userId', (req, res) => {
     var resId = '';
-    // if respondent exists in Recipients table, update their information
-    db.Recipient.findOne({
-        where: {
-            recipientEmail: req.body.respondentEmail,
-        }
-    }).then((dbRecipient) => {
-        if (dbRecipient !== null) {
-            db.Recipient.update({
-                recipientName: req.body.respondentName,
-                recipientPhone: req.body.respondentPhone,
-            }, {
-                where: {
-                    recipientEmail: req.body.respondentEmail,
-                }
-            });
-        }
-    });
+    if (req.body.respondentEmail !== undefined){
+        // if respondent exists in Recipients table, update their information
+        db.Recipient.findOne({
+            where: {
+                recipientEmail: req.body.respondentEmail,
+            }
+        }).then((dbRecipient) => {
+            if (dbRecipient !== null) {
+                db.Recipient.update({
+                    recipientName: req.body.respondentName,
+                    recipientPhone: req.body.respondentPhone,
+                }, {
+                    where: {
+                        recipientEmail: req.body.respondentEmail,
+                    }
+                });
+            }
+        });
+    }
 
     // Save Respondent information to Respondent table
     db.Respondent.create({
@@ -507,31 +509,14 @@ router.post('/responses/:userId', (req, res) => {
             if (dbSurvey.dataValues.notify) {
                 var userEmail = dbSurvey.dataValues.User.emailAddress;
                 var userName = dbSurvey.dataValues.User.name.split(" ")[0];
+                var subject = 'New Response Notification';
                 const emailBody = `
                 <p>Hello ${userName},</p>
-                <p style="color: black;">${req.body.respondentName} has just completed your survey (${updatedSurvey.surveyName})</p>    
+                <p style="color: black;">${(req.body.respondentName == undefined ? 'A Respondent' : req.body.respondentName)} has just completed your survey (${updatedSurvey.surveyName})</p>    
                 <p>Please <a href="https://surveneer.herokuapp.com/signin">login</a> to view their responses.</p>
                 <span style="font-size: 1rem;color: black;"><strong>SurvEnEEr Inc.</strong></span>
                 `;
-
-                let mailOptions = {
-                    from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
-                    to: userEmail, // list of receivers
-                    subject: 'New Response Notification', // Subject line
-                    text: 'Hello world?', // plain text body
-                    html: emailBody, // html body
-                    //template: 'templates/surveynotification'
-                };
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        resolve(false);
-                    } else {
-                        resolve(true);
-                        console.log('Message ID: %s', info.messageId);
-                        console.log(info.envelope.to.toString());
-                    }
-                });
-
+                sendEmail(emailBody, subject, userEmail);
             }
 
             db.Survey.update(updatedSurvey, {
@@ -658,31 +643,7 @@ router.post('/subscribe', [
                     `;
 
                     return new Promise((resolve, reject) => {
-                        let mailOptions = {
-                            from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
-                            to: req.body.email, // list of receivers
-                            subject: "Welcome Aboard", // Subject line
-                            text: 'Hello world?', // plain text body
-                            html: emailBody, // html body
-                            //template: 'templates/surveynotification'
-                        };
-
-                        // send mail with defined transport object
-                        transporter.sendMail(mailOptions, (error, info) => {
-                            if (error) {
-                                resolve(false);
-                                const hbsObject = {
-                                    msg: "An error occurred while sending email.",
-                                    showModal: true
-                                };
-                                Object.assign(hbsObject, req.session.globalUser);
-                                res.render('auth/sign', hbsObject);
-                            } else {
-                                resolve(true);
-                                console.log('Message ID: %s', info.messageId);
-                                console.log(info.envelope.to.toString());
-                            }
-                        });
+                        sendEmail(emailBody, 'Welcome! Your account information', req.body.email);
                         return res.render('auth/signin', message);
                     });
 
@@ -789,7 +750,7 @@ router.post('/emailSurvey/:surveyId', [
                 } else {
                     const hbsObject = { surveyId: dbSurvey.dataValues.surveyId }
 
-                    const output = `
+                    const emailBody = `
             <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
             <p>Hello,</p>
             <p style="color: black;">${req.body.message}</p>
@@ -799,63 +760,34 @@ router.post('/emailSurvey/:surveyId', [
 
                     return new Promise((resolve, reject) => {
 
-                        // transporter.use('compile', eht({
-                        //     viewEngine: 'express-handlebars',
-                        //     viewPath: `${appRoot}/views`,
-                        // }));
-
                         for (var i = 0; i < emailArray.length; i++) {
-                            // setup email data with unicode symbols
-                            let mailOptions = {
-                                from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
-                                to: emailArray[i], // list of receivers
-                                subject: req.body.subject, // Subject line
-                                text: 'Hello world?', // plain text body
-                                html: output, // html body
-                                //template: 'templates/surveynotification'
-                            };
-
-                            // send mail with defined transport object
-                            transporter.sendMail(mailOptions, (error, info) => {
-                                if (error) {
-                                    resolve(false);
-                                    const hbsObject = {
-                                        emailFailedAlertMessage: true,
-                                    };
-                                    Object.assign(hbsObject, req.session.globalUser);
-                                    res.render('survey/send', hbsObject);
-                                } else {
-                                    resolve(true);
-                                    console.log('Message ID: %s', info.messageId);
-                                    console.log(info.envelope.to.toString());
-
-                                    // Add email to recipient table if it doesnt exist
-                                    db.Recipient.findOne({
-                                        where: {
-                                            recipientEmail: info.envelope.to.toString(),
-                                            SurveySurveyId: req.params.surveyId,
-                                        }
-                                    }).then((dbRecipient) => {
-                                        if (dbRecipient == null) {
-                                            db.Recipient.create({
-                                                recipientEmail: info.envelope.to.toString(),
-                                                UserUserId: req.session.globalUser.userId,
-                                                SurveySurveyId: req.params.surveyId,
-                                            });
-                                        }
-                                    });
-
-                                    // Increase Number of recipients by 1
-                                    dbSurvey.dataValues.RecipientCount += 1;
-                                    const updatedSurvey = {
-                                        RecipientCount: dbSurvey.dataValues.RecipientCount,
-                                    };
-                                    db.Survey.update(updatedSurvey, {
-                                        where: {
-                                            surveyId: dbSurvey.dataValues.surveyId,
-                                        },
+                            sendEmail(emailBody, req.body.subject, emailArray[i]);
+                            var recipientEmail = emailArray[i];
+                            // Add email to recipient table if it doesnt exist
+                            db.Recipient.findOne({
+                                where: {
+                                    recipientEmail: recipientEmail,
+                                    SurveySurveyId: req.params.surveyId,
+                                }
+                            }).then((dbRecipient) => {
+                                if (dbRecipient == null) {
+                                    db.Recipient.create({
+                                        recipientEmail: recipientEmail,
+                                        UserUserId: req.session.globalUser.userId,
+                                        SurveySurveyId: req.params.surveyId,
                                     });
                                 }
+                            });
+
+                            // Increase Number of recipients by 1
+                            dbSurvey.dataValues.RecipientCount += 1;
+                            const updatedSurvey = {
+                                RecipientCount: dbSurvey.dataValues.RecipientCount,
+                            };
+                            db.Survey.update(updatedSurvey, {
+                                where: {
+                                    surveyId: dbSurvey.dataValues.surveyId,
+                                },
                             });
 
                         } //===For loop end
