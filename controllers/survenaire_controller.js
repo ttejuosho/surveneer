@@ -507,7 +507,7 @@ router.get('/surveys/:surveyId/v2', (req, res) => {
 // Save Responses and Respondent (Needs Refactoring - Error handling)
 router.post('/responses/:userId', (req, res) => {
     var resId = '';
-    if (req.body.respondentEmail !== undefined){
+    if (req.body.respondentEmail !== undefined) {
         // if respondent exists in Recipients table, update their information
         db.Recipient.findOne({
             where: {
@@ -540,7 +540,7 @@ router.post('/responses/:userId', (req, res) => {
         for (let i = 0; i < req.body.questionLength; i++) {
             const qanda = {
                 QuestionQuestionId: req.body['questionId' + i],
-                answer: (req.body['answer' + i] == null ? '' : req.body['answer' + i]),
+                answer: (req.body['answer' + i] == null ? '' : (req.body['answer' + i].includes('option') ? req.body['answer' + i].slice(7) : req.body['answer' + i])),
                 RespondentRespondentId: dbRespondent.dataValues.respondentId,
                 SurveySurveyId: req.body.surveyId,
             };
