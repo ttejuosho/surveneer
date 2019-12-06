@@ -2,15 +2,17 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 const express = require('express');
-const app = express();
+const bCrypt = require('bcrypt-nodejs');
+const crypto = require('crypto');
+//const app = express();
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const db = require('../models');
-const appRoot = require('app-root-path');
+//const appRoot = require('app-root-path');
 const passport = require('passport');
 //const io = require('socket.io');
 const { check, validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
+//const nodemailer = require('nodemailer');
 const sendEmail = require('../config/email/email');
 //const eht = require('nodemailer-express-handlebars');
 
@@ -35,15 +37,12 @@ router.get('/survey/v/:surveyId', (req, res) => {
             { model: db.Survey, as: "Survey", attributes: ["surveyId", "surveyName", "RespondentCount", "RecipientCount", "QuestionCount"] }
         ]
     }).then(function(responses) {
-        //res.json(responses);
         const hbsObject = { responses: responses };
         Object.assign(hbsObject, req.session.globalUser);
-        console.log(hbsObject);
         return res.render('response/view', hbsObject);
     }).catch(function(err) {
         res.render('error', err);
     });
-
 });
 
 router.get('/index', (req, res) => {
@@ -69,6 +68,110 @@ router.get('/mycontacts', (req, res) => {
     return res.render('user/contacts', hbsObject);
 });
 
+// Forgot password page
+router.get('/forgot', (req, res) => {
+    const hbsObject = { layout: 'partials/prelogin' };
+    return res.render('user/forgot', hbsObject);
+});
+
+router.get('/reset/:token',(req,res)=>{
+    db.User.findOne({
+        where: {
+            resetPasswordToken: req.params.token
+        }
+    }).then((dbUser)=>{
+        if (dbUser === null){
+            const errors = { errorMessage: "Email not found", layout: 'partials/prelogin' }
+            return res.render('user/forgot', errors);
+        }
+        if ((dbUser.dataValues.resetPasswordExpires > Date.now()) && crypto.timingSafeEqual(Buffer.from(dbUser.dataValues.resetPasswordToken), Buffer.from(req.params.token)) ){
+            const hbsObject = { token: req.params.token, layout: 'partials/prelogin'}
+            return res.render('user/reset', hbsObject);
+        } else {
+            const hbsObject = { errorMessage: 'Your Password reset link has expired, please  request another one.', layout: 'partials/prelogin' };
+            return res.render('user/forgot', hbsObject);
+        }
+    })
+});
+
+router.post('/reset/:token',(req,res)=>{
+    db.User.findOne({
+        where: {
+            resetPasswordToken: req.params.token
+        }
+    }).then((dbUser)=>{
+        if (dbUser === null){
+            const errors = { errorMessage: "Email not found" , layout: 'partials/prelogin'}
+            return res.render('user/forgot', errors);
+        }
+        if ((dbUser.dataValues.resetPasswordExpires > Date.now()) && crypto.timingSafeEqual(Buffer.from(dbUser.dataValues.resetPasswordToken), Buffer.from(req.params.token)) ){
+            const userPassword = bCrypt.hashSync(req.body.newPassword, bCrypt.genSaltSync(8), null);
+            db.User.update({ resetPasswordExpires: null, resetPasswordToken: null, password: userPassword },{
+                where: {
+                    userId: dbUser.dataValues.userId
+                }
+            });
+            const userName = dbUser.dataValues.name.split(" ")[0];
+            const subject = 'Your SurvEnEEr Password has changed';
+            const emailBody = `
+            <p>Hello ${userName},</p>
+            <p style="color: black;">Your password has been successfully reset.</p>    
+            <p>Click <a href="https://surveneer.herokuapp.com/signin">here to Log In</a>.</p>
+            <span style="font-size: 1rem;color: black;"><strong>SurvEnEEr Inc.</strong></span>`;
+            return new Promise((resolve, reject) => {
+                sendEmail(emailBody, subject, dbUser.dataValues.emailAddress);
+                return res.redirect('/signin');
+            });
+        }
+    })
+});
+
+router.post('/forgot', [check('emailAddress').not().isEmpty().withMessage('Please enter your email address')], (req, res) => {
+    const token = crypto.randomBytes(20).toString('hex');
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        errors.layout = 'partials/prelogin';
+        return res.render('user/forgot', errors);
+    }
+    db.User.findOne({
+        where: {
+            emailAddress: req.body.emailAddress
+        }
+    }).then((dbUser)=>{
+        if (dbUser === null){
+            const errors = { errorMessage: "Email not found", layout: 'partials/prelogin' }
+            return res.render('user/forgot', errors);
+        }
+        const userInfo = {
+            userName: dbUser.dataValues.name.split(" ")[0],
+            emailAddress: dbUser.dataValues.emailAddress,
+            resetPasswordToken: token,
+            resetPasswordExpires: Date.now() + 3600000
+        }
+
+        const subject = 'Reset Your SurvEnEEr Password';
+        const emailBody = `
+        <p>Hello ${userInfo.userName},</p>
+        <p style="color: black;">Ready to reset your password ?.</p>    
+        <p>Click <a href="https://surveneer.herokuapp.com/reset/${token}">Reset now</a> to begin.</p>
+        <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+        <span style="font-size: 1rem;color: black;"><strong>SurvEnEEr Inc.</strong></span>
+        `;
+        
+        return new Promise((resolve, reject) => {
+            sendEmail(emailBody, subject, userInfo.emailAddress);
+            db.User.update({ resetPasswordExpires: userInfo.resetPasswordExpires, resetPasswordToken: userInfo.resetPasswordToken },{
+                where: {
+                    userId: dbUser.dataValues.userId
+                }
+            });
+            const message = { emailSent : true, errorMessage: "Password reset email has been sent to " + userInfo.emailAddress, layout: 'partials/prelogin' }
+            return res.render('user/forgot', message);
+        });
+    });
+  });
+
+
 // List of Users on SurvEnEEr
 router.get('/contacts', (req, res) => {
     const hbsObject = { loadJs: 'true' };
@@ -79,7 +182,6 @@ router.get('/contacts', (req, res) => {
 // New Survey POST Route
 router.post('/newSurvey', [check('surveyName').not().isEmpty().withMessage('Please enter a name for your survey')], (req, res) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
         Object.assign(errors, req.session.globalUser);
         return res.render('survey/new', errors);
@@ -591,7 +693,6 @@ router.get('/chart/:surveyId', (req, res) => {
             results.optionType.push(arr.shift());
             results.answerCounts.push(arr);
         }
-        //console.log(results);
         return res.json(results);
     });
 });
@@ -646,8 +747,6 @@ router.post('/subscribe', [
                         sendEmail(emailBody, 'Welcome! Your account information', req.body.email);
                         return res.render('auth/signin', message);
                     });
-
-
 
                 }).catch((err) => {
                     res.render('error', err);
@@ -710,7 +809,6 @@ router.get('/sendSurvey/:surveyId', (req, res) => {
             Object.assign(hbsObject, req.session.globalUser);
             res.render('survey/send', hbsObject);
         }
-
     }).catch((err) => {
         res.render('error', err);
     });
@@ -749,17 +847,15 @@ router.post('/emailSurvey/:surveyId', [
                     return res.render('survey/send', errors);
                 } else {
                     const hbsObject = { surveyId: dbSurvey.dataValues.surveyId }
-
                     const emailBody = `
-            <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
-            <p>Hello,</p>
-            <p style="color: black;">${req.body.message}</p>
-            <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/v2">Open Survey</a>
-            <p>Surveneer Team</p>
-            `;
+                    <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
+                    <p>Hello,</p>
+                    <p style="color: black;">${req.body.message}</p>
+                    <a class="btn btn-sm btn-primary" href="https://surveneer.herokuapp.com/surveys/${req.params.surveyId}/v2">Open Survey</a>
+                    <p>Surveneer Team</p>
+                    `;
 
                     return new Promise((resolve, reject) => {
-
                         for (var i = 0; i < emailArray.length; i++) {
                             sendEmail(emailBody, req.body.subject, emailArray[i]);
                             var recipientEmail = emailArray[i];
@@ -792,6 +888,7 @@ router.post('/emailSurvey/:surveyId', [
 
                         } //===For loop end
                         hbsObject["emailSentAlertMessage"] = true;
+                        hbsObject["subject"] = req.body.subject;
                         Object.assign(hbsObject, req.session.globalUser);
                         res.render('survey/send', hbsObject);
                     }); //======
@@ -869,7 +966,7 @@ router.post('/newRecipient/:userId', [
             UserUserId: req.params.userId,
             SurveySurveyId: req.body.surveyId
         }).then((dbRecipient) => {
-            console.log(dbRecipient.dataValues);
+            //console.log(dbRecipient.dataValues);
             var hbsObject = { successMessage: true }
             Object.assign(hbsObject, req.session.globalUser);
             return res.render('user/contacts', hbsObject);

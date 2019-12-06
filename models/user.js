@@ -18,6 +18,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    resetPasswordExpires: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+    },
     phoneNumber: {
       type: DataTypes.BIGINT,
       allowNull: true,

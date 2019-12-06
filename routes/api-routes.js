@@ -15,6 +15,17 @@ module.exports = (app) => {
         });
     });
 
+    // Get a User
+    app.get('/api/users/email/:emailAddress', (req, res) => {
+        db.User.findAll({
+            where: {
+                emailAddress: req.params.emailAddress,
+            },
+        }).then(function(dbUser) {
+            res.json(dbUser);
+        });
+    });
+    
     // Get all Users
     app.get('/api/users', (req, res) => {
         db.User.findAll().then(function(dbUser) {

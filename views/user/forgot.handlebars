@@ -1,0 +1,39 @@
+<div class="col-md-6 mb-lg-auto">
+    <div class="card card-register">
+        <div class="card-header">
+            <img class="card-img" src="/assets/img/square1.png" alt="Card image">
+            <h4 class="card-title">iForgot</h4>
+        </div>
+        <div class="card-body">
+            <form id="forgot" class="form" action="/forgot" method="POST">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label class="required">Username</label>
+                        <input id="emailAddress" name="emailAddress" type="text" class="form-control mb-1" placeholder="Email Address">
+                        {{#if errors}}
+                            {{#each errors}}
+                                {{#ifEquals param "emailAddress"}} 
+                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                {{/ifEquals}}
+                            {{/each}}
+                        {{/if}}
+                        <div class="messages text-danger font-weight-bold">{{errorMessage}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-fill btn-primary btn-sm float-right">Send Reset Email</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{#if emailSent}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Password reset email sent');
+        });
+    </script>
+{{/if}}
