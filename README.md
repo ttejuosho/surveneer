@@ -33,7 +33,7 @@ Before you get started, make sure you have the following software installed on y
 
 ### Sign Up
 
-![](SignUp.gif)
+![](Sign-Up.gif)
 
 ### Create A Survey
 
