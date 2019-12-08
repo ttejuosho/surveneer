@@ -54,6 +54,7 @@ Additional features to be implemented in the future:
 - [ ] Survey Types/Templates
 - [ ] Real time update for response rate charts
 - [ ] Response Views
+- [ ] Survey Sharing
 
 
 ## Deployment
