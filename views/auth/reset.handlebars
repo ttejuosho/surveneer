@@ -1,0 +1,52 @@
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header"><h2 class="mb-1">Reset Password</h2></div>
+        <div class="card-body">
+            <form id="resetPassword" class="form" action="/reset/{{token}}" method="POST">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label class="required">Password</label>
+                        <input id="newPassword" name="newPassword" type="password" class="form-control mb-1" placeholder="New Password">
+                        {{#if errors}}
+                            {{#each errors}}
+                                {{#ifEquals param "newPassword"}} 
+                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                {{/ifEquals}}
+                            {{/each}}
+                        {{/if}}
+                        <div class="messages text-danger font-weight-bold">{{errorMessage}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <label class="required">Confirm Password</label>
+                        <input id="confirmPassword" name="confirmPassword" type="password" class="form-control mb-1" placeholder="Confirm Password">
+                        {{#if errors}}
+                            {{#each errors}}
+                                {{#ifEquals param "confirmPassword"}} 
+                                    <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                {{/ifEquals}}
+                            {{/each}}
+                        {{/if}}
+                        <div class="messages text-danger font-weight-bold">{{errorMessage}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-fill btn-primary btn-sm float-right">Reset Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{#if emailSent}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Password reset email sent');
+        });
+    </script>
+{{/if}}

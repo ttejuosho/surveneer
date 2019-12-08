@@ -5,7 +5,7 @@
       <h4 class="card-title">Register</h4>
     </div>
     <div class="card-body">
-      <form id="signupForm" class="form" action="/signup" method="POST" enctype="multipart/form-data">
+      <form id="signupForm" class="form needs-validation" action="/signup" method="POST" enctype="multipart/form-data" novalidate>
       <fieldset>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -14,6 +14,7 @@
             </div>
           </div>
           <input type="text" class="form-control" name="name" placeholder="First & Last Name" required>
+          <div class="invalid-feedback">Please enter your first & last names.</div>
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -22,6 +23,7 @@
             </div>
           </div>
           <input type="text" class="form-control" name="emailAddress" placeholder="Email" required>
+          <div class="invalid-feedback">Im going to need this so you can log in.</div>
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -30,6 +32,7 @@
             </div>
           </div>
           <input type="tel" class="form-control" name="phoneNumber" placeholder="Phone Number" required>
+          <div class="invalid-feedback">I need your phone number.</div>
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
@@ -38,6 +41,7 @@
             </div>
           </div>
           <input type="password" class="form-control" name="password" placeholder="Password"  autocomplete="off" required>
+          <div class="invalid-feedback">Errm..Your password ?</div>
         </div>
 
         <div class="input-group">
@@ -45,8 +49,7 @@
             <div class="input-group-text" style="border: unset;">
               <i class="tim-icons icon-image-02"></i>
             </div>
-            <input type="file" class="custom-file-input" id="profileImage" name="profileImage" aria-describedby="inputGroupFileAddon01">
-           
+            <input type="file" class="custom-file-input" id="profileImage" name="profileImage" aria-describedby="inputGroupFileAddon01">    
             <div class="">
               <label class="custom-file-label" for="inputGroupFile01" style="padding-top: 1em; padding-left: 4.8em; font-size: 0.7rem;">Choose Image</label>
             </div>

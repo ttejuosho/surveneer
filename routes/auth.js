@@ -76,12 +76,13 @@ module.exports = function(upload, app, passport) {
           } else {
             updatedUserInfo.surveyImage = req.file.filename;
             db.Survey.update(updatedUserInfo, {
-              where: { 
-                UserUserid: req.session.passport.user 
-              }
-            })
+              where: {
+                UserUserid: req.session.passport.user,
+              },
+            });
           }
         }
+
         db.User.update(updatedUserInfo, {
           where: {
             userId: req.session.passport.user,

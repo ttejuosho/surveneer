@@ -28,19 +28,23 @@ Before you get started, make sure you have the following software installed on y
 ### Installing
 
 ## Completed Features
-
+### Dashboard
+![](Dashboard.png)
 ### Sign Up
 
-![](signup.gif)
+![](SignUp.gif)
 
 ### Create A Survey
 
-![](newsurvey.gif)
+![](NewSurvey.gif)
 
 ### Real time update
 
-![](realtimeUpdate.gif)
+![](RealtimeUpdate.gif)
 
+### Password Reset
+
+![](PasswordReset.gif)
 
 ### Next Steps
 

@@ -47,10 +47,11 @@
                     Completed !!
                 </div>
                 <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <h4>Thank you for your time !!! We got your responses.</h4>
+                    <blockquote class="blockquote mb-0 pt-2 pb-2">
                         {{#if postSurveyInstructions}}
-                            <h4>{{postSurveyInstructions}}</h4>
+                            <h5>{{postSurveyInstructions}}</h5>
+                        {{else}}
+                            <h5>Thank you for your time !!! We got your responses.</h5>
                         {{/if}}
                     </blockquote>
                     <input type="hidden" id="surveyId" value="{{surveyId}}">

@@ -3,8 +3,7 @@
 // load bcrypt
 const bCrypt = require('bcrypt-nodejs');
 const db = require('../../models');
-const nodemailer = require('nodemailer');
-const transporter = require('../email/email');
+const sendEmail = require('../../config/email/email');
 
 module.exports = function(passport, user) {
   const User = user;
@@ -66,54 +65,35 @@ module.exports = function(passport, user) {
         };
 
         User.create(data).then(function(newUser, created) {
-          if (!newUser) { return done(null, false); }
-          if (newUser) { return done(null, newUser);}
+          if (!newUser) {
+            return done(null, false);
+          }
+          if (newUser) {
+            return done(null, newUser);
+          }
         }).then(()=>{
-        db.Contact.findOne({
-          where: { email: email, },
-        }).then((dbContact) => {
-          if (dbContact == null) {
-            db.Contact.create({
-              firstName: req.body.name.split(' ')[0],
-              lastName: req.body.name.split(' ')[1],
-              email: email,
-          }).then(()=>{
-
-          const emailBody = `
-          <span style="text-transform: uppercase; font-size: 1rem;color: black;"><strong>Surveneer</strong></span>
+          db.Contact.findOne({
+            where: {email: email},
+          }).then((dbContact) => {
+            if (dbContact == null) {
+              db.Contact.create({
+                firstName: req.body.name.split(' ')[0],
+                lastName: req.body.name.split(' ')[1],
+                email: email,
+              }).then(()=>{
+                const emailBody = `
           <p>Hello ${req.body.name.split(' ')[0]},</p>
-          <p style="color: black;">Your account is set annd you're all good to go. Click <a href="https://surveneer.herokuapp.com/">here</a> to sign in to create your first survey.</p>
-          <p> The SurvEnEEr Team</p>
+          <p style="color: black;">Your account is set and you're all good to go. Click <a href="https://surveneer.herokuapp.com/">here</a> to sign in to create your first survey.</p>
+          <p> <span style="font-size: 1rem;color: black;"><strong>The Surveneer Team</strong></span></p>
           `;
 
-          let mailOptions = {
-            from: '"SurvEnEEr" <ttejuosho@aol.com>', // sender address
-            to: email, // list of receivers
-            subject: 'New account created', // Subject line
-            text: 'Hello world?', // plain text body
-            html: emailBody, // html body
-            //template: 'templates/surveynotification'
-        };
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              resolve(false);
-              const hbsObject = {
-                  error: 'An error occurred while sending a welcome email',
-              };
-              res.render('error', hbsObject);
-          } else {
-            resolve(true);
-            console.log('Message ID: %s', info.messageId); 
-          }
+                sendEmail(emailBody, 'Welcome to SurvEvEEr !', email);
+              }).catch((err) => {
+                return res.render('error', err);
+              });
+            }
           });
-
-          }).catch((err) => {
-              return res.render('error', err);
-          });
-          }
         });
-      });
       }
     });
   }
@@ -150,8 +130,8 @@ module.exports = function(passport, user) {
           message: 'Incorrect password.',
         });
       }
-      const userinfo = user.get();
-      return done(null, userinfo);
+      const userInfo = user.get();
+      return done(null, userInfo);
     }).catch(function(err) {
       console.log('Error:', err);
       return done(null, false, {

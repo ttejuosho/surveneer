@@ -51,7 +51,7 @@
         {{!-- {{else}} --}}
             {{!-- <div><img class="survey-banner" src="../../900x150xBanner.jpg" ></div> --}}
         {{/if}}
-        <h2><p>{{surveyName}}</p></h2>
+        <h2 class="pb-0 mb-0">{{surveyName}}</h2>
     </div>
     
     <div class="card-body">
@@ -84,7 +84,7 @@
 
     {{#if preSurveyInstructions}}
     <div class="form-group">
-        <blockquote class="blockquote mb-0"><h4>{{preSurveyInstructions}}</h4></blockquote>
+        <blockquote class="blockquote mb-0 pt-2 pb-2"><h5 class="mb-0">{{preSurveyInstructions}}</h5></blockquote>
     </div>
     {{/if}}
     {{#ifEquals getId 1}}
@@ -114,7 +114,7 @@
         <div class="row">
             <div class="col-md-12 mb-3 qanda">
                 <div class="form-group mb-1">
-                    <h4 class= "{{#ifEquals required true}} required {{/ifEquals}}">Question {{counter @index}}</h4>
+                    <h4 class= "{{#ifEquals required true}}required{{/ifEquals}}">Question {{counter @index}}</h4>
                     {{#if questionInstruction}}<h6>Information: {{questionInstruction}}</h6>{{/if}}
                     <input type="text" name="questionId{{@index}}" id="questionId" class="questionId d-none" value="{{questionId}}" />
                     <p class="question">{{question}}</p>
