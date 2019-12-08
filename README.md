@@ -39,7 +39,7 @@ Before you get started, make sure you have the following software installed on y
 
 ![](newSurvey.gif)
 
-### Real time update
+### Real time updates
 
 ![](RealtimeUpdate.gif)
 
