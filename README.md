@@ -27,6 +27,7 @@ Before you get started, make sure you have the following software installed on y
 ### Installing
 
 ## Completed Features
+
 ### Dashboard
 ![](Dashboard.png)
 
@@ -36,7 +37,7 @@ Before you get started, make sure you have the following software installed on y
 
 ### Create A Survey
 
-![](NewSurvey.gif)
+![](newSurvey.gif)
 
 ### Real time update
 
