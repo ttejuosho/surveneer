@@ -30,6 +30,7 @@ Before you get started, make sure you have the following software installed on y
 ## Completed Features
 ### Dashboard
 ![](Dashboard.png)
+
 ### Sign Up
 
 ![](SignUp.gif)
