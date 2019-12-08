@@ -37,7 +37,7 @@ Before you get started, make sure you have the following software installed on y
 
 ### Create A Survey
 
-![](newSurvey.gif)
+![](NewSurvey-2.gif)
 
 ### Real time updates
 
