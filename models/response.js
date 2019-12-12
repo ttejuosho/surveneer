@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
         },
         answer: {
-            type: DataTypes.TEXY,
+            type: DataTypes.TEXT,
             allowNull: false,
         },
     });
