@@ -510,7 +510,7 @@ router.get('/surveys/:surveyId/v2', (req, res) => {
 
 // Save Responses and Respondent (Needs Refactoring - Error handling for responses)
 router.post('/responses/:userId', [
-    check('respondentName').custom(value => {
+    check('respondentName').escape().isLength({ min: 2, max: 50 }).withMessage('You got names that long, really ?').custom(value => {
         if (value.split(' ').length < 2) {
             return Promise.reject('First & Last Names are required');
         }
