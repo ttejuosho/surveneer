@@ -368,7 +368,8 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>               
-                        <textarea rows="2" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>             
+                        <textarea rows="2" cols="80" maxlength = "100" class="form-control mb-0 answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <span class="mr-2">Length: <span class="answerCount">0</span>/100</span>            
                       </div>
                     </div>
                   </div>
@@ -378,7 +379,8 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="4" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>   
+                        <textarea rows="4" cols="80" maxlength = "200" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <span class="mr-2">Length: <span id="longAnswerCount">0</span>/100</span>    
                       </div>
                     </div>
                   </div>
@@ -408,5 +410,20 @@
 $('.numberRating').click((e)=>{
     $('.numberRating').removeClass('btn-primary');
     $(e.target).addClass('btn-primary');
+});
+
+//text Counter Function
+$('textarea').keyup(function () {
+    var characterCount = $(this).val().length,
+        current = $('#shortAnswerCount');
+        console.log(current);
+    current.text(characterCount);
+});
+
+//text Counter Function
+$('textarea').keyup(function () {
+    var characterCount = $(this).val().length,
+        current = $('#longAnswerCount');
+    current.text(characterCount);
 });
 </script>

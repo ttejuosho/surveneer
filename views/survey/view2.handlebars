@@ -416,6 +416,7 @@
                       <div class="form-group">
                         <label>Response</label>
                         <textarea rows="4" cols="80" maxlength = "100" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <span class="mr-2">Length: <span id="shortAnswerCount">0</span>/100</span>
                       </div>
                     </div>
                   </div>
@@ -426,6 +427,7 @@
                       <div class="form-group">
                         <label>Response</label>
                         <textarea rows="8" cols="80" maxlength = "200" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <span class="mr-2">Length: <span id="longAnswerCount">0</span>/100</span>
                       </div>
                     </div>
                   </div>
@@ -487,6 +489,20 @@
     $('.numberRating').click((e)=>{
         $('.numberRating').removeClass('btn-primary');
         $(e.target).addClass('btn-primary');
+    });
+
+    //text Counter Function
+    $('textarea').keyup(function () {
+        var characterCount = $(this).val().length,
+            current = $('#shortAnswerCount');
+        current.text(characterCount);
+    });
+    
+    //text Counter Function
+    $('textarea').keyup(function () {
+        var characterCount = $(this).val().length,
+            current = $('#longAnswerCount');
+        current.text(characterCount);
     });
     </script>
     {{#ifEquals showTOU true}}

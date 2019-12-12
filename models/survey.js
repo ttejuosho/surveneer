@@ -33,19 +33,19 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         },
         preSurveyInstructions: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         postSurveyInstructions: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         surveyNotes: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         surveyTOU: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         RespondentCount: {
