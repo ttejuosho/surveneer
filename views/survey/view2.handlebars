@@ -415,7 +415,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="4" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <textarea rows="4" cols="80" maxlength = "100" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
                       </div>
                     </div>
                   </div>
@@ -425,7 +425,7 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="8" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <textarea rows="8" cols="80" maxlength = "200" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
                       </div>
                     </div>
                   </div>
