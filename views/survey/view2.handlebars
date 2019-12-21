@@ -92,19 +92,40 @@
         <div class="col-md-4 pr-md-1">
             <div class="form-group">
             <label class="required">Name</label>
-            <input type="text" class="form-control" name="respondentName" id="respondentName" placeholder="Name" required>
+            <input type="text" class="form-control mb-0" name="respondentName" id="respondentName" placeholder="Name" required>
+            {{#if errors}}
+                {{#each errors}}
+                    {{#ifEquals param "respondentName"}} 
+                        <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                    {{/ifEquals}}
+                {{/each}}
+            {{/if}}
             </div>
         </div>
         <div class="col-md-4 px-md-1">
             <div class="form-group">
             <label class="required">Email Address</label>
-            <input type="email" class="form-control" name="respondentEmail" id="respondentEmail" placeholder="Email" required>
+            <input type="email" class="form-control mb-0" name="respondentEmail" id="respondentEmail" placeholder="Email" required>
+            {{#if errors}}
+                {{#each errors}}
+                    {{#ifEquals param "respondentEmail"}} 
+                        <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                    {{/ifEquals}}
+                {{/each}}
+            {{/if}}
             </div>
         </div>
         <div class="col-md-4 pl-md-1">
             <div class="form-group">
             <label class="required">Phone Number</label>
-            <input type="number" class="form-control" name="respondentPhone" id="respondentPhone" placeholder="Phone Number" required>
+            <input type="number" class="form-control mb-0" name="respondentPhone" id="respondentPhone" placeholder="Phone Number" required>
+            {{#if errors}}
+                {{#each errors}}
+                    {{#ifEquals param "respondentPhone"}} 
+                        <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                    {{/ifEquals}}
+                {{/each}}
+            {{/if}}
             </div>
         </div>
     </div>
@@ -394,7 +415,8 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="4" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <textarea rows="4" cols="80" maxlength = "100" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <span class="mr-2">Length: <span id="shortAnswerCount">0</span>/100</span>
                       </div>
                     </div>
                   </div>
@@ -404,7 +426,8 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Response</label>
-                        <textarea rows="8" cols="80" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <textarea rows="8" cols="80" maxlength = "200" class="form-control answer" id="{{question}}" name="answer{{@index}}" placeholder="Enter Response Here" {{#ifEquals required 1}} required {{/ifEquals}}></textarea>
+                        <span class="mr-2">Length: <span id="longAnswerCount">0</span>/100</span>
                       </div>
                     </div>
                   </div>
@@ -466,6 +489,20 @@
     $('.numberRating').click((e)=>{
         $('.numberRating').removeClass('btn-primary');
         $(e.target).addClass('btn-primary');
+    });
+
+    //text Counter Function
+    $('textarea').keyup(function () {
+        var characterCount = $(this).val().length,
+            current = $('#shortAnswerCount');
+        current.text(characterCount);
+    });
+    
+    //text Counter Function
+    $('textarea').keyup(function () {
+        var characterCount = $(this).val().length,
+            current = $('#longAnswerCount');
+        current.text(characterCount);
     });
     </script>
     {{#ifEquals showTOU true}}
