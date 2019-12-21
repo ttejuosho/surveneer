@@ -1,0 +1,51 @@
+<div class="col-lg-6 mb-lg-auto">
+  <div class="card card-register">
+    <div class="card-header">
+      <img class="card-img" src="/assets/img/square1.png" alt="Card image">
+      <h4 class="card-title">Welcome</h4>
+    </div>
+    <div class="card-body">
+      <form id="completeRegistrationForm" class="form needs-validation" action="/completeRegistration" method="POST" novalidate>
+      <fieldset>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="tim-icons icon-email-85"></i>
+            </div>
+          </div>
+          <input type="text" class="form-control" name="emailAddress" placeholder="Email" value="{{emailAddress}}" required readonly>
+          <div class="invalid-feedback">Im going to need this so you can log in.</div>
+        </div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="tim-icons icon-single-02"></i>
+            </div>
+          </div>
+          <input type="text" class="form-control" name="name" placeholder="First & Last Name" required>
+          <div class="invalid-feedback">Please enter your first & last names.</div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="tim-icons icon-mobile"></i>
+            </div>
+          </div>
+          <input type="tel" class="form-control" name="phoneNumber" placeholder="Phone Number" required>
+          <div class="invalid-feedback">I need your phone number.</div>
+        </div>
+        
+        <div class="input-group mt-4">
+          <button type="submit" class="col btn btn-primary">Complete Sign Up</button>
+        </div>
+        <div class="messages text-danger font-weight-bold">{{error}}</div>     
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+</script>

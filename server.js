@@ -35,7 +35,8 @@ const strategy = new Auth0Strategy({
   domain: process.env.AUTH0_DOMAIN,
   clientID: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://surveneer.herokuapp.com/callback',
+  // callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://surveneer.herokuapp.com/callback',
+  callbackURL: process.env.AUTH0_CALLBACK_URL,
 },
 function(accessToken, refreshToken, extraParams, profile, done) {
   /**
@@ -84,39 +85,6 @@ app.use(passport.initialize());
 passport.use(strategy);
 app.use(passport.session()); // persistent login sessions
 
-// Set The Storage Engine
-const storage = multer.diskStorage({
-  destination: './uploads/',
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  },
-});
-
-// Init Upload
-const upload = multer({
-  storage: storage,
-  limits: {fileSize: 1000000},
-  fileFilter: function(req, file, cb) {
-    checkFileType(file, cb);
-  },
-}).single('profileImage');
-
-// Check File Type
-function checkFileType(file, cb) {
-  // Allowed ext
-  const filetypes = /jpeg|jpg|png|gif/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
-  }
-}
-
 const hbs = exphbs.create({
   helpers: {
     ifEquals: function(arg1, arg2, options) {
@@ -157,24 +125,20 @@ app.use((err, req, res, next) => {
   next();
 });
 
-const routes = require('./controllers/survenaire_controller');
+// const routes = require('./controllers/survenaire_controller');
 
-require('./routes/auth.js')(upload, app, passport);
+require('./routes/auth-routes.js')(app, passport);
+require('./routes/contact-routes')(app);
+require('./routes/survey-routes')(app);
+require('./routes/user-routes')(app);
+require('./routes/question-routes')(app);
+require('./routes/surveneer-routes')(app);
+require('./routes/recipient-routes')(app);
+require('./routes/response-routes')(app);
+require('./routes/api-routes.js')(app);
 
 // load passport strategies
 require('./config/passport/passport.js')(passport, db.User);
-
-require('./routes/api-routes.js')(app);
-// require('./routes/auth')(app);
-app.use('/', routes);
-app.use('/update', routes);
-app.use('/new', routes);
-app.use('/delete', routes);
-app.use('/survey', routes);
-app.use('/mysurveys', routes);
-app.use('/question', routes);
-app.use('/sendSurvey', routes);
-app.use('/emailSurvey', routes);
 
 // listen on port 3000
 const port = process.env.PORT || 3000;

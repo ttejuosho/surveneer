@@ -1,15 +1,13 @@
+/* eslint-disable max-len */
 const express = require('express');
 const app = express();
 const router = express.Router();
 const db = require('../models');
-const appRoot = require('app-root-path');
-const passport = require('passport');
 const {check, validationResult} = require('express-validator');
-const nodemailer = require('nodemailer');
-const transporter = require('../config/email/email');
+
 
 // Get all responses to a Survey
-router.get('/responses/:SurveySurveyId/view', (req, res) => {
+exports.getSurveyResponses = (req, res) => {
   db.Response.findAll({
     where: {
       SurveySurveyId: req.params.SurveySurveyId,
@@ -24,7 +22,7 @@ router.get('/responses/:SurveySurveyId/view', (req, res) => {
   }).catch(function(err) {
     res.render('error', err);
   });
-});
+};
 
 // Save Responses and Respondent (Needs Refactoring - Error handling)
 router.post('/responses/:userId', (req, res) => {
@@ -78,7 +76,7 @@ router.post('/responses/:userId', (req, res) => {
           },
         }).then((dbQuestion) => {
           dbQuestion.dataValues.YesResponseCount += 1;
-          let updatedQuestion = {YesResponseCount: dbQuestion.dataValues.YesResponseCount};
+          const updatedQuestion = {YesResponseCount: dbQuestion.dataValues.YesResponseCount};
           db.Question.update(updatedQuestion, {
             where: {
               questionId: dbQuestion.dataValues.questionId,
@@ -92,7 +90,7 @@ router.post('/responses/:userId', (req, res) => {
           },
         }).then((dbQuestion) => {
           dbQuestion.dataValues.NoResponseCount += 1;
-          let updatedQuestion = {NoResponseCount: dbQuestion.dataValues.NoResponseCount};
+          const updatedQuestion = {NoResponseCount: dbQuestion.dataValues.NoResponseCount};
           db.Question.update(updatedQuestion, {
             where: {
               questionId: dbQuestion.dataValues.questionId,
@@ -106,7 +104,7 @@ router.post('/responses/:userId', (req, res) => {
           },
         }).then((dbQuestion) => {
           dbQuestion.dataValues.TrueResponseCount += 1;
-          let updatedQuestion = {TrueResponseCount: dbQuestion.dataValues.TrueResponseCount};
+          const updatedQuestion = {TrueResponseCount: dbQuestion.dataValues.TrueResponseCount};
           db.Question.update(updatedQuestion, {
             where: {
               questionId: dbQuestion.dataValues.questionId,
@@ -120,7 +118,7 @@ router.post('/responses/:userId', (req, res) => {
           },
         }).then((dbQuestion) => {
           dbQuestion.dataValues.FalseResponseCount += 1;
-          let updatedQuestion = {FalseResponseCount: dbQuestion.dataValues.FalseResponseCount};
+          const updatedQuestion = {FalseResponseCount: dbQuestion.dataValues.FalseResponseCount};
           db.Question.update(updatedQuestion, {
             where: {
               questionId: dbQuestion.dataValues.questionId,
@@ -184,9 +182,8 @@ router.post('/responses/:userId', (req, res) => {
   });
 });
 
-
-router.get('/complete', (req, res) => {
+exports.complete = (req, res) => {
   return res.render('survey/complete', {layout: false});
-});
+};
 
 module.exports = router;

@@ -8,7 +8,6 @@ const sendEmail = require('../../config/email/email');
 module.exports = function(passport, user) {
   const User = user;
   const LocalStrategy = require('passport-local').Strategy;
-
   // creates a cookie for the user sessions
   passport.serializeUser(function(user, done) {
     done(null, user.userId);
@@ -34,12 +33,12 @@ module.exports = function(passport, user) {
   //   done(null, user);
   // });
 
+  // LOCAL SIGNUP
   passport.use('local-signup', new LocalStrategy({
     usernameField: 'emailAddress',
     passwordField: 'password',
     passReqToCallback: true, // allows us to pass back the entire request to the callback
   },
-
   function(req, email, password, done) {
     const generateHash = function(password) {
       return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
@@ -82,11 +81,10 @@ module.exports = function(passport, user) {
                 email: email,
               }).then(()=>{
                 const emailBody = `
-          <p>Hello ${req.body.name.split(' ')[0]},</p>
-          <p style="color: black;">Your account is set and you're all good to go. Click <a href="https://surveneer.herokuapp.com/">here</a> to sign in to create your first survey.</p>
-          <p> <span style="font-size: 1rem;color: black;"><strong>The Surveneer Team</strong></span></p>
-          `;
-
+                <p>Hello ${req.body.name.split(' ')[0]},</p>
+                <p style="color: black;">Your account is set and you're all good to go. Click <a href="https://surveneer.herokuapp.com/">here</a> to sign in to create your first survey.</p>
+                <p> <span style="font-size: 1rem;color: black;"><strong>The Surveneer Team</strong></span></p>
+                `;
                 sendEmail(emailBody, 'Welcome to SurvEvEEr !', email);
               }).catch((err) => {
                 return res.render('error', err);
@@ -107,7 +105,6 @@ module.exports = function(passport, user) {
     passReqToCallback: true, // allows us to pass back the entire request to the callback
     failureFlash: true,
   },
-
   function(req, email, password, done) {
     const User = user;
     const isValidPassword = function(userpass, password) {
@@ -140,4 +137,7 @@ module.exports = function(passport, user) {
     });
   }
   ));
+
 };
+
+

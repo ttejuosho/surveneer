@@ -1,26 +1,15 @@
-const express = require('express');
-const app = express();
-const router = express.Router();
+// const express = require('express');
+// const router = express.Router();
 const db = require('../models');
-const appRoot = require('app-root-path');
-const passport = require('passport');
-const {check, validationResult} = require('express-validator');
-const nodemailer = require('nodemailer');
-const transporter = require('../config/email/email');
+const {validationResult} = require('express-validator');
 
-// List of Users on SurvEnEEr
-router.get('/contacts', (req, res) => {
+exports.getContacts = (req, res)=>{
   const hbsObject = {loadJs: 'true'};
   Object.assign(hbsObject, req.session.globalUser);
   return res.render('admin/contacts', hbsObject);
-});
+};
 
-// Save New Contact Subscribe
-router.post('/subscribe', [
-  check('firstName').not().isEmpty().escape().withMessage('Please enter your first name'),
-  check('lastName').not().isEmpty().escape().withMessage('Please enter your last name'),
-  check('email').not().isEmpty().escape().withMessage('Please enter your email address'),
-], (req, res) => {
+exports.subscribe = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     errors.layout = 'partials/prelogin';
@@ -49,7 +38,7 @@ router.post('/subscribe', [
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
-        }).then((dbContact) => {
+        }).then(() => {
           const message = {
             showConfirmation: true,
             layout: 'partials/prelogin',
@@ -61,10 +50,10 @@ router.post('/subscribe', [
       }
     });
   }
-});
+};
 
-// Update contact
-router.post('/updateContact', (req, res) => {
+// Update Contact
+exports.updateContact = (req, res) => {
   const updatedContact = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -86,10 +75,10 @@ router.post('/updateContact', (req, res) => {
   }).catch((err) => {
     res.render('error', err);
   });
-});
+};
 
-// Delete Contact
-router.get('/deleteContact/:contactId', (req, res) => {
+// Delete contact
+exports.deleteContact = (req, res) => {
   db.Contact.findByPk(req.params.contactId)
       .then((dbContact) => {
         if (dbContact !== null) {
@@ -104,6 +93,4 @@ router.get('/deleteContact/:contactId', (req, res) => {
           });
         }
       });
-});
-
-module.exports = router;
+};

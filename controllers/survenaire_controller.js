@@ -76,6 +76,7 @@ router.get('/forgot', (req, res) => {
   return res.render('auth/forgot', hbsObject);
 });
 
+// Find User by Token & render new password page
 router.get('/reset/:token', (req, res)=>{
   db.User.findOne({
     where: {
@@ -90,12 +91,13 @@ router.get('/reset/:token', (req, res)=>{
       const hbsObject = {token: req.params.token, layout: 'partials/prelogin'};
       return res.render('auth/reset', hbsObject);
     } else {
-      const hbsObject = {errorMessage: 'Your Password reset link has expired, please  request another one.', layout: 'partials/prelogin'};
+      const hbsObject = {errorMessage: 'Your Password reset link has expired, please request another one.', layout: 'partials/prelogin'};
       return res.render('auth/forgot', hbsObject);
     }
   });
 });
 
+// Reset Password & Send Confirmation Email
 router.post('/reset/:token', (req, res)=>{
   db.User.findOne({
     where: {
@@ -148,7 +150,7 @@ router.post('/forgot', [check('emailAddress').not().isEmpty().withMessage('Pleas
       userName: dbUser.dataValues.name.split(' ')[0],
       emailAddress: dbUser.dataValues.emailAddress,
       resetPasswordToken: token,
-      resetPasswordExpires: Date.now() + 3600000,
+      resetPasswordExpires: Date.now() + 260000,
     };
 
     const subject = 'Reset Your SurvEnEEr Password';
@@ -172,7 +174,6 @@ router.post('/forgot', [check('emailAddress').not().isEmpty().withMessage('Pleas
     });
   });
 });
-
 
 // List of Users on SurvEnEEr
 router.get('/contacts', (req, res) => {
@@ -452,7 +453,7 @@ router.post('/newQuestion/:surveyId', [
 });
 
 // =================Get One User Survey With Questions & Responses (Survey Panel)==========
-router.get('/mysurveys/:surveyId', function(req, res) {
+router.get('/mysurveys/:surveyId', (req, res) => {
   db.Survey.findOne({
     where: {
       surveyId: req.params.surveyId,
@@ -634,6 +635,7 @@ router.post('/responses/:userId', (req, res) => {
   });
 });
 
+// Render Document (public facing)
 router.get('/responses/:surveyId/view', (req, res) => {
   db.Response.findAll({
     where: {
@@ -651,13 +653,12 @@ router.get('/responses/:surveyId/view', (req, res) => {
   });
 });
 
-// Get Route to Update Question
+// Get Route to Profile page
 router.get('/profile', (req, res) => {
   db.User
-      .findByPk(req.session.passport.user)
+      .findByPk(req.session.globalUser.userId)
       .then((dbUser) => {
         const hbsObject = dbUser.dataValues;
-        delete hbsObject.password;
         hbsObject['initials'] = hbsObject.name.split(' ')[0][0] + hbsObject.name.split(' ')[1][0];
         res.render('user/profile', hbsObject);
       });
@@ -736,7 +737,7 @@ router.post('/subscribe', [
                     `;
 
           return new Promise((resolve, reject) => {
-            sendEmail(emailBody, 'Welcome! Your account information', req.body.email);
+            sendEmail(emailBody, 'Thank you for subscribing!', req.body.email);
             return res.render('auth/signin', message);
           });
         }).catch((err) => {

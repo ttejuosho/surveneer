@@ -10,6 +10,9 @@ module.exports = (app) => {
       where: {
         userId: req.params.userId,
       },
+      attributes: {
+        exclude: ['password'],
+      },
     }).then(function(dbUser) {
       res.json(dbUser);
     });
@@ -21,6 +24,9 @@ module.exports = (app) => {
       where: {
         emailAddress: req.params.emailAddress,
       },
+      attributes: {
+        exclude: ['password'],
+      },
     }).then(function(dbUser) {
       res.json(dbUser);
     });
@@ -28,7 +34,11 @@ module.exports = (app) => {
 
   // Get all Users
   app.get('/api/users', (req, res) => {
-    db.User.findAll().then(function(dbUser) {
+    db.User.findAll({
+      attributes: {
+        exclude: ['password'],
+      },
+    }).then(function(dbUser) {
       res.json(dbUser);
     });
   });
@@ -53,6 +63,47 @@ module.exports = (app) => {
       getId: req.body.getId,
     }).then((dbSurvey) => {
       res.json(dbSurvey);
+    });
+  });
+
+  // Get all Users
+  app.get('/api/users', (req, res) => {
+    db.User.findAll().then(function(dbUser) {
+      res.json(dbUser);
+    });
+  });
+
+  // Create a User
+  app.post('/api/newUser', (req, res) => {
+    db.User.create({
+      userId: req.body.userId,
+      name: req.body.name,
+      emailAddress: req.body.emailAddress,
+      password: req.body.password,
+      phoneNumber: req.body.phoneNumber,
+      active: req.body.active,
+      profileImage: req.body.profileImage,
+    }).then((dbUser)=>{
+      res.json(dbUser);
+    });
+  });
+
+  // Get a User information
+  app.get('/api/getUser/:userId', (req, res)=>{
+    db.User.findByPk(req.params.userId)
+        .then((dbUser)=>{
+          res.json(dbUser);
+        });
+  });
+
+  // Find a user by email
+  app.get('/api/findUser/:emailAddress', (req, res)=>{
+    db.User.findOne({
+      where: {
+        emailAddress: req.params.emailAddress,
+      },
+    }).then((dbUser)=>{
+      res.json(dbUser);
     });
   });
 
@@ -488,13 +539,6 @@ module.exports = (app) => {
         }
       });
     }
-  });
-
-  // Get all Users
-  app.get('/api/users', (req, res) => {
-    db.User.findAll().then(function(dbUser) {
-      res.json(dbUser);
-    });
   });
 
   // Get all Surveys by a User
