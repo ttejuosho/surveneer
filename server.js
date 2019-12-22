@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
+// const path = require('path');
 const app = express();
 const http = require('http').createServer(app);
 const morgan = require('morgan');
@@ -11,7 +11,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const session = require('express-session');
 const db = require('./models');
-const multer = require('multer');
+// const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
 const cookieParser = require(`cookie-parser`);
 // const flash = require('connect-flash');
@@ -136,6 +136,7 @@ require('./routes/surveneer-routes')(app);
 require('./routes/recipient-routes')(app);
 require('./routes/response-routes')(app);
 require('./routes/api-routes.js')(app);
+
 
 // load passport strategies
 require('./config/passport/passport.js')(passport, db.User);

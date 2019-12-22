@@ -1,7 +1,7 @@
-// const express = require('express');
-// const router = express.Router();
+/* eslint-disable max-len */
 const db = require('../models');
 const {validationResult} = require('express-validator');
+const sendEmail = require('../config/email/email.js');
 
 exports.getContacts = (req, res)=>{
   const hbsObject = {loadJs: 'true'};
@@ -38,12 +38,22 @@ exports.subscribe = (req, res) => {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
-        }).then(() => {
+        }).then((dbContact) => {
           const message = {
             showConfirmation: true,
             layout: 'partials/prelogin',
           };
-          return res.render('auth/signin', message);
+          // Send Email
+          const emailBody = `
+                    <p>Hello ${req.body.firstName},</p>
+                    <p style="color: black;">Thank you for subscribing to the SurvEnEEr mailing list. We will keep you informed about the latest features and updates.</p>
+                    <span style="font-size: 1rem;color: black;"><strong>SurvEnEEr Team</strong></span>
+                    `;
+
+          return new Promise((resolve, reject) => {
+            sendEmail(emailBody, 'Thank you for subscribing!', req.body.email);
+            return res.render('auth/signin', message);
+          });
         }).catch((err) => {
           res.render('error', err);
         });

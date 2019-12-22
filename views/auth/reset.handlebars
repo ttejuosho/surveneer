@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header"><h2 class="mb-1">Reset Password</h2></div>
         <div class="card-body">
-            <form id="resetPassword" class="form" action="/reset/{{token}}" method="POST">
+            <form id="resetPassword" class="form needs-validation" action="/reset/{{token}}" method="POST" novalidate>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -15,7 +15,6 @@
                                 {{/ifEquals}}
                             {{/each}}
                         {{/if}}
-                        <div class="messages text-danger font-weight-bold">{{errorMessage}}</div>
                         </div>
                     </div>
                 </div>
@@ -31,18 +30,30 @@
                                 {{/ifEquals}}
                             {{/each}}
                         {{/if}}
-                        <div class="messages text-danger font-weight-bold">{{errorMessage}}</div>
+                        <div id="mismatch" class="messages text-danger font-weight-bold">{{errorMessage}}</div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-fill btn-primary btn-sm float-right">Reset Password</button>
+                    <button id="resetPasswordBtn" type="submit" class="btn btn-fill btn-primary btn-sm float-right">Reset Password</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script type="text/javascript">
+$('#confirmPassword').keyup(()=>{
+    var confirmPasswordLength = $('#confirmPassword').val().length;
+    if ($('#newPassword').val().substring(0, confirmPasswordLength) !== $('#confirmPassword').val()){
+        $('#mismatch').text('Passwords dont match');
+    } else {
+        $('#mismatch').text('');
+        $('#resetPasswordBtn').attr('disabled', false);
+        // if(confirmPasswordLength == $('#newPassword').val().length) { $('#resetPasswordBtn').attr('disabled', false); }
+    }
+});
+</script>
 {{#if emailSent}}
     <script type="text/javascript">
         $(function () {

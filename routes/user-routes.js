@@ -9,6 +9,9 @@ module.exports = (app) => {
       [check('emailAddress').not().isEmpty().withMessage('Please enter your email address')],
       userController.sendPasswordResetEmail);
   app.get('/reset/:token', userController.getResetPasswordPage);
-  app.post('/reset/:token', userController.resetPassword);
+  app.post('/reset/:token',
+      [check('newPassword').not().isEmpty().withMessage('Please enter your new password'),
+        check('confirmPassword').not().isEmpty().withMessage('Please confirm your new password')],
+      userController.resetPassword);
   app.get('/mycontacts', userController.getUserContacts);
 };
