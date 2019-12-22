@@ -95,6 +95,21 @@ exports.updateSurvey = (req, res) => {
 
 // Delete Route for Survey (Needs Revisit)
 exports.deleteSurvey = (req, res) => {
+  db.Response.destroy({
+    where: {
+      SurveySurveyId: req.params.surveyId,
+    },
+  });
+  db.Recipient.destroy({
+    where: {
+      SurveySurveyId: req.params.surveyId,
+    },
+  });
+  db.Respondent.destroy({
+    where: {
+      SurveySurveyId: req.params.surveyId,
+    },
+  });
   db.Question.destroy({
     where: {
       SurveySurveyId: req.params.surveyId,
