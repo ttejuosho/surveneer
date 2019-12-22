@@ -3,13 +3,14 @@ const db = require('../models');
 const {validationResult} = require('express-validator');
 const sendEmail = require('../config/email/email');
 
+// Render new survey page
 exports.getNewSurveyPage = (req, res) => {
   const hbsObject = {};
   Object.assign(hbsObject, req.session.globalUser);
   return res.render('survey/new', hbsObject);
 };
 
-// New Survey POST Route
+// create New Survey POST Route
 exports.newSurvey = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -198,6 +199,7 @@ exports.getSendSurveyPage = (req, res) => {
   });
 };
 
+// Post: Send survey in email
 exports.emailSurvey = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
