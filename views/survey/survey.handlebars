@@ -25,6 +25,7 @@
                     <a class="dropdown-item" href="/viewSurvey/{{surveyId}}">View Survey</a>
                     <a class="dropdown-item" href="/surveys/{{surveyId}}/v2">Respondent View</a>
                     <a class="dropdown-item" href="/sendSurvey/{{surveyId}}">Share</a>
+                    <a class="dropdown-item" href="#" onclick="copyToClipboard()">Copy Survey Link</a>
                 </div>
             </div>
         </div>
@@ -34,6 +35,7 @@
     <span class="float-right"><a href="#"><i id="editSurvey" class="ml-3 tim-icons icon-pencil"></i></a></span>
 </div>
 <div class="card-body">
+    <textarea id="surveyUrl" class="d-none">http://surveneer.herokuapp/surveys/{{surveyId}}/v2</textarea>
 <form id="updateSurveyForm" class="form" action="/updateSurvey" method="POST" target="updateSurvey_iframe">
 <fieldset>
 <div class="row d-none">
@@ -697,6 +699,14 @@ $(document).ready(function() {
         if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', true); } else { $('#surveyTOURow').addClass('d-none'); }
     });
     
+        //Copy to Clipboard
+    function copyToClipboard() {
+        $("#surveyUrl").removeClass("d-none");
+        $("#surveyUrl").select();
+        document.execCommand("copy");
+        $("#surveyUrl").addClass("d-none");
+        survenaire.showNotification('success', 'top', 'center', 'Survey Url copied');
+    }
 //console.log(countValues);
 </script>
 
