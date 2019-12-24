@@ -11,7 +11,6 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const session = require('express-session');
 const db = require('./models');
-// const multer = require('multer');
 const Auth0Strategy = require('passport-auth0');
 const cookieParser = require(`cookie-parser`);
 // const flash = require('connect-flash');
@@ -63,9 +62,6 @@ io.on('connection', function(socket) {
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/uploads'));
-
-// const publicDir = path.join(__dirname, '/uploads');
-// app.use(express.static(publicDir));
 
 // Logger uncomment next line to enable winston
 // app.use(morgan('combined', { stream: winston.stream }));
@@ -139,7 +135,6 @@ require('./routes/surveneer-routes')(app);
 require('./routes/recipient-routes')(app);
 require('./routes/response-routes')(app);
 require('./routes/api-routes.js')(app);
-
 
 // load passport strategies
 require('./config/passport/passport.js')(passport, db.User);
