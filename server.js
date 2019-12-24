@@ -64,6 +64,9 @@ io.on('connection', function(socket) {
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/uploads'));
 
+// const publicDir = path.join(__dirname, '/uploads');
+// app.use(express.static(publicDir));
+
 // Logger uncomment next line to enable winston
 // app.use(morgan('combined', { stream: winston.stream }));
 
