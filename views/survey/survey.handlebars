@@ -636,8 +636,10 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         $('#RespondentCount').val(data.message);
         $('#ResponseSection').prepend(data.domData);
         for (var i = 0; i < charts.length; i++){
-            charts[i].data.datasets[0].data = data.chartData[i];
-            charts[i].update();
+            if(charts[i+1] !== undefined){
+                charts[i+1].data.datasets[0].data = data.chartData[i];
+                charts[i+1].update();
+            }
         }
     });
 
