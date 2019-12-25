@@ -4,6 +4,7 @@ const bCrypt = require('bcrypt-nodejs');
 const crypto = require('crypto');
 const { validationResult } = require('express-validator');
 const sendEmail = require('../config/email/email.js');
+const upload = require('../config/utils/utils.js');
 
 // Get Route to Update Question
 exports.getUserProfilePage = (req, res) => {
