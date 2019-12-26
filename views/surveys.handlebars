@@ -24,6 +24,9 @@
                         {{#ifEquals notify 0}}<h5 class="card-category text-danger">Email Notifications Off</h5>
                         {{else}}<h5 class="card-category text-success">Email Notifications On</h5>
                         {{/ifEquals}}
+                        {{#ifEquals acceptingResponses 0}}<h5 class="card-category text-danger">No Longer Accepting Responses</h5>
+                        {{else}}<h5 class="card-category text-success">Still Accepting Responses</h5>
+                        {{/ifEquals}}
                         <h5>{{mess}}</h5>
                     </div>
                     <div id="surveyData{{counter @index}}" class="card-body pt-0 d-none">

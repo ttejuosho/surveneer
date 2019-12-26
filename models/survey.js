@@ -25,12 +25,17 @@ module.exports = (sequelize, DataTypes) => {
     showTOU: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-      allowNull: true,
+      allowNull: false,
     },
     notify: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-      allowNull: true,
+      allowNull: false,
+    },
+    acceptingResponses: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      allowNull: false,
     },
     preSurveyInstructions: {
       type: DataTypes.TEXT,

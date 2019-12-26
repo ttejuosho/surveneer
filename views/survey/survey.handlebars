@@ -138,6 +138,22 @@
     </div>
 </div>
 
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="form-check disabled">
+        <label class="form-check-label">Accepting Responses
+        {{#ifEquals acceptingResponses 0}}
+        <input id="acceptingResponsesi" name="acceptingResponsesi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>    
+        {{else}}
+        <input id="acceptingResponsesi" name="acceptingResponsesi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>      
+        {{/ifEquals}}
+        <span class="form-check-sign"><span class="check"></span></span>
+        </label>
+        <input id="acceptingResponses" name="acceptingResponses" class="form-control form-control-sm" type="hidden" value= {{#ifEquals acceptingResponses 0}} false {{else}} true {{/ifEquals}}>
+        </div>
+    </div>
+</div>
+
 {{#if preSurveyInstructions}}
 <div id="preSurveyInstructionsRow" class="row">
     <div class="col-md-12">
@@ -676,10 +692,19 @@ $(document).ready(function() {
             $('#notify').val(false);
         }
     });
+
+    $('#acceptingResponsesi').click(()=>{
+        if ($('input[name=acceptingResponsesi]').is(':checked')) {
+            // Checkbox is checked..
+            $('#acceptingResponses').val(true);
+        } else {
+            // Checkbox is not checked..
+            $('#acceptingResponses').val(false);
+        }
+    });
 });
 
     $('#updateSurveyBtn').on('click', () => {
-        //console.log($('#getId').val(), $('#showTOU').val());
         if ($('#surveyTOU').val().trim().length < 1 && $('#showTOU').val() === 'true'){
             $('input[name=showTOUi]').attr('checked', false);
             $('#showTOU').val(false);
