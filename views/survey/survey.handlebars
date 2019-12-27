@@ -1,5 +1,5 @@
 <div class="col-md-11">
-    
+
     <div class="modal fade" id="confirmDeleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteQuestionModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -12,9 +12,9 @@
           </div>
         </div>
     </div>
-    
-    <div class="row justify-content-between ml-0 mr-0"> 
-        <h2 class="mb-0">Survey Name: {{surveyName}}</h2> 
+
+    <div class="row justify-content-between ml-0 mr-0">
+        <h2 class="mb-0">Survey Name: {{surveyName}}</h2>
         <div class="btn-group">
             <div class="dropdown">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -95,9 +95,9 @@
         <div class="form-check disabled">
         <label class="form-check-label">Get Respondent Information
         {{#ifEquals getId 0}}
-        <input id="getIdi" name="getIdi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>    
+        <input id="getIdi" name="getIdi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>
         {{else}}
-        <input id="getIdi" name="getIdi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>      
+        <input id="getIdi" name="getIdi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
@@ -111,14 +111,14 @@
         <div class="form-check disabled">
         <label class="form-check-label">Show Terms of Use
         {{#ifEquals showTOU 0}}
-        <input id="showTOUi" name="showTOUi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>  
-        {{else}} 
+        <input id="showTOUi" name="showTOUi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>
+        {{else}}
         <input id="showTOUi" name="showTOUi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
         </div>
-        <input id="showTOU" name="showTOU" class="form-control form-control-sm" type="hidden" value= {{#ifEquals showTOU 0}} false {{else}} true {{/ifEquals}}> 
+        <input id="showTOU" name="showTOU" class="form-control form-control-sm" type="hidden" value= {{#ifEquals showTOU 0}} false {{else}} true {{/ifEquals}}>
     </div>
 </div>
 
@@ -127,9 +127,9 @@
         <div class="form-check disabled">
         <label class="form-check-label">Get Email Notifications for new responses
         {{#ifEquals notify 0}}
-        <input id="notifyi" name="notifyi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>    
+        <input id="notifyi" name="notifyi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>
         {{else}}
-        <input id="notifyi" name="notifyi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>      
+        <input id="notifyi" name="notifyi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
@@ -143,9 +143,9 @@
         <div class="form-check disabled">
         <label class="form-check-label">Accepting Responses
         {{#ifEquals acceptingResponses 0}}
-        <input id="acceptingResponsesi" name="acceptingResponsesi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>    
+        <input id="acceptingResponsesi" name="acceptingResponsesi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>
         {{else}}
-        <input id="acceptingResponsesi" name="acceptingResponsesi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>      
+        <input id="acceptingResponsesi" name="acceptingResponsesi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
         {{/ifEquals}}
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
@@ -297,7 +297,7 @@
                             <canvas id="q{{counter @index}}YesNoResponseChart" width="400" height="120"></canvas>
                         </div>
                     {{/ifEquals}}
-                    
+
                     {{#ifEquals optionType "TrueFalse"}}
                         <input type="hidden" name="TrueResponseCount" id="q{{counter @index}}TrueResponseCount" value="{{TrueResponseCount}}">
                         <input type="hidden" name="FalseResponseCount" id="q{{counter @index}}FalseResponseCount" value="{{FalseResponseCount}}">
@@ -395,7 +395,7 @@
                 </div>
             </div>
             {{#ifEquals optionType "MultipleChoice"}}
-                
+
                 <div class="row">
                     {{#if option1}}
                         <div class="col-sm-12 col-lg-6 pr-0">
@@ -481,20 +481,20 @@
         <div id="collapseOne{{@index}}" class="collapse" role="tabpanel" aria-labelledby="headingOne{{@index}}">
         <div id="Respondent{{@index}}" class="card-body">
             {{#ifEquals ../getId 1}}
-                <h5><span class="title mr-1">Phone Number: </span>{{respondentPhone}}</h5> 
+                <h5><span class="title mr-1">Phone Number: </span>{{respondentPhone}}</h5>
                 <h5><span class="title mr-1">Email Address: </span>{{respondentEmail}}</h5>
             {{/ifEquals}}
             <div class="row">
                 <div class="col-md-6 pr-md-1">
-                    {{#each ../Questions}} 
-                        <h5>{{question}}  </h5>          
+                    {{#each ../Questions}}
+                        <h5>{{question}}  </h5>
                     {{/each}}
                 </div>
                 <div class="col-md-6 pr-md-1">
                     {{#each ../Responses}}
-                        {{#ifEquals RespondentRespondentId ../respondentId}}              
+                        {{#ifEquals RespondentRespondentId ../respondentId}}
                             <h5>{{#ifEquals answer ''}} No Response {{else}} {{answer}} {{/ifEquals}}</h5>
-                        {{/ifEquals}} 
+                        {{/ifEquals}}
                     {{/each}}
                 </div>
             </div>
@@ -548,7 +548,7 @@ var openSurveyImageModal = (surveyId) => {
     const socket = io();
 
 function createChart(i, optionType, optionType1, optionType2, optionType3, optionType4, optionType5){
-    // if there are no recipients, exit this function else show Chart Div 
+    // if there are no recipients, exit this function else show Chart Div
     if ( parseInt($('#RespondentCount').val()) < 1 ){ return; } else { $('.chartDiv').removeClass('d-none'); }
 
     //var chartLabels = (optionType3 ? [optionType1, optionType2, optionType3, optionType4, optionType5] : [optionType1, optionType2])
@@ -585,14 +585,14 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
     countValues.push(chartData);
     charts[i] = new Chart($('#q' + [i+1] + optionType + 'ResponseChart'),{
         type: 'horizontalBar',
-        data: 
-            { 
+        data:
+            {
                 labels: chartLabels,
-                datasets: [{ 
+                datasets: [{
                     label: 'Responses Chart',
                     data: chartData,
                     backgroundColor: chartBgColor,
-                    borderWidth: 1 
+                    borderWidth: 1
                 }],
             },
         options: {
@@ -664,13 +664,13 @@ $(document).ready(function() {
         if ($('input[name=getIdi]').is(':checked')) {
             // Checkbox is checked..
             $('#getId').val(true);
-            
+
         } else {
             // Checkbox is not checked..
             $('#getId').val(false);
         }
     });
-    
+
     $('#showTOUi').click(()=>{
         if ($('input[name=showTOUi]').is(':checked')) {
             // Checkbox is checked..
@@ -725,14 +725,14 @@ $(document).ready(function() {
         if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', true); } else { $('#surveyNotesRow').addClass('d-none'); }
         if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', true); } else { $('#surveyTOURow').addClass('d-none'); }
     });
-    
+
         //Copy to Clipboard
     function copyToClipboard() {
         $("#surveyUrl").removeClass("d-none");
         $("#surveyUrl").select();
         document.execCommand("copy");
         $("#surveyUrl").addClass("d-none");
-        survenaire.showNotification('success', 'top', 'center', 'Survey Url copied');
+        survenaire.showNotification('success', 'top', 'center', 'Survey Url has been copied to clipboard');
     }
 //console.log(countValues);
 </script>
