@@ -175,3 +175,21 @@ exports.saveResponses = (req, res) => {
 exports.complete = (req, res) => {
   return res.render('survey/complete', {layout: false});
 };
+
+exports.declined = (req, res) => {
+  db.Survey.findOne({
+    where: {
+      surveyId: req.params.surveyId,
+    },
+  }).then((dbSurvey)=>{
+    if (dbSurvey !== null) {
+      dbSurvey.dataValues.declinedCount += 1;
+      db.Survey.update(dbSurvey.dataValues, {
+        where: {
+          surveyId: req.params.surveyId,
+        },
+      });
+      return res.render('survey/declined', {layout: false});
+    }
+  });
+};

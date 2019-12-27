@@ -75,7 +75,7 @@
                 {{surveyTOU}}
             </div>
             <div class="modal-footer">
-                <a href="/complete"><button type="button" class="btn btn-secondary">Decline</button></a>
+                <a href="/declined/{{surveyId}}"><button type="button" class="btn btn-secondary">Decline</button></a>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Agree</button>
             </div>
             </div>
@@ -452,16 +452,16 @@
     </div>
 </div>
 <footer class="footer">
-        <div class="container-fluid">
-          <div class="copyright">
-            ©
-            <script>
-              document.write(new Date().getFullYear())
-            </script>
-            <a href="http://ttejuosho.herokuapp.com" target="_blank">Powered By SurvEneer</a>
-          </div>
+    <div class="container-fluid">
+        <div class="copyright">
+        ©
+        <script>
+            document.write(new Date().getFullYear())
+        </script>
+        <a href="http://ttejuosho.herokuapp.com" target="_blank">Powered By SurvEneer</a>
         </div>
-      </footer>
+    </div>
+</footer>
 </body>
 
 <!--   Core JS Files   -->
@@ -485,6 +485,16 @@
   <!-- Black Dashboard DEMO methods, don't include it in your project! -->
   <script src="/assets/demo/demo.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    {{#ifEquals showTOU true}}
+        <script type="text/javascript">
+            $(function () {
+                $("#surveyTOUModal").modal({
+                    backdrop: false,
+                    show: true
+                });
+            });
+        </script>
+    {{/ifEquals}}
     <script type="text/javascript">
     $('.numberRating').click((e)=>{
         $('.numberRating').removeClass('btn-primary');
@@ -505,14 +515,4 @@
         current.text(characterCount);
     });
     </script>
-    {{#ifEquals showTOU true}}
-        <script type="text/javascript">
-            $(function () {
-                $("#surveyTOUModal").modal({
-                    backdrop: false,
-                    show: true
-                });
-            });
-        </script>
-    {{/ifEquals}}
 </html>

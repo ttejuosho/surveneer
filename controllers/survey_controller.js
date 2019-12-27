@@ -207,7 +207,8 @@ exports.viewSurveyV2 = (req, res) => {
       survey.dataValues['layout'] = false;
       return res.render('survey/view2', survey.dataValues);
     } else {
-      return res.render('survey/closed');
+      const hbsObject = {layout: false};
+      return res.render('survey/closed', hbsObject);
     }
   }).catch(function(err) {
     res.render('error', err);

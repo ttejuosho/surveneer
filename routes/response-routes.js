@@ -16,4 +16,5 @@ module.exports = function(app) {
       ],
       responseController.saveResponses);
   app.get('/complete', responseController.complete);
+  app.get('/declined/:surveyId', responseController.declined);
 };
