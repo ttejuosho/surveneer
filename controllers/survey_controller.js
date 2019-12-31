@@ -32,9 +32,10 @@ exports.newSurvey = (req, res) => {
           surveyNotes: req.body.surveyNotes,
           surveyTOU: req.body.surveyTOU,
           notify: req.body.notify,
+          affirmation: req.body.affirmation,
+          affirmationStatement: req.body.affirmationStatement,
           preSurveyInstructions: req.body.preSurveyInstructions,
           postSurveyInstructions: req.body.postSurveyInstructions,
-          RespondentCount: 0,
           UserUserId: req.session.passport.user,
         }).then((dbSurvey) => {
           // increase number of surveys for user
@@ -97,6 +98,8 @@ exports.updateSurvey = (req, res) => {
     surveyName: req.body.surveyName,
     getId: req.body.getId,
     notify: req.body.notify,
+    affirmation: req.body.affirmation,
+    affirmationStatement: req.body.affirmationStatement,
     acceptingResponses: req.body.acceptingResponses,
     showTOU: req.body.showTOU,
     surveyBrandname: req.body.surveyBrandname,
@@ -152,7 +155,7 @@ exports.deleteSurvey = (req, res) => {
   });
 };
 
-exports.mySurveys = (req, res) => {
+exports.getSurveyPanel = (req, res) => {
   db.Survey.findOne({
     where: {
       surveyId: req.params.surveyId,
@@ -161,6 +164,9 @@ exports.mySurveys = (req, res) => {
       {model: db.Response, as: 'Responses', attributes: ['QuestionQuestionId', 'RespondentRespondentId', 'answer']},
       {model: db.Respondent, as: 'Respondents', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
       {model: db.Question, as: 'Questions'},
+    ],
+    order: [
+      [db.Question, 'createdAt', 'ASC'],
     ],
   }).then(function(survey) {
     const hbsObject = survey.dataValues;
@@ -288,9 +294,9 @@ exports.emailSurvey = (req, res) => {
             });
 
             // Increase Number of recipients by 1
-            dbSurvey.dataValues.RecipientCount += 1;
+            dbSurvey.dataValues.recipientCount += 1;
             const updatedSurvey = {
-              RecipientCount: dbSurvey.dataValues.RecipientCount,
+              recipientCount: dbSurvey.dataValues.recipientCount,
             };
             db.Survey.update(updatedSurvey, {
               where: {
@@ -303,6 +309,100 @@ exports.emailSurvey = (req, res) => {
           Object.assign(hbsObject, req.session.globalUser);
           res.render('survey/send', hbsObject);
         }); // ======
+      }
+    }).catch((err) => {
+      res.render('error', err);
+    });
+  }
+};
+
+// Post: Share Survey with other Surveeneer Users
+exports.shareSurvey = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    errors.username = req.body.username;
+    errors.surveyId = req.params.surveyId;
+    Object.assign(errors, req.session.globalUser);
+    return res.render('survey/send', errors);
+  } else {
+    // Verify User Email
+    db.User.findOne({
+      where: {
+        emailAddress: req.body.username,
+      },
+    }).then((dbUser) => {
+      if (dbUser !== null) {
+        db.Survey.findByPk(req.params.surveyId)
+            .then((dbSurvey)=>{
+              if (dbSurvey == null) {
+                const errors = {};
+                errors.username = req.body.username;
+                errors.noSurveyError = 'Survey not found';
+                Object.assign(errors, req.session.globalUser);
+                return res.render('survey/send', errors);
+              } else {
+                db.Survey.create({
+                  surveyName: dbSurvey.dataValues.surveyName,
+                  getId: dbSurvey.dataValues.getId,
+                  showTOU: dbSurvey.dataValues.showTOU,
+                  surveyBrandname: dbSurvey.dataValues.surveyBrandname,
+                  surveyTOU: req.body.surveyTOU,
+                  notify: req.body.notify,
+                  affirmation: req.body.affirmation,
+                  affirmationStatement: req.body.affirmationStatement,
+                  preSurveyInstructions: req.body.preSurveyInstructions,
+                  postSurveyInstructions: req.body.postSurveyInstructions,
+                  UserUserId: dbUser.dataValues.userId,
+                }).then((newDbSurvey)=>{
+                  db.Question.findAll({
+                    where: {
+                      SurveySurveyId: req.params.surveyId,
+                    },
+                  }).then((dbQuestion)=>{
+                    for (let i = 0; i < dbQuestion.length; i++) {
+                      db.Question.create({
+                        question: dbQuestion[i].dataValues.question,
+                        optionType: dbQuestion[i].dataValues.optionType,
+                        required: dbQuestion[i].dataValues.required,
+                        questionInstruction: dbQuestion[i].dataValues.questionInstruction,
+                        SurveySurveyId: newDbSurvey.dataValues.surveyId,
+                        option1: dbQuestion[i].dataValues.option1,
+                        option2: dbQuestion[i].dataValues.option2,
+                        option3: dbQuestion[i].dataValues.option3,
+                        option4: dbQuestion[i].dataValues.option4,
+                      });
+                    }
+                    // Update Question count for new survey
+                    db.Survey.update({questionCount: dbQuestion.length}, {
+                      where: {
+                        surveyId: newDbSurvey.dataValues.surveyId,
+                      },
+                    });
+                  });
+
+                  // set number of surveys for the added user
+                  dbUser.dataValues.surveyCount += 1;
+                  db.User.update({surveyCount: dbUser.dataValues.surveyCount}, {
+                    where: {
+                      userId: dbUser.dataValues.userId,
+                    },
+                  }).then(()=>{
+                    const hbsObject = {
+                      surveyId: req.params.surveyId,
+                      sharedAlertMessage: true,
+                    };
+                    Object.assign(hbsObject, req.session.globalUser);
+                    return res.render('survey/send', hbsObject);
+                  });
+                });
+              }
+            });
+      } else {
+        const errors = {};
+        errors.username = req.body.username;
+        errors.noUserError = 'Email not found, Please enter a survEnEEr username';
+        Object.assign(errors, req.session.globalUser);
+        return res.render('survey/send', errors);
       }
     }).catch((err) => {
       res.render('error', err);

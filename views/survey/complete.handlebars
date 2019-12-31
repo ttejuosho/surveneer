@@ -66,13 +66,13 @@
 $(document).ready(function(){
 
      function randomStr(len, arr) { 
-            var ans = ''; 
-            for (var i = len; i > 0; i--) { 
-                ans +=  
-                  arr[Math.floor(Math.random() * arr.length)]; 
-            } 
-            return ans; 
-        }
+        var ans = ''; 
+        for (var i = len; i > 0; i--) { 
+            ans +=  
+                arr[Math.floor(Math.random() * arr.length)]; 
+        } 
+        return ans; 
+    }
 
     const socket = io();
     const surveyId = $('#surveyId').val();
@@ -112,7 +112,7 @@ $(document).ready(function(){
                         '</div>' +
                     '</div>';
         // Emit User Id along with message
-        var socketData = { message: data[0][0].RespondentCount, domData: html, room: userId, chartData: [] };
+        var socketData = { message: data[0][0].respondentCount, domData: html, room: userId, chartData: [] };
         data[1].forEach((d, i)=>{
             if(d.Question.optionType === 'YesNo'){
                 socketData.chartData.push([parseInt(d.Question.YesResponseCount), parseInt(d.Question.NoResponseCount)]);
@@ -183,6 +183,7 @@ $(document).ready(function(){
                 ]);
             }
         });
+        console.log(socketData);
         socket.emit('response', socketData);
     });
 });

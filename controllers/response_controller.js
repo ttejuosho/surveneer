@@ -12,7 +12,7 @@ const sendEmail = require('../config/email/email.js');
 //     include: [
 //       {model: db.Question, as: 'Question', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4']},
 //       {model: db.Respondent, as: 'Respondent', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone']},
-//       {model: db.Survey, as: 'Survey', attributes: ['surveyId', 'surveyName', 'RespondentCount', 'RecipientCount', 'QuestionCount']},
+//       {model: db.Survey, as: 'Survey', attributes: ['surveyId', 'surveyName', 'respondentCount', 'recipientCount', 'questionCount']},
 //     ],
 //   }).then(function(responses) {
 //     res.json(responses);
@@ -128,9 +128,9 @@ exports.saveResponses = (req, res) => {
         },
         include: [{model: db.User, as: 'User', attributes: ['name', 'emailAddress']}],
       }).then((dbSurvey) => {
-        dbSurvey.dataValues.RespondentCount += 1;
+        dbSurvey.dataValues.respondentCount += 1;
         const updatedSurvey = {
-          RespondentCount: dbSurvey.dataValues.RespondentCount,
+          respondentCount: dbSurvey.dataValues.respondentCount,
         };
         const hbsObject = {
           respondentName: req.body.respondentName,

@@ -32,6 +32,15 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
       allowNull: false,
     },
+    affirmation: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    },
+    affirmationStatement: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     acceptingResponses: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -53,17 +62,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    RespondentCount: {
+    respondentCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true,
     },
-    RecipientCount: {
+    recipientCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true,
     },
-    QuestionCount: {
+    questionCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true,

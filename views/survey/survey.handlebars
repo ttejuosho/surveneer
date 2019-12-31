@@ -67,7 +67,7 @@
     <div class="col-md-12">
         <div class="form-group">
         <label>Number of Recipients</label>
-        <input id="RecipientCount" type="text" class="form-control form-control-sm" value="{{RecipientCount}}" readonly>
+        <input id="recipientCount" type="text" class="form-control form-control-sm" value="{{recipientCount}}" readonly>
         </div>
     </div>
 </div>
@@ -76,7 +76,7 @@
     <div class="col-md-12">
         <div class="form-group">
         <label>Number of Respondents</label>
-        <input id="RespondentCount" type="text" class="form-control form-control-sm" value="{{RespondentCount}}" readonly>
+        <input id="respondentCount" type="text" class="form-control form-control-sm" value="{{respondentCount}}" readonly>
         </div>
     </div>
 </div>
@@ -85,7 +85,7 @@
     <div class="col-md-12">
         <div class="form-group">
         <label>Number of Questions</label>
-        <input id="QuestionCount" type="text" class="form-control form-control-sm" value="{{getLength Questions}}" readonly>
+        <input id="questionCount" type="text" class="form-control form-control-sm" value="{{questionCount}}" readonly>
         </div>
     </div>
 </div>
@@ -150,6 +150,22 @@
         <span class="form-check-sign"><span class="check"></span></span>
         </label>
         <input id="acceptingResponses" name="acceptingResponses" class="form-control form-control-sm" type="hidden" value= {{#ifEquals acceptingResponses 0}} false {{else}} true {{/ifEquals}}>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="form-check disabled">
+        <label class="form-check-label">Add Affirmation Statement
+        {{#ifEquals affirmation 0}}
+        <input id="affirmationi" name="affirmationi" class="form-check-input surveyEditCheck" type="checkbox" value=false disabled>
+        {{else}}
+        <input id="affirmationi" name="affirmationi" class="form-check-input surveyEditCheck" type="checkbox" value=true checked disabled>
+        {{/ifEquals}}
+        <span class="form-check-sign"><span class="check"></span></span>
+        </label>
+        <input id="affirmation" name="affirmation" class="form-control form-control-sm" type="hidden" value= {{#ifEquals affirmation 0}} false {{else}} true {{/ifEquals}}>
         </div>
     </div>
 </div>
@@ -234,6 +250,25 @@
 </div>
 {{/if}}
 
+{{#if affirmation}}
+<div id="affirmationStatementRow" class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Affirmation Statement</label>
+        <textarea id="affirmationStatement" name="affirmationStatement" type="text" class="form-control form-control-sm" readonly>{{affirmationStatement}}</textarea>
+        </div>
+    </div>
+</div>
+{{else}}
+<div id="affirmationStatementRow" class="row d-none">
+    <div class="col-md-12">
+        <div class="form-group">
+        <label>Affirmation Statement</label>
+        <textarea id="affirmationStatement" name="affirmationStatement" type="text" class="form-control form-control-sm">{{affirmationStatement}}</textarea>
+        </div>
+    </div>
+</div>
+{{/if}}
 </div>
 <div class="card-footer">
     <button id="updateSurveyBtn" type="submit" class="btn btn-sm btn-primary d-none float-right">Update</button>
@@ -389,7 +424,7 @@
                         <input type="hidden" name="Option3ResponseCount" id="q{{counter @index}}Option3ResponseCount" value="{{option3ResponseCount}}">
                         <input type="hidden" name="Option4ResponseCount" id="q{{counter @index}}Option4ResponseCount" value="{{option4ResponseCount}}">
                         <div class="chart-container" style="position: relative; height: auto;">
-                            <canvas id="q{{counter @index}}MultipleChoiceResponseChart" width="400" height="120"></canvas>
+                            <canvas id="q{{counter @index}}MultipleChoiceResponseChart" width="400" height="170"></canvas>
                         </div>
                     {{/ifEquals}}
                 </div>
@@ -402,7 +437,7 @@
                             <div class="col-md-12 pl-0">
                                 <div class="form-group">
                                     <label>Option 1</label>
-                                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
+                                    <input id="option1{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option1}}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -412,7 +447,7 @@
                             <div class="col-md-12 pr-0">
                                 <div class="form-group">
                                     <label>Option 2</label>
-                                    <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
+                                    <input id="option2{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option2}}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -425,7 +460,7 @@
                             <div class="col-md-12 pr-0">
                                 <div class="form-group">
                                 <label>Option 3</label>
-                                <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
+                                <input id="option3{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option3}}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -435,7 +470,7 @@
                             <div class="col-md-12 pr-0">
                                 <div class="form-group">
                                 <label>Option 4</label>
-                                <input id="options{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
+                                <input id="option4{{questionId}}" name="options" type="text" class="form-control form-control-sm" value="{{option4}}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -536,8 +571,8 @@ var openModal  = (questionId) => {
 
 var openSurveyImageModal = (surveyId) => {
     $('#addSurveyImageModal').modal({
-            backdrop: false
-        });
+        backdrop: false
+    });
     $('#addSurveyImageModal').modal('show');
 }
 
@@ -549,7 +584,7 @@ var openSurveyImageModal = (surveyId) => {
 
 function createChart(i, optionType, optionType1, optionType2, optionType3, optionType4, optionType5){
     // if there are no recipients, exit this function else show Chart Div
-    if ( parseInt($('#RespondentCount').val()) < 1 ){ return; } else { $('.chartDiv').removeClass('d-none'); }
+    if ( parseInt($('#respondentCount').val()) < 1 ){ return; } else { $('.chartDiv').removeClass('d-none'); }
 
     //var chartLabels = (optionType3 ? [optionType1, optionType2, optionType3, optionType4, optionType5] : [optionType1, optionType2])
     var chartLabels = [];
@@ -581,7 +616,6 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
         chartBgColor = ['#1f8ef1', '#2dce89'];
     }
 
-    //console.log(chartLabels);
     countValues.push(chartData);
     charts[i] = new Chart($('#q' + [i+1] + optionType + 'ResponseChart'),{
         type: 'horizontalBar',
@@ -649,15 +683,22 @@ function createChart(i, optionType, optionType1, optionType2, optionType3, optio
     socket.on('news', function(data) {
         if($('#accordion').length == 0){ $('#noResponse').empty(); }
         $('.responseCount').text(data.message);
-        $('#RespondentCount').val(data.message);
+        $('#respondentCount').val(data.message);
         $('#ResponseSection').prepend(data.domData);
         for (var i = 0; i < charts.length; i++){
-            if(charts[i+1] !== undefined){
-                charts[i+1].data.datasets[0].data = data.chartData[i];
-                charts[i+1].update();
+            if(charts[i] !== undefined){
+                charts[i].data.datasets[0].data = data.chartData[i];
+                charts[i].update();
             }
         }
     });
+
+// Remove empty elements from Charts Array
+for (var i = 0; i < charts.length; i++){
+    if(charts[i] === undefined){
+        charts.splice(i, 1);
+    }
+}
 
 $(document).ready(function() {
     $('#getIdi').click(()=>{
@@ -702,6 +743,18 @@ $(document).ready(function() {
             $('#acceptingResponses').val(false);
         }
     });
+
+    $('#affirmationi').click(()=>{
+        if ($('input[name=affirmationi]').is(':checked')) {
+            // Checkbox is checked..
+            $('#affirmation').val(true);
+            $('#affirmationStatementRow').removeClass('d-none');
+        } else {
+            // Checkbox is not checked..
+            $('#affirmation').val(false);
+            $('#affirmationStatementRow').addClass('d-none');
+        }
+    });
 });
 
     $('#updateSurveyBtn').on('click', () => {
@@ -724,6 +777,7 @@ $(document).ready(function() {
         if ($('#postSurveyInstructions').val().trim().length > 0){ $('#postSurveyInstructions').attr('readonly', true); } else { $('#postSurveyInstructionsRow').addClass('d-none'); }
         if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', true); } else { $('#surveyNotesRow').addClass('d-none'); }
         if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', true); } else { $('#surveyTOURow').addClass('d-none'); }
+        if ($('#affirmationStatement').val().trim().length > 0){ $('#affirmationStatement').attr('readonly', true); } else { $('#affirmationStatementRow').addClass('d-none'); }
     });
 
         //Copy to Clipboard

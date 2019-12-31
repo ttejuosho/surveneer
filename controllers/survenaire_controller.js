@@ -34,7 +34,7 @@ router.get('/survey/v/:surveyId', (req, res) => {
         include: [
             { model: db.Question, as: 'Question', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] },
             { model: db.Respondent, as: 'Respondent', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
-            { model: db.Survey, as: 'Survey', attributes: ['surveyId', 'surveyName', 'RespondentCount', 'RecipientCount', 'QuestionCount'] },
+            { model: db.Survey, as: 'Survey', attributes: ['surveyId', 'surveyName', 'respondentCount', 'recipientCount', 'questionCount'] },
         ],
     }).then(function(responses) {
         const hbsObject = { responses: responses };
@@ -207,7 +207,7 @@ router.post('/newSurvey', [check('surveyName').not().isEmpty().escape().withMess
                     notify: req.body.notify,
                     preSurveyInstructions: req.body.preSurveyInstructions,
                     postSurveyInstructions: req.body.postSurveyInstructions,
-                    RespondentCount: 0,
+                    respondentCount: 0,
                     UserUserId: req.session.passport.user,
                 }).then((dbSurvey) => {
                     // increase number of surveys for user
@@ -349,9 +349,9 @@ router.get('/deleteQuestion/:questionId', (req, res) => {
                     surveyId: SurveyId,
                 },
             }).then((dbSurvey) => {
-                dbSurvey.dataValues.QuestionCount -= 1;
+                dbSurvey.dataValues.questionCount -= 1;
                 const updatedSurvey = {
-                    QuestionCount: dbSurvey.dataValues.QuestionCount,
+                    questionCount: dbSurvey.dataValues.questionCount,
                 };
 
                 db.Survey.update(updatedSurvey, {
@@ -420,12 +420,12 @@ router.post('/newQuestion/:surveyId', [
                     surveyId: req.params.surveyId,
                 },
             }).then((dbSurvey) => {
-                dbSurvey.dataValues.QuestionCount += 1;
+                dbSurvey.dataValues.questionCount += 1;
                 const updatedSurvey = {
                     surveyName: dbSurvey.dataValues.surveyName,
                     getId: dbSurvey.dataValues.getId,
-                    RespondentCount: dbSurvey.dataValues.RespondentCount,
-                    QuestionCount: dbSurvey.dataValues.QuestionCount,
+                    respondentCount: dbSurvey.dataValues.respondentCount,
+                    questionCount: dbSurvey.dataValues.questionCount,
                     preSurveyInstructions: dbSurvey.dataValues.preSurveyInstructions,
                     postSurveyInstructions: dbSurvey.dataValues.postSurveyInstructions,
                     surveyNotes: dbSurvey.dataValues.surveyNotes,
@@ -623,9 +623,9 @@ router.post('/responses/:userId', [
                 },
                 include: [{ model: db.User, as: 'User', attributes: ['name', 'emailAddress'] }],
             }).then((dbSurvey) => {
-                dbSurvey.dataValues.RespondentCount += 1;
+                dbSurvey.dataValues.respondentCount += 1;
                 const updatedSurvey = {
-                    RespondentCount: dbSurvey.dataValues.RespondentCount,
+                    respondentCount: dbSurvey.dataValues.respondentCount,
                 };
                 const hbsObject = {
                     respondentName: req.body.respondentName,
@@ -676,7 +676,7 @@ router.get('/responses/:surveyId/view', (req, res) => {
         include: [
             { model: db.Question, as: 'Question', attributes: ['questionId', 'question', 'questionInstruction', 'optionType', 'option1', 'option2', 'option3', 'option4'] },
             { model: db.Respondent, as: 'Respondent', attributes: ['respondentId', 'respondentName', 'respondentEmail', 'respondentPhone'] },
-            { model: db.Survey, as: 'Survey', attributes: ['surveyId', 'surveyName', 'RespondentCount', 'RecipientCount', 'QuestionCount'] },
+            { model: db.Survey, as: 'Survey', attributes: ['surveyId', 'surveyName', 'respondentCount', 'recipientCount', 'questionCount'] },
         ],
     }).then(function(responses) {
         res.json(responses);
@@ -902,9 +902,9 @@ router.post('/emailSurvey/:surveyId', [
                             });
 
                             // Increase Number of recipients by 1
-                            dbSurvey.dataValues.RecipientCount += 1;
+                            dbSurvey.dataValues.recipientCount += 1;
                             const updatedSurvey = {
-                                RecipientCount: dbSurvey.dataValues.RecipientCount,
+                                recipientCount: dbSurvey.dataValues.recipientCount,
                             };
                             db.Survey.update(updatedSurvey, {
                                 where: {

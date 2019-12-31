@@ -7,11 +7,14 @@
     <li class="nav-item">
         <a class="nav-link" href="#SocialMediaSection" id="SocialMediaSectionTab" data-toggle="tab" role="tab" aria-controls="SocialMediaSection" aria-selected="false">Social Media</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#UserSection" id="UserSectionTab" data-toggle="tab" role="tab" aria-controls="UserSection" aria-selected="false">Other Users</a>
+    </li>
     </ul>
 
     {{!-- Tab Content --}}
     <div class="tab-content">
-
+        {{!-- Begin of Email Section --}}
         <div id="EmailSection" class="tab-pane fade show active" role="tabpanel" aria-labelledby="Email-tab">
             <div class="card">
                 <div class="card-header pt-3">
@@ -78,8 +81,9 @@
 
         </div>
         </div>
-
         {{!-- End of Email Section --}}
+
+        {{!-- Begin of Social Media Section --}}   
         <div id="SocialMediaSection" class="tab-pane fade" role="tabpanel" aria-labelledby="SocialMedia-tab">
             <div class="card">
                 <div class="card-header pt-3">
@@ -113,7 +117,46 @@
                 </div>
             </div>
         </div>
+        {{!-- End of Social Media Section --}}
 
+        {{!-- Begin of User Section --}} 
+        <div id="UserSection" class="tab-pane fade" role="tabpanel" aria-labelledby="User-tab">
+            <div class="card">
+                <div class="card-header pt-3">
+                    <h2><i class="tim-icons icon-email-85 mr-2 mb-1"></i>Share survey with a SurvEnEEr User</h2>
+                </div>
+                <div class="card-body">
+                    <div class="messages text-danger font-weight-bold">{{noSurveyError}}</div>
+                    <form id="shareSurveyForm" class="form" action="/shareSurvey/{{surveyId}}" method="POST">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <label>Email</label>
+                                    <input id="username" name="username" type="text" class="form-control mb-1" placeholder="Enter SurvEnEEr username" autocomplete="off" value="{{username}}">
+                                    <small id="usernameHelp" class="form-text text-muted">Any changes they make will not affect your copy of the survey.</small>
+                                    {{#if errors}}
+                                        {{#each errors}}
+                                            {{#ifEquals param "username"}}
+                                                <div class="messages text-danger font-weight-bold">{{msg}}</div>
+                                            {{/ifEquals}}
+                                        {{/each}}
+                                    {{/if}}
+                                    <div class="messages text-danger font-weight-bold">{{noUserError}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="/mysurveys/{{surveyId}}"><button type="button" class="btn btn-fill btn-sm btn-primary">Go to survey</button></a>
+                                <button id="shareSurveyBtn" type="submit" class="btn btn-sm btn-fill btn-primary float-right">Share Survey</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        {{!-- End of User Section --}}
     </div>
 </div>
 
@@ -186,8 +229,15 @@ $('#sendSurveyForm').on('submit',()=>{
 });
 
 InitRecipientsSelectize();
-</script>
 
+</script>
+{{#if sharedAlertMessage}}
+    <script type="text/javascript">
+        $(function () {
+            survenaire.showNotification('success', 'top', 'center', 'Survey shared successfully');
+        });
+    </script>
+{{/if}}
 {{#if emailSentAlertMessage}}
     <script type="text/javascript">
         $(function () {

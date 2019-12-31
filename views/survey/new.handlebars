@@ -33,14 +33,6 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="surveyNotes" name="surveyNotes" rows="4" cols="80" class="form-control" placeholder="Survey Notes"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
                     <div class="form-check">
                         <label class="form-check-label">
                         <input id="getId" name="getId" class="form-check-input" type="checkbox" value=true checked>
@@ -117,6 +109,49 @@
                     <label>Post-Survey Instructions</label>
                     <input id="postSurveyInstructions" name="postSurveyInstructions" type="text" class="form-control mb-0" placeholder="Enter post instructions for this survey">
                     <small id="postSurveyInstructionsHelp" class="form-text text-muted">Will be displayed when the survey is complete</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input id="addNotes" name="addNotes" class="form-check-input" type="checkbox" value=true>
+                        Add Notes
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row surveyNotesInput d-none">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="surveyNotes" name="surveyNotes" rows="4" cols="80" class="form-control" placeholder="Survey Notes"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input id="affirmation" name="affirmation" class="form-check-input" type="checkbox" >
+                        Add Affirmation Statement
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-none affirmationStatementInput">
+                <div class="col-md-12">
+                    <div class="form-group">
+                    <label>Affirmation Statement</label>
+                    <textarea id="affirmationStatement" name="affirmationStatement" rows="3" cols="80" class="form-control">I hereby affirm that I have provided complete and accurate answers to all of the questions above.
+Note: Providing inaccurate or incomplete answers or information may result in corrective action.</textarea>
                     </div>
                 </div>
             </div>

@@ -146,7 +146,7 @@ module.exports = (app) => {
         questionId: req.params.questionId,
       },
       include: [
-        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'RespondentCount', 'surveyNotes']},
+        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'respondentCount', 'surveyNotes']},
         {model: db.Response, as: 'Responses', attributes: ['answer']},
       ],
     }).then(function(dbQuestion) {
@@ -254,11 +254,11 @@ module.exports = (app) => {
         surveyId: req.params.surveyId,
       },
     }).then((dbSurvey) => {
-      dbSurvey.dataValues.RespondentCount += 1;
+      dbSurvey.dataValues.respondentCount += 1;
       const updatedSurvey = {
         surveyName: dbSurvey.dataValues.surveyName,
         getId: dbSurvey.dataValues.getId,
-        RespondentCount: dbSurvey.dataValues.RespondentCount,
+        respondentCount: dbSurvey.dataValues.respondentCount,
         surveyInstructions: dbSurvey.dataValues.surveyInstructions,
         surveyNotes: dbSurvey.dataValues.surveyNotes,
       };
@@ -279,12 +279,12 @@ module.exports = (app) => {
         surveyId: req.params.surveyId,
       },
     }).then((dbSurvey) => {
-      dbSurvey.dataValues.QuestionCount += 1;
+      dbSurvey.dataValues.questionCount += 1;
       const updatedSurvey = {
         surveyName: dbSurvey.dataValues.surveyName,
         getId: dbSurvey.dataValues.getId,
-        RespondentCount: dbSurvey.dataValues.RespondentCount,
-        QuestionCount: dbSurvey.dataValues.QuestionCount,
+        respondentCount: dbSurvey.dataValues.respondentCount,
+        questionCount: dbSurvey.dataValues.questionCount,
         surveyInstructions: dbSurvey.dataValues.surveyInstructions,
         surveyNotes: dbSurvey.dataValues.surveyNotes,
       };
@@ -321,7 +321,7 @@ module.exports = (app) => {
         SurveyId: req.params.surveyId,
       },
     }).then((dbSurvey) => {
-      d = dbSurvey.RespondentCount;
+      d = dbSurvey.respondentCount;
     }).then(() => {
       db.Response.findAll({
         where: {
@@ -333,7 +333,7 @@ module.exports = (app) => {
           {model: db.Question, as: 'Question'},
         ],
       }).then((dbRespondent) => {
-        data.push([{RespondentCount: d}]);
+        data.push([{respondentCount: d}]);
         data.push(dbRespondent);
         res.json(data);
       });
@@ -357,7 +357,7 @@ module.exports = (app) => {
       where: {
         QuestionQuestionId: req.params.questionId,
       },
-      include: [{model: db.Survey, as: 'Survey', attributes: ['surveyName', 'RespondentCount', 'surveyNotes']}],
+      include: [{model: db.Survey, as: 'Survey', attributes: ['surveyName', 'respondentCount', 'surveyNotes']}],
     }).then((dbQuestion) => {
       res.json(dbQuestion);
     });
@@ -370,7 +370,7 @@ module.exports = (app) => {
         SurveySurveyId: req.params.surveyId,
       },
       include: [
-        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'RespondentCount', 'surveyNotes']},
+        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'respondentCount', 'surveyNotes']},
         {model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone']},
       ],
     }).then((dbResponse) => {
@@ -591,7 +591,7 @@ module.exports = (app) => {
         questionId: req.params.questionId,
       },
       include: [
-        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'RespondentCount', 'surveyNotes']},
+        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'respondentCount', 'surveyNotes']},
         {model: db.Response, as: 'Responses', attributes: ['answer']},
       ],
     }).then(function(dbQuestion) {
@@ -700,11 +700,11 @@ module.exports = (app) => {
         surveyId: req.params.surveyId,
       },
     }).then((dbSurvey) => {
-      dbSurvey.dataValues.RespondentCount += 1;
+      dbSurvey.dataValues.respondentCount += 1;
       const updatedSurvey = {
         surveyName: dbSurvey.dataValues.surveyName,
         getId: dbSurvey.dataValues.getId,
-        RespondentCount: dbSurvey.dataValues.RespondentCount,
+        respondentCount: dbSurvey.dataValues.respondentCount,
         surveyInstructions: dbSurvey.dataValues.surveyInstructions,
         surveyNotes: dbSurvey.dataValues.surveyNotes,
       };
@@ -725,12 +725,12 @@ module.exports = (app) => {
         surveyId: req.params.surveyId,
       },
     }).then((dbSurvey) => {
-      dbSurvey.dataValues.QuestionCount += 1;
+      dbSurvey.dataValues.questionCount += 1;
       const updatedSurvey = {
         surveyName: dbSurvey.dataValues.surveyName,
         getId: dbSurvey.dataValues.getId,
-        RespondentCount: dbSurvey.dataValues.RespondentCount,
-        QuestionCount: dbSurvey.dataValues.QuestionCount,
+        respondentCount: dbSurvey.dataValues.respondentCount,
+        questionCount: dbSurvey.dataValues.questionCount,
         surveyInstructions: dbSurvey.dataValues.surveyInstructions,
         surveyNotes: dbSurvey.dataValues.surveyNotes,
       };
@@ -767,7 +767,7 @@ module.exports = (app) => {
         SurveyId: req.params.surveyId,
       },
     }).then((dbSurvey) => {
-      d = dbSurvey.RespondentCount;
+      d = dbSurvey.respondentCount;
     }).then(() => {
       db.Response.findAll({
         where: {
@@ -779,7 +779,7 @@ module.exports = (app) => {
           {model: db.Question, as: 'Question', attributes: ['questionId', 'question', 'optionType', 'YesResponseCount', 'NoResponseCount', 'TrueResponseCount', 'FalseResponseCount']},
         ],
       }).then((dbRespondent) => {
-        data.push([{RespondentCount: d}]);
+        data.push([{respondentCount: d}]);
         data.push(dbRespondent);
         res.json(data);
       });
@@ -803,7 +803,7 @@ module.exports = (app) => {
       where: {
         QuestionQuestionId: req.params.questionId,
       },
-      include: [{model: db.Survey, as: 'Survey', attributes: ['surveyName', 'RespondentCount', 'surveyNotes']}],
+      include: [{model: db.Survey, as: 'Survey', attributes: ['surveyName', 'respondentCount', 'surveyNotes']}],
     }).then((dbQuestion) => {
       res.json(dbQuestion);
     });
@@ -816,7 +816,7 @@ module.exports = (app) => {
         SurveySurveyId: req.params.surveyId,
       },
       include: [
-        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'RespondentCount', 'surveyNotes']},
+        {model: db.Survey, as: 'Survey', attributes: ['surveyName', 'respondentCount', 'surveyNotes']},
         {model: db.Respondent, as: 'Respondent', attributes: ['respondentName', 'respondentEmail', 'respondentPhone']},
       ],
     }).then((dbResponse) => {

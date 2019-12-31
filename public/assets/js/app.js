@@ -157,9 +157,18 @@ $(function() {
     $(this).val(this.checked ? true : false);
   });
 
+  $('input[name=\'addNotes\']').on('change', function() {
+    $('.surveyNotesInput').toggleClass('d-none');
+  });
+
   $('input[name=\'showTOU\']').on('change', function() {
     $(this).val(this.checked ? true : false);
     $('.surveyTOUInput').toggleClass('d-none');
+  });
+
+  $('input[name=\'affirmation\']').on('change', function() {
+    $(this).val(this.checked ? true : false);
+    $('.affirmationStatementInput').toggleClass('d-none');
   });
 
   $('input[name=\'getInstructions\']').on('change', function() {
@@ -226,7 +235,14 @@ $(function() {
     if ($('#showTOU').val() === 'false') {
       $('#surveyTOURow').addClass('d-none');
     }
-
+    if ($('#affirmationStatement').val().trim().length > 0) {
+      $('#affirmationStatement').attr('readonly', false);
+    } else {
+      $('#affirmationStatementRow').removeClass('d-none');
+    }
+    if ($('#affirmation').val() === 'false') {
+      $('#affirmationStatementRow').addClass('d-none');
+    }
     $('#updateSurveyBtn').removeClass('d-none');
 
     $('#editSurvey').addClass('d-none');

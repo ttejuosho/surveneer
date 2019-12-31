@@ -11,10 +11,13 @@ module.exports = function(app) {
   app.get('/surveys', Security.isLoggedIn, surveyController.getUserSurveys);
   app.post('/updateSurvey', Security.isLoggedIn, surveyController.updateSurvey);
   app.get('/deleteSurvey/:surveyId', Security.isLoggedIn, surveyController.deleteSurvey);
-  app.get('/mysurveys/:surveyId', Security.isLoggedIn, surveyController.mySurveys);
+  app.get('/mysurveys/:surveyId', Security.isLoggedIn, surveyController.getSurveyPanel);
   app.get('/viewSurvey/:surveyId', Security.isLoggedIn, surveyController.viewSurvey);
   app.get('/surveys/:surveyId/v2', Security.isLoggedIn, surveyController.viewSurveyV2);
   app.get('/sendSurvey/:surveyId', Security.isLoggedIn, surveyController.getSendSurveyPage);
+  app.post('/shareSurvey/:surveyId',
+      [check('username').not().isEmpty().escape().withMessage('Please enter a valid email address')],
+      Security.isLoggedIn, surveyController.shareSurvey);
   app.post('/emailSurvey/:surveyId', [
     check('email').not().isEmpty().escape().withMessage('Please enter an email address'),
     check('subject').not().isEmpty().escape().withMessage('Please enter a subject for your email'),

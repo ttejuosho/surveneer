@@ -396,10 +396,25 @@
             </div>
         </div>
     {{/each}}
-
+    {{#ifEquals affirmation 1}}
+    <h4 class="required">Affirmation</h4>
+    <p>{{affirmationStatement}}</p>
+    <div class="form-check form-check-radio form-check-inline mt-0">
+        <label class="form-check-label">
+            <input class="form-check-input answer" type="radio" name="affirmation" id="affirmationTrue" value=True required> Yes, I affirm
+            <span class="form-check-sign"></span>
+        </label>
+    </div>
+    <div class="form-check form-check-radio form-check-inline mt-0">
+        <label class="form-check-label">
+            <input class="form-check-input answer" type="radio" name="affirmation" id="affirmationFalse" value=False required> No, I do not affirm
+            <span class="form-check-sign"></span>
+        </label>
+    </div>
+    {{/ifEquals}}
     <div class="card-footer mt-3">
         <a href="/mysurveys/{{surveyId}}"><button type="button" class="btn btn-sm btn-fill btn-primary">Go to Survey</button></a>
-        <button type="submit" class="btn btn-sm btn-fill btn-primary float-right">Submit</button>
+        <button type="submit" id="submitResponseBtn" class="btn btn-sm btn-fill btn-primary float-right">Submit</button>
     </div>
     </form>
     </div>
@@ -407,6 +422,17 @@
 </div>
 
 <script type="text/javascript">
+
+$('input[name=affirmation]').click(()=>{
+    if ($('#affirmationFalse').is(':checked')) {
+        // Checkbox is checked..
+        $('#submitResponseBtn').addClass('d-none');
+    } else {
+        // Checkbox is not checked..
+        $('#submitResponseBtn').removeClass('d-none');
+    }
+});
+
 $('.numberRating').click((e)=>{
     $('.numberRating').removeClass('btn-primary');
     $(e.target).addClass('btn-primary');

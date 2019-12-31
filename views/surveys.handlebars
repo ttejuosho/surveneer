@@ -18,9 +18,10 @@
                     <div class="card-header"> 
                         <i onclick="openModal(`{{surveyId}}`)" class="float-right tim-icons icon-trash-simple text-danger" style="cursor: pointer;"></i>
                         <h3 class="card-title"><i class="tim-icons icon-atom text-primary"></i><a href="/mysurveys/{{surveyId}}">{{surveyName}}</a></h3>
-                        <h5 class="card-category"><span id="QuestionCount{{counter @index}}">{{QuestionCount}}</span> {{#ifEquals QuestionCount 1}} Question {{else}} Questions {{/ifEquals}}</h5>
-                        <h5 class="card-category"><span id="RespondentCount{{counter @index}}">{{RespondentCount}}</span> {{#ifEquals RespondentCount 1}} Respondent {{else}} Respondents {{/ifEquals}}</h5>
-                        <h5 class="card-category"><span id="RecipientCount{{counter @index}}">{{RecipientCount}}</span> {{#ifEquals RecipientCount 1}} Recipient {{else}} Recipients {{/ifEquals}}</h5>
+                        <h5 class="card-category"><span id="questionCount{{counter @index}}">{{questionCount}}</span> {{#ifEquals questionCount 1}} Question {{else}} Questions {{/ifEquals}}</h5>
+                        <h5 class="card-category"><span id="respondentCount{{counter @index}}">{{respondentCount}}</span> {{#ifEquals respondentCount 1}} Respondent {{else}} Respondents {{/ifEquals}}</h5>
+                        <h5 class="card-category"><span id="recipientCount{{counter @index}}">{{recipientCount}}</span> {{#ifEquals recipientCount 1}} Recipient {{else}} Recipients {{/ifEquals}}</h5>
+                        <h5 class="card-category"><span id="declinedCount{{counter @index}}">{{declinedCount}}</span>{{#ifEquals declinedCount 1}} Respondent {{else}} Respondents {{/ifEquals}} declined</h5>
                         {{#ifEquals notify 0}}<h5 class="card-category text-danger">Email Notifications Off</h5>
                         {{else}}<h5 class="card-category text-success">Email Notifications On</h5>
                         {{/ifEquals}}
@@ -60,22 +61,22 @@ function openModal (surveyId) {
     var responseRatecharts = [];
     var numberOfSurveys = $('.chart-area').length;
     for (var i = 0; i < numberOfSurveys; i++){
-        var RespondentCount = parseInt($('#RespondentCount' + [i+1]).text());
-        var RecipientCount = parseInt($('#RecipientCount' + [i+1]).text());
-        var awaitingResponse = RecipientCount - RespondentCount;
-    if (RespondentCount > 0){   
-        var responseRatePercentage = ((RespondentCount/RecipientCount)*100).toFixed();
+        var respondentCount = parseInt($('#respondentCount' + [i+1]).text());
+        var recipientCount = parseInt($('#recipientCount' + [i+1]).text());
+        var awaitingResponse = recipientCount - respondentCount;
+    if (respondentCount > 0){   
+        var responseRatePercentage = ((respondentCount/recipientCount)*100).toFixed();
         var ctx = $('#chartLinePurple' + [i+1]);
         if (parseInt(responseRatePercentage) > 0){
             $('#responseRatePercentage' + [i+1]).text(responseRatePercentage + '% Response Rate');
         } else {
             $('#responseRatePercentage' + [i+1]).text('0% Response Rate');
         }
-        if (RespondentCount > RecipientCount){
+        if (respondentCount > recipientCount){
             $('#responseRatePercentage' + [i+1]).text('100% Response Rate');
             awaitingResponse = 0;
         }
-        var data = [RespondentCount, awaitingResponse];
+        var data = [respondentCount, awaitingResponse];
         responseRatecharts[i] = new Chart(ctx,
         {
             type: "pie",
