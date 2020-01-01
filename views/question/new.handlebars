@@ -136,31 +136,31 @@
                         <small class="form-text text-muted">Choose from one of the options below.</small>
                         <div class="form-group">
                             <label for="option1">Option 1</label>
-                            <input type="text" class="form-control MultipleChoiceInput MultipleChoiceOption1" name="option1" id="options" placeholder="option1">
+                            <input type="text" class="form-control MultipleChoiceInput MultipleChoiceOption1" name="option1" id="options" placeholder="option 1">
                         </div>
                         <div class="form-group">
                             <label for="option2">Option 2</label>
-                            <input type="text" class="form-control MultipleChoiceInput" name="option2" id="options" placeholder="option2">
+                            <input type="text" class="form-control MultipleChoiceInput" name="option2" id="options" placeholder="option 2">
                         </div>
                         <div class="form-group">
                             <label for="option3">Option 3</label>
-                            <input type="text" class="form-control MultipleChoiceInput" name="option3" id="options" placeholder="option3">
+                            <input type="text" class="form-control MultipleChoiceInput" name="option3" id="options" placeholder="option 3">
                         </div>
                             <div class="form-group">
                             <label for="option4">Option 4</label>
-                            <input type="text" class="form-control MultipleChoiceInput" name="option4" id="options" placeholder="option4">
+                            <input type="text" class="form-control MultipleChoiceInput" name="option4" id="options" placeholder="option 4">
                         </div>
                     </div>
 
-                        <div class="form-check form-check-radio disabled">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="optionType" id="CustomOptions" value="CustomOption" disabled>
-                                Custom Options
-                                <span class="form-check-sign"></span>
-                            </label>
-                            <small class="form-text text-muted ml-3" style="display: unset;">(currently not supported)</small>
-                        </div>
-                        <div class="messages text-danger font-weight-bold">{{optionsError}}</div>
+                    <div class="form-check form-check-radio disabled">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="optionType" id="CustomOptions" value="CustomOption" disabled>
+                            Custom Options
+                            <span class="form-check-sign"></span>
+                        </label>
+                        <small class="form-text text-muted ml-3" style="display: unset;">(currently not supported)</small>
+                    </div>
+                    <div class="messages text-danger font-weight-bold">{{optionsError}}</div>
                     {{#if errors}}
                         {{#each errors}}
                             {{#ifEquals param "optionType"}} 

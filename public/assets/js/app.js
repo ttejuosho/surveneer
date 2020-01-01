@@ -211,6 +211,7 @@ $(function() {
 
   $('#editSurvey').on('click', () => {
     $('.surveyEditInput').removeAttr('readonly');
+    $('#surveyBrandnameRow').removeClass('d-none');
 
     if ($('#preSurveyInstructions').val().trim().length > 0) {
       $('#preSurveyInstructions').attr('readonly', false);

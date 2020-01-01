@@ -54,7 +54,7 @@
     </div>
 </div>
 
-<div class="row">
+<div id="surveyBrandnameRow" class="{{#if surveyBrandname}} row {{else}} row d-none {{/if}}">
     <div class="col-md-12">
         <div class="form-group">
         <label>Brand Name</label>
@@ -778,9 +778,10 @@ $(document).ready(function() {
         if ($('#surveyNotes').val().trim().length > 0){ $('#surveyNotes').attr('readonly', true); } else { $('#surveyNotesRow').addClass('d-none'); }
         if ($('#surveyTOU').val().trim().length > 0){ $('#surveyTOU').attr('readonly', true); } else { $('#surveyTOURow').addClass('d-none'); }
         if ($('#affirmationStatement').val().trim().length > 0){ $('#affirmationStatement').attr('readonly', true); } else { $('#affirmationStatementRow').addClass('d-none'); }
+        if ($('#surveyBrandname').val().trim().length > 0){ $('#surveyBrandname').attr('readonly', true); } else { $('#surveyBrandnameRow').addClass('d-none'); }
     });
 
-        //Copy to Clipboard
+    // Copy to Clipboard
     function copyToClipboard() {
         $("#surveyUrl").removeClass("d-none");
         $("#surveyUrl").select();
@@ -788,7 +789,7 @@ $(document).ready(function() {
         $("#surveyUrl").addClass("d-none");
         survenaire.showNotification('success', 'top', 'center', 'Survey Url has been copied to clipboard');
     }
-//console.log(countValues);
+
 </script>
 
 {{#if deleteAlertMessage}}
