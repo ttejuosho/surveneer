@@ -2,6 +2,7 @@
 const surveyController = require('../controllers/survey_controller.js');
 const {check} = require('express-validator');
 const Security = require('../config/security/security.js');
+// const {getUserSurveys} = require('../controllers/survey_controller.js');
 
 module.exports = function(app) {
   app.get('/newSurvey', Security.isLoggedIn, surveyController.getNewSurveyPage);
