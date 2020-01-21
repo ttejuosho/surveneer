@@ -3,6 +3,7 @@ const userController = require('../controllers/user_controller.js');
 const { check } = require('express-validator');
 const Security = require('../config/security/security.js');
 
+
 module.exports = (app) => {
     app.get('/forgot', userController.forgot);
     app.post('/forgot', [check('emailAddress').not().isEmpty().withMessage('Please enter your email address')],
