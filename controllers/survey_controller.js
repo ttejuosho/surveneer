@@ -83,11 +83,15 @@ exports.getUserSurveys = (req, res) => {
     ],
   }).then((dbSurvey) => {
     const surveys = {};
-    surveys['survey'] = dbSurvey;
+    surveys['survey'] = [dbSurvey[0].dataValues, dbSurvey[1].dataValues];
     surveys['userId'] = req.session.globalUser.userId;
+    console.log(surveys.survey);
+    surveys.allowProtoMethodsByDefault = true;
+    surveys.allowProtoPropertiesByDefault = true;
     if (req.session.globalUser) {
       Object.assign(surveys, req.session.globalUser);
     }
+
     return res.render('surveys', surveys);
   });
 };
