@@ -115,8 +115,9 @@ app.use((err, req, res, next) => {
 
   // add this line to include winston logging uncomment next line to enable winston
   // winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-
-  res.locals.isAuthenticated = req.isAuthenticated();
+  if (req.isAuthenticated) {
+    res.locals.isAuthenticated = req.isAuthenticated();
+  }
   // render the error page
   res.status(err.status || 500);
   res.render('error');
