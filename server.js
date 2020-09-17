@@ -11,7 +11,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const session = require('express-session');
 const db = require('./models');
-const Auth0Strategy = require('passport-auth0');
+// const Auth0Strategy = require('passport-auth0');
 const cookieParser = require(`cookie-parser`);
 // const flash = require('connect-flash');
 // const nodemailer = require('nodemailer');
@@ -30,24 +30,24 @@ app.use(cors());
 app.use(helmet());
 app.options('*', cors());
 
-const strategy = new Auth0Strategy({
-  domain: process.env.AUTH0_DOMAIN,
-  clientID: process.env.AUTH0_CLIENT_ID,
-  clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  // callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://surveneer.herokuapp.com/callback',
-  callbackURL: process.env.AUTH0_CALLBACK_URL,
-},
-function(accessToken, refreshToken, extraParams, profile, done) {
-  /**
-         * Access tokens are used to authorize users to an API
-         * (resource server)
-         * accessToken is the token to call the Auth0 API
-         * or a secured third-party API
-         * extraParams.id_token has the JSON Web Token
-         * profile has all the information from the user
-         */
-  return done(null, profile);
-});
+// const strategy = new Auth0Strategy({
+//   domain: process.env.AUTH0_DOMAIN,
+//   clientID: process.env.AUTH0_CLIENT_ID,
+//   clientSecret: process.env.AUTH0_CLIENT_SECRET,
+//   // callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://surveneer.herokuapp.com/callback',
+//   callbackURL: process.env.AUTH0_CALLBACK_URL,
+// },
+// function(accessToken, refreshToken, extraParams, profile, done) {
+//   /**
+//          * Access tokens are used to authorize users to an API
+//          * (resource server)
+//          * accessToken is the token to call the Auth0 API
+//          * or a secured third-party API
+//          * extraParams.id_token has the JSON Web Token
+//          * profile has all the information from the user
+//          */
+//   return done(null, profile);
+// });
 
 io.on('connection', function(socket) {
   socket.on('response', (response) => {
@@ -81,7 +81,7 @@ app.use(cookieParser());
 // For Passport
 app.use(session({secret: 'alakori somebodi', resave: true, saveUninitialized: false, cookie: {}})); // session secret
 app.use(passport.initialize());
-passport.use(strategy);
+// passport.use(strategy);
 app.use(passport.session()); // persistent login sessions
 
 const hbs = exphbs.create({
